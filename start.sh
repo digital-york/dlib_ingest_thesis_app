@@ -1,1 +1,1 @@
-rails s -b0.0.0.0
+rails s -d -b0.0.0.0
