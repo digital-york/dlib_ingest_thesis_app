@@ -43,6 +43,10 @@ gem 'dotenv-rails'
 gem 'devise'
 gem 'devise_ldap_authenticatable'
 
+gem "activemessaging"
+gem 'stomp'
+
+
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug'
@@ -54,3 +58,5 @@ group :development, :test do
   gem 'spring'
 end
 
+
+gem 'daemons'

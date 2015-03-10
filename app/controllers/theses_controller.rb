@@ -3,6 +3,9 @@ require 'nokogiri-pretty'
 
 require 'dotenv'
 
+require 'activemessaging'
+include ActiveMessaging::MessageSender
+
 class ThesesController < ApplicationController
   before_action :set_thesis, only: [:show, :edit, :update, :destroy]
 
@@ -46,6 +49,19 @@ class ThesesController < ApplicationController
   # POST /theses
   # POST /theses.json
   def create
+    metadata_file_path = '/var/tmp/' + SecureRandom.uuid + '.dc'
+    File.open(metadata_file_path, "w+") do |f|
+      f.write(add_bioler_plate_fields(get_thesis_xml.to_xml))
+    end
+
+    wf_client_file_path = '/var/tmp/' + SecureRandom.uuid + '.wf.client'
+    File.open(wf_client_file_path, "w+") do |f|
+      f.write(get_workflow_client_thesis_xml(metadata_file_path).to_xml)
+    end
+
+    publish :'workflow_queue', get_workflow_client_thesis_xml(metadata_file_path).to_xml, {'suppress_content_length' => true}
+
+
     @thesis = Thesis.new(thesis_params)
 
     respond_to do |format|
@@ -82,6 +98,92 @@ class ThesesController < ApplicationController
       format.json { head :no_content }
     end
   end
+
+  private
+    def get_thesis_xml
+      creator     = thesis_params[:creator]
+      title       = thesis_params[:title]
+      date        = thesis_params[:date]
+      desc        = thesis_params[:description]
+      degreetype  = thesis_params[:degree_type]
+      contributor = thesis_params[:contributor]
+      publisher   = thesis_params[:publisher]
+      subject     = thesis_params[:subject]
+      rights      = thesis_params[:rights]
+      licence     = thesis_params[:licence]
+
+      builder = Nokogiri::XML::Builder.new do |xml|
+        xml['oai_dc'].dc('xmlns:oai_dc' => 'http://www.openarchives.org/OAI/2.0/oai_dc/', 'xmlns:dc' => 'http://purl.org/dc/elements/1.1/') {
+          xml['dc'].creator creator
+          xml['dc'].title title
+          xml['dc'].date date
+          xml['dc'].description desc
+          xml['dc'].type degreetype
+          xml['dc'].contributor contributor
+          xml['dc'].publisher publisher
+          xml['dc'].subject subject
+          xml['dc'].rights rights
+          xml['dc'].licence licence
+        }
+      end
+    end
+
+    def add_bioler_plate_fields(xml_string)
+      doc = Nokogiri::XML(xml_string)
+      root = doc.root
+      root.add_namespace 'oai_dc', 'http://www.openarchives.org/OAI/2.0/oai_dc/'
+      root.add_namespace 'dc',      'http://purl.org/dc/elements/1.1/'
+      # publisher = ''
+      # root.xpath('dc:publisher').each do |pub|
+      #   publisher = pub.content
+      # end
+      publisher  = thesis_params[:publisher]
+      degreetype = thesis_params[:degree_type]
+
+      Settings.thesis.degreetype.to_hash.keys.each do |key|
+        if degreetype == Settings.thesis.degreetype[key]
+          dc_type_value = Settings.thesis.degreetype_to_dctype[key].to_s
+          root.add_child('<dc:type>'+dc_type_value+'</dc:type>')
+        end
+      end
+      #root.add_child('<dc:type>TEST</dc:type>')
+
+      #process boiler plate fields
+      Settings.thesis.boiler_plate.to_hash.keys.each do |key|
+        key_str = key.to_s
+        key_str.sub! '_', ':'
+        if key_str!='dc:rights'
+          Settings.thesis.boiler_plate[key].to_hash.values.each do |value|
+            root.add_child('<'+key_str+'>'+value.to_s+'</'+key_str+'>')
+          end
+        else
+          public_dept_list = Settings.thesis.boiler_plate.dc_rights.public_department_list.to_hash.values
+          if public_dept_list.include? publisher
+            Settings.thesis.boiler_plate.dc_rights.public_rights.to_hash.values.each do |value|
+              root.add_child('<'+key_str+'>'+value.to_s+'</'+key_str+'>')
+            end
+          else
+            Settings.thesis.boiler_plate.dc_rights.york_restricted.to_hash.values.each do |value|
+              root.add_child('<'+key_str+'>'+value.to_s+'</'+key_str+'>')
+            end
+          end
+        end
+      end
+      #t = doc.to_xml(:indent => 2)
+      t = doc.human
+    end
+
+    def get_workflow_client_thesis_xml(metadata_file)
+      builder = Nokogiri::XML::Builder.new do |xml|
+        xml['wf'].workflow('xmlns:wf' => 'http://dlib.york.ac.uk/workflow') {
+          xml['wf'].client(:scenarioid => Settings.thesis.scenarioid, :parent =>Settings.thesis.parentcollection, :submittedBy => Settings.thesis.submittedBy, :client => Settings.thesis.client, :stopOnError => Settings.thesis.stopOnError, :accesskey => Settings.thesis.accesskey) {
+            xml['wf'].file(:mime => 'text/xml', :id => 'DC', :file => metadata_file)
+          }
+        }
+      end
+    end
+
+
 
   private
     # Use callbacks to share common setup or constraints between actions.
