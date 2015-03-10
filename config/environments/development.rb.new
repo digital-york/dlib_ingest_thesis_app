@@ -41,13 +41,13 @@ Rails.application.configure do
 
   config.action_mailer.delivery_method = :smtp
   config.action_mailer.smtp_settings = {
-      address:   ENV['email.server'],
-      port:      ENV['email.port'].to_i,
+      address:   ENV['email.server'].to_s,
+      port:      ENV['email.port'],
       #domain : "york.ac.uk" , Do not need this
-      authentication: ENV['email.authentication'],
-      user_name: ENV['email.username'],
-      password:  ENV['email.password'],
-      enable_starttls_auto: ENV['email.enable_starttls_auto']=='true'
+      authentication: ENV['email.authentication'].to_s,
+      user_name: ENV['email.username'].to_s,
+      password:  ENV['email.password'].to_s,
+      enable_starttls_auto: ENV['email.enable_starttls_auto']
   }
 
 end

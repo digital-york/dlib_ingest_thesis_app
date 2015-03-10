@@ -40,6 +40,10 @@ class ThesesController < ApplicationController
       @thesis.department = self.current_user.department
     end
 
+    if self.current_user!=nil and self.current_user.email!=nil
+      ThesisMailer.submitted(self.current_user.email).deliver
+    end
+
   end
 
   # GET /theses/1/edit
