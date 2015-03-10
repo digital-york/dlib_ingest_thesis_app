@@ -21,6 +21,9 @@ class ThesesController < ApplicationController
   # GET /theses/new
   def new
     @thesis = Thesis.new
+    if self.current_user!=nil and self.current_user.surname!=nil and self.current_user.givenname!=nil
+        @thesis.name = self.current_user.surname + ', ' + self.current_user.givenname
+    end
 
     @years        = Time.now.year.step(1960, -1)
     @thesis.date  = Time.now.year
@@ -30,6 +33,9 @@ class ThesesController < ApplicationController
     #@licences     = Settings.thesis.licencetype.to_hash.invert
     @licences     = Settings.thesis.licencetype.to_hash
 
+    if self.current_user!=nil and self.current_user.department!=nil
+      @thesis.department = self.current_user.department
+    end
 
   end
 

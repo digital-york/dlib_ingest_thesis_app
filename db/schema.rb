@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150310120736) do
+ActiveRecord::Schema.define(version: 20150310141306) do
 
   create_table "theses", force: :cascade do |t|
     t.string   "name"
@@ -38,6 +38,12 @@ ActiveRecord::Schema.define(version: 20150310120736) do
     t.string   "last_sign_in_ip"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "email"
+    t.string   "surname"
+    t.string   "givenname"
+    t.string   "degreetype"
+    t.string   "supervisor"
+    t.string   "department"
   end
 
   add_index "users", ["login"], name: "index_users_on_login", unique: true
