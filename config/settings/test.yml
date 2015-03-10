@@ -4,4 +4,4 @@ thesis:
   submittedBy: fedoraAdmin
   client: ThesisClient
   stopOnError: false
-  accesskey: ENV['TEST.WORKFLOW_API_KEY']
+  accesskey: <%= ENV['TEST.WORKFLOW_API_KEY'] %>

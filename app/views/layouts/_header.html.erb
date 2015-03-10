@@ -5,7 +5,12 @@
       <ul class="nav navbar-nav navbar-right" style="padding-right: 30px;">
         <li><%= link_to "Home",   root_path %></li>
         <li><%= link_to "Help",   help_path %></li>
-        <li><%= link_to "Log in", '#' %></li>
+        <% if user_signed_in? %>
+            <!--<li><div style="color:#FFFFFF; padding-top: 15px;"><%= current_user.login %></div></li>-->
+            <li><%= link_to "Log out", destroy_user_session_path, :method => :delete %></li>
+        <%else%>
+            <li><%= link_to "Log in", new_user_session_path %></li>
+        <% end %>
       </ul>
     </nav>
   </div>

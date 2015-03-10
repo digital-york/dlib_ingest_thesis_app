@@ -1,12 +1,15 @@
 require 'nokogiri'
 require 'nokogiri-pretty'
 
+require 'dotenv'
+
 class ThesesController < ApplicationController
   before_action :set_thesis, only: [:show, :edit, :update, :destroy]
 
   # GET /theses
   # GET /theses.json
   def index
+    #Dotenv.load
     @theses = Thesis.all
   end
 

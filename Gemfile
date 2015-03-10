@@ -1,8 +1,10 @@
 source 'https://rubygems.org'
 
+#gem 'dotenv-rails', :groups => [:development, :test]
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '4.2.0'
+
 # Use sqlite3 as the database for Active Record
 gem 'sqlite3'
 # Use SCSS for stylesheets
@@ -38,6 +40,8 @@ gem 'rails_config'
 gem 'nokogiri-pretty'
 gem 'dotenv-rails'
 
+gem 'devise'
+gem 'devise_ldap_authenticatable'
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console

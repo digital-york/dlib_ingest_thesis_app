@@ -1,7 +1,3 @@
-<<<<<<< HEAD
-
-=======
->>>>>>> eac8918b13dccec6621833685ee6ca7cb760350e
 ## Authorizations
 # Uncomment out the merging for each environment that you'd like to include.
 # You can also just copy and paste the tree (do not include the "authorizations") to each
@@ -23,32 +19,35 @@ authorizations: &AUTHORIZATIONS
     authorizationRole: postsAdmin
 
 ## Environment
+
 development:
-  host: ENV['ldap.host']
-  port: ENV['ldap.port']
-  attribute: ENV['ldap.attribute']
-  base: ENV['ldap.base']
-  admin_user: ENV['ldap.admin']
-  admin_password: ENV['ldap.password']
-  ssl: false
+  host:           <%= ENV['ldap.host']      %>
+  port:           <%= ENV['ldap.port']      %>
+  attribute:      <%= ENV['ldap.attribute'] %>
+  base:           <%= ENV['ldap.base']      %>
+  admin_user:     <%= ENV['ldap.admin']     %>
+  admin_password: <%= ENV['ldap.password']  %>
+  ssl:            <%= ENV['ldap.ssl']       %>
   # <<: *AUTHORIZATIONS
 
 test:
-  host: localhost
-  port: 3389
-  attribute: cn
-  base: ou=people,dc=test,dc=com
-  admin_user: cn=admin,dc=test,dc=com
-  admin_password: admin_password
-  ssl: simple_tls
+  host:           <%= ENV['ldap.host']      %>
+  port:           <%= ENV['ldap.port']      %>
+  attribute:      <%= ENV['ldap.attribute'] %>
+  base:           <%= ENV['ldap.base']      %>
+  admin_user:     <%= ENV['ldap.admin']     %>
+  admin_password: <%= ENV['ldap.password']  %>
+  ssl:            <%= ENV['ldap.ssl']       %>
+
   # <<: *AUTHORIZATIONS
 
 production:
-  host: localhost
-  port: 636
-  attribute: cn
-  base: ou=people,dc=test,dc=com
-  admin_user: cn=admin,dc=test,dc=com
-  admin_password: admin_password
-  ssl: start_tls
+  host:           <%= ENV['ldap.host']      %>
+  port:           <%= ENV['ldap.port']      %>
+  attribute:      <%= ENV['ldap.attribute'] %>
+  base:           <%= ENV['ldap.base']      %>
+  admin_user:     <%= ENV['ldap.admin']     %>
+  admin_password: <%= ENV['ldap.password']  %>
+  ssl:            <%= ENV['ldap.ssl']       %>
+
   # <<: *AUTHORIZATIONS
