@@ -1,0 +1,84 @@
+# Settings for Thesis attributes
+thesis:
+  # All degree types
+  degreetype:
+    BA:     'Bachelor of Arts (BA)'
+    BSc:    'Bachelor of Science (BSc)'
+    BEng:   'Bachelor of Engineering (BEng)'
+    MA:     'Master of Arts (MA)'
+    MSc:    'Master of Science (MSc)'
+    MEng:   'Master of Engineering (MEng)'
+    MPhil:  'Master of Philosophy (MPhil)'
+    MRes:   'Master of Research (MRes)'
+    MPhys:  'Master of Physics (MPhys)'
+    MPA:    'Master of Public Administration (MPA)'
+    PGCE:   'Postgraduate Certificate in Education (PGCE)'
+    PGCert: 'Postgraduate Certificate in Medical Education (PGCert)'
+    PGDip:  'Postgraduate Diploma (PGDip)'
+  degreetype_to_dctype:
+    BA:     Bachelors
+    BSc:    Bachelors
+    BEng:   Bachelors
+    MA:     Masters
+    MSc:    Masters
+    MEng:   Masters
+    MPhil:  Masters
+    MRes:   Masters
+    MPhys:  Masters
+    MPA:    Masters
+    PGCE:   'Postgraduate Certificate'
+    PGCert: 'Postgraduate Certificate'
+    PGDip:  'Postgraduate Diploma'
+  licencetype:
+    self:   "I agree to licence my dissertation to York Digital Library to make available under the terms of the deposit licence."
+    other:  "I am depositing this dissertation on behalf of someone else, with their knowledge and permission. They have been made aware of the terms of the deposit licence."
+  # Settings for LDAP attributes
+  ldap:
+    department:
+      archaeol:  'University of York. Dept. of Archaeology'
+      biology:   'University of York. Dept. of Biology'
+      wmnsst:    "University of York. Centre for Women's Studies"
+      medievst:  'University of York. Centre for Medieval Studies'
+      chemistry: 'University of York. Dept. of Chemistry'
+      compsci:   'University of York. Dept. of Computer Science'
+      economics: 'University of York. Dept. of Economics and Related Studies'
+      educat:    'University of York. Dept. of Education'
+      elctrncs:  'University of York. Dept. of Electronics'
+      english:   'University of York. Dept. of English and Related Literature'
+      envrnmnt:  'University of York. Environment Dept'
+      hlthsci:   'University of York. Dept. of Health Sciences'
+      history:   'University of York. Dept. of History'
+      hstart:    'University of York. Dept. of History of Art'
+      langling:  'University of York. Dept. of Language and Linguistic Science'
+      law:        'University of York. York Law School'
+      ymgtsch:   'University of York. York Management School'
+      maths:     'University of York. Dept. of Mathematics'
+      music:     'University of York. Dept. of Music'
+      philos:    'University of York. Dept. of Philosophy'
+      physics:   'University of York. Dept. of Physics'
+      politics:  'University of York. Dept. of Politics'
+      pep:        'University of York. School of Politics Economics and Philosophy'
+      psychol:   'University of York. Dept. of Psychology'
+      spsw:      'University of York. Dept. of Social Policy and Social Work'
+      sociology: 'University of York. Dept. of Sociology'
+      theflmtv:  'University of York. Dept. of Theatre, Film and Television'
+      hyms:      'Hull York Medical School'
+  #biolder plate is used to add default dc fields
+  boiler_plate:
+    dc_type:
+      text1: 'http://purl.org/dc/dcmitype/Text'
+      text2: 'http://purl.org/eprint/type/Thesis'
+      text3: 'Theses'
+      text4: 'Dissertations'
+    dc_rights:
+      york_restricted:
+        text1: 'http://dlib.york.ac.uk/licences#yorkrestricted'
+        text2: 'The University licenses York users permission to view, download and print the resource. The resource may be distributed to other current York users but must not be further distributed without permission. Please refer to the University of York Digital Library Rights Policy for further information.'
+      public_rights:
+        text1: 'http://creativecommons.org/licenses/by-nc-nd/2.0/uk/'
+        text2: 'Made available by the University of York under the terms of a Creative Commons Attribution, Non-Commercial, No Derivative Works Licence. This means that a user may copy, distribute and display the resource providing that they give credit, do not use for commercial purposes, and do not alter, transform, or build upon the image. Users must adhere to the terms of the licence. Please refer to the University of York Digital Library Rights Policy for further information.'
+      #any department want to make thesis public need to be added to this list
+      public_department_list:
+        dept:  'University of York. Dept. of Music'
+
+

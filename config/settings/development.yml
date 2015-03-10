@@ -1,0 +1,8 @@
+thesis:
+  scenarioid: 'York-Fedora-Thesis-Object'
+  parentcollection: 'york:3'
+  submittedBy: fedoraAdmin
+  client: ThesisClient
+  stopOnError: false
+  accesskey: ENV['DEV.WORKFLOW_API_KEY']
+

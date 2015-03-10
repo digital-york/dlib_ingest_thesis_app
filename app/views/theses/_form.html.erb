@@ -1,0 +1,114 @@
+<%= form_for(@thesis) do |f| %>
+<div class="form-group">
+  <% if @thesis.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@thesis.errors.count, "error") %> prohibited this thesis from being saved:</h2>
+
+      <ul>
+      <% @thesis.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+<div class="form-group">
+  <div class="control-label col-xs-2 form-fields">
+   <%= f.label "Author's name" %>
+  </div>
+  <div class="col-xs-10 form-fields">
+    <%= f.text_field :name, :size=>"80", placeholder: "Author's name" %>
+  </div>
+
+  <div class="control-label col-xs-2 form-fields">
+    <%= f.label "Dissertation title" %>
+  </div>
+  <div class="col-xs-10 form-fields">
+    <%= f.text_field :title, :size=>"80", placeholder: "Dissertation title"  %>
+  </div>
+
+  <div class="control-label col-xs-2 form-fields">
+    <%= f.label :date %>
+  </div>
+  <div class="col-xs-10 form-fields">
+    <%= f.collection_select :date, @years, :to_s, :to_s, include_blank: false %>
+  </div>
+  <br/>
+
+  <div class="control-label col-xs-2 big-form-fields">
+    <%= f.label :abstract %>
+  </div>
+  <div class="col-xs-10 big-form-fields">
+    <%= f.text_area :abstract, :size => "80x5", placeholder: "Abstract" %>
+  </div>
+  <br/>
+
+  <div class="control-label col-xs-2 form-fields">
+    <%= f.label "Degree type"  %>
+  </div>
+  <div class="col-xs-10 form-fields">
+    <%= f.collection_select :degreetype, @degree_types, :to_s, :to_s, include_blank: false %>
+  </div>
+  <br/>
+
+  <div class="control-label col-xs-2 form-fields">
+    <%= f.label "Degree supervisor" %>
+  </div>
+  <div class="col-xs-10 form-fields">
+    <%= f.text_field :supervisor, :size=>"80", placeholder: "Degree supervisor" %>
+  </div>
+  <br/>
+
+  <div class="control-label col-xs-2 form-fields">
+    <%= f.label :department %>
+  </div>
+  <div class="col-xs-10 form-fields">
+    <%= f.collection_select :department, @departments, :to_s, :to_s, include_blank: false %>
+  </div>
+  <br/>
+
+  <div class="control-label col-xs-2 form-fields">
+    <%= f.label "Subject keyword" %>
+  </div>
+  <div class="col-xs-10 form-fields">
+    <%= f.text_field :subjectkeyword, :size=>"80", placeholder: "Subject keyword" %>
+  </div>
+  <br/>
+
+  <div class="control-label col-xs-2 form-fields">
+    <%= f.label "Rights holder" %>
+  </div>
+  <div class="col-xs-10 form-fields">
+    <%= f.text_field :rightsholder, :size=>"80", placeholder: "Rights holder" %>
+  </div>
+  <br/>
+
+  <div class="control-label col-xs-2 form-fields">
+    <%= f.label :licence %>
+  </div>
+  <div class="col-xs-10 medium-form-fields">
+    <% first_time = true %>
+    <% @licences.each do |licence| %>
+        <% if first_time == true %>
+          <%= radio_button_tag 'licence', licence[0], true %>
+          <% first_time = false %>
+        <% else %>
+          <%= radio_button_tag 'licence', licence[0], false %>
+        <% end %>
+      <%= licence[1] %><br/>
+    <% end %>
+  </div>
+  <br/>
+  <br/>
+  <br/>
+  <br/>
+  <div class="form-fields">
+  </div>
+
+  <div class="col-xs-offset-2 col-xs-10 form-fields">
+    <%= f.submit "Submit Thesis", :class => 'btn btn-primary' %>
+  </div>
+  <br/>
+</div>
+
+<% end %>

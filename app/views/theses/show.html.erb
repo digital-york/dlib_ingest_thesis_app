@@ -1,0 +1,54 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Name:</strong>
+  <%= @thesis.name %>
+</p>
+
+<p>
+  <strong>Title:</strong>
+  <%= @thesis.title %>
+</p>
+
+<p>
+  <strong>Date:</strong>
+  <%= @thesis.date %>
+</p>
+
+<p>
+  <strong>Abstract:</strong>
+  <%= @thesis.abstract %>
+</p>
+
+<p>
+  <strong>Degreetype:</strong>
+  <%= @thesis.degreetype %>
+</p>
+
+<p>
+  <strong>Supervisor:</strong>
+  <%= @thesis.supervisor %>
+</p>
+
+<p>
+  <strong>Department:</strong>
+  <%= @thesis.department %>
+</p>
+
+<p>
+  <strong>Subjectkeyword:</strong>
+  <%= @thesis.subjectkeyword %>
+</p>
+
+<p>
+  <strong>Rightsholder:</strong>
+  <%= @thesis.rightsholder %>
+</p>
+
+<p>
+  <strong>Licence:</strong>
+  <%= @thesis.licence %>
+</p>
+
+<%= link_to 'Edit', edit_thesis_path(@thesis) %> |
+<%= link_to 'Back', theses_path %>
