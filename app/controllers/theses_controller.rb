@@ -39,11 +39,7 @@ class ThesesController < ApplicationController
     if self.current_user!=nil and self.current_user.department!=nil
       @thesis.department = self.current_user.department
     end
-
-    if self.current_user!=nil and self.current_user.email!=nil
-      ThesisMailer.submitted(self.current_user.email).deliver
-    end
-
+    
   end
 
   # GET /theses/1/edit
@@ -67,6 +63,10 @@ class ThesesController < ApplicationController
 
 
     @thesis = Thesis.new(thesis_params)
+
+    if self.current_user!=nil and self.current_user.email!=nil
+      ThesisMailer.submitted(self.current_user.email).deliver
+    end
 
     respond_to do |format|
       if @thesis.save
