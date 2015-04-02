@@ -1,0 +1,13 @@
+<h3>New Ingest Job</h3>
+
+<% if self.current_user.nil? %>
+
+    <p>Please login.</p>
+
+<% else %>
+
+<%= render 'form' %>
+
+<%= link_to 'Back', ingests_path %>
+
+<% end %>

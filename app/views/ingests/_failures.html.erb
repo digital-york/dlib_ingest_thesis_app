@@ -1,0 +1,5 @@
+
+
+    <% session[:failures].keys.each do | k | %>
+        <p><%= k %>: <%= session[:failures][k] %></p>
+    <% end %>

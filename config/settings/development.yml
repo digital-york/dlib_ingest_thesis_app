@@ -5,4 +5,10 @@ thesis:
   client: ThesisClient
   stopOnError: false
   accesskey: <%= ENV['DEV.WORKFLOW_API_KEY'] %>
+image:
+  scenarioid: 'York-Fedora-StillImage-Object'
+filestore:
+  yodlprodingest: 'tmpdata/'
+  archbishop: 'tmpdata/'
+tmppath: 'tmpdata_output/'
 

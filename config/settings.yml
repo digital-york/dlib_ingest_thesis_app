@@ -80,5 +80,49 @@ thesis:
       #any department want to make thesis public need to be added to this list
       public_department_list:
         dept:  'University of York. Dept. of Music'
-
-
+      #dc types for other content types
+    dc_type_coll:
+      text1: 'http://purl.org/dc/dcmitype/Collection'
+    dc_type_schol:
+      text1: 'http://purl.org/dc/dcmitype/Text'
+      text2: 'http://purl.org/eprint/type/ScholarlyText'
+    dc_type_exam:
+      text1: 'http://purl.org/dc/dcmitype/Text'
+      text2: 'http://dlib.york.ac.uk/type/ExamPaper'
+      text3: 'Exam paper'
+rights:
+  admin_only:
+      text: 'This item is copyrighted. All rights reserved by the copyright holder. Please refer to the University of York Digital Library Rights Policy for further information.'
+      license: 'http://dlib.york.ac.uk/licences#allrightsreservedrestricted'
+  undetermined:
+    text: 'The copyright holder of this resource is undetermined. Any person who believes they are the rights holder of this resource, or can help identify the rights holder is encouraged to contact the Digital Library. This resource is made available by the University of York for Educational Non-Commercial re-use. This means that a user may copy, distribute and display the resource providing that they give credit, do not use for commercial purposes, and do not alter, transform, or build upon the resource. Please refer to the University of York Digital Library Rights Policy for further information.'
+    license: 'http://dlib.york.ac.uk/licences#undetermined'
+  creative_commons_by_nc_sa:
+    text: 'Made available by the University of York under the terms of a Creative Commons Attribution-Non-Commercial-Share Alike Licence. This means that a user may copy, distribute and display the resource providing that they give credit, do not use for commercial purposes, and if the work is altered, transformed, or built upon, the resulting work must be distributed under a licence identical to this one. Users must adhere to the terms of the licence. Please refer to the University of York Digital Library Rights Policy for further information.'
+    license: 'http://creativecommons.org/licenses/by-nc-sa/2.0/uk/'
+  creative_commons_by_nc_sa_preview:
+    text: 'Some rights reserved. A preview size is made publicly available by the University of York under the terms of a Creative Commons Attribution-Non-Commercial-Share Alike Licence. This means that a user may copy, distribute and display the resource providing that they give credit, do not use for commercial purposes, and if the work is altered, transformed, or built upon, the resulting work must be distributed under a licence identical to this one. York users may not distribute the full sized resource outside of the University. Users must adhere to the terms of the licence. Please refer to the University of York Digital Library Rights Policy for further information.'
+    license: 'http://dlib.york.ac.uk/licences#creative-commons-by-nc-sa-preview'
+  creative_commons_by_nc_nd:
+    text: 'Made available by the University of York under the terms of a Creative Commons Attribution, Non-Commercial, No Derivative Works Licence. This means that a user may copy, distribute and display the resource providing that they give credit, do not use for commercial purposes, and do not alter, transform, or build upon the image. Users must adhere to the terms of the licence. Please refer to the University of York Digital Library Rights Policy for further information.'
+    license: 'http://creativecommons.org/licenses/by-nc-nd/2.0/uk/'
+  creative_commons_by_nc_nd_preview:
+    text: 'Some rights reserved. A preview size is made publicly available by the University of York under the terms of a Creative Commons Attribution, Non-Commercial, No Derivative Works Licence. This means that a user may copy, distribute and display the resource providing that they give credit, do not use for commercial purposes, and do not alter, transform, or build upon the image. York users may not distribute the full sized resource outside of the University. Users must adhere to the terms of the licence. Please refer to the University of York Digital Library Rights Policy for further information.'
+    license: 'http://dlib.york.ac.uk/licences#creative-commons-by-nc-nd-preview'
+  york_restricted:
+    text: 'The University licenses York users permission to view, download and print the resource. The resource may be distributed to other current York users but must not be further distributed without permission. Please refer to the University of York Digital Library Rights Policy for further information.'
+    license: 'http://dlib.york.ac.uk/licences#yorkrestricted'
+  online_only:
+    text: 'Made available online by the University of York, by permission of the rights holder. Please contact the rights holder for any further permissions. Please refer to the University of York Digital Library Rights Policy for further information.'
+    license: 'http://dlib.york.ac.uk/licences#onlineonly'
+  uk_copyright_permitted_acts:
+        text: 'This resource is Copyrighted. It has been scanned under the terms of one of the permitted acts outlined in sections 28-36 of the Copyright, Designs and Patents Act 1988. Please refer to the University of York Digital Library Rights Policy for further information.'
+        license: 'http://dlib.york.ac.uk/licences#permitted-acts'
+  public_domain:
+    text: 'This resource is in the public domain.'
+    license: ''
+repository:
+  none:
+  borthwick:
+    name: 'Borthwick Institute for Archives'
+    place: 'England, York'

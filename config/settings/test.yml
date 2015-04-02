@@ -5,3 +5,9 @@ thesis:
   client: ThesisClient
   stopOnError: false
   accesskey: <%= ENV['TEST.WORKFLOW_API_KEY'] %>
+image:
+  scenarioid: 'York-Fedora-StillImage-Object'
+filestore:
+  yodlprodingest: '/usr/digilib-ingest/'
+  archbishop: '/usr/digilib-archbishop/'
+tmppath: '/tmp/'
