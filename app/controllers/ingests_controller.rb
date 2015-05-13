@@ -22,15 +22,20 @@ class IngestsController < ApplicationController
   # POST /ingests.json
   def create
     @ingest = Ingest.new(ingest_params)
+
     if @ingest[:content] != '' and @ingest[:file] != '' and @ingest[:rights] != ''
-      if @ingest[:content].start_with? 'image'
-        count,failed_lines = IngestImages.new.open_file(@ingest[:folder], params[:ingest][:file].tempfile, @ingest[:content], @ingest[:rights], @ingest[:photographer], @ingest[:worktype], @ingest[:repository], @ingest[:filestore], @ingest[:parent])
-        notice = count
-        session[:failures] = failed_lines
+      if @ingest[:dryrun]
+        notice = 'Dry run'
       else
-        count,failed_lines = IngestItems.new.open_file(@ingest[:folder], params[:ingest][:file].tempfile, @ingest[:content], @ingest[:rights], @ingest[:filestore], @ingest[:parent])
-        notice = count
-        session[:failures] = failed_lines
+        if @ingest[:content].start_with? 'image'
+          count,failed_lines = IngestImages.new.open_file(@ingest[:folder], params[:ingest][:file].tempfile, @ingest[:content], @ingest[:rights], @ingest[:photographer], @ingest[:worktype], @ingest[:repository], @ingest[:filestore], @ingest[:parent])
+          notice = count
+          session[:failures] = failed_lines
+        else
+          count,failed_lines = IngestItems.new.open_file(@ingest[:folder], params[:ingest][:file].tempfile, @ingest[:content], @ingest[:rights], @ingest[:filestore], @ingest[:parent])
+          notice = count
+          session[:failures] = failed_lines
+        end
       end
     else
       notice = 'Make sure all fields are completed'
@@ -55,6 +60,6 @@ class IngestsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def ingest_params
-      params.require(:ingest).permit(:folder, :file, :content, :rights, :worktype, :repository, :filestore, :parent, :photographer)
+      params.require(:ingest).permit(:folder, :file, :content, :rights, :worktype, :repository, :filestore, :parent, :photographer,:dryrun)
     end
 end

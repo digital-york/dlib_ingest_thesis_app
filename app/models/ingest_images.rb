@@ -136,7 +136,6 @@ class IngestImages
             raise
           end
 
-
           wf_client_file_path = Settings.tmppath + SecureRandom.uuid + '.wf.client'
           File.open(wf_client_file_path, "w+") do |f|
             f.write(get_workflow_client_thesis_xml(metadata_file_path, par,archival_master_file_path,display_file_path).to_xml)
@@ -149,6 +148,7 @@ class IngestImages
           if !failed_lines.has_key?(image)
             failed_lines[image] = 'error'
           end
+          #delete any files created during a failed process
           cleanup(metadata_file_path,wf_client_file_path,archival_master_file_path,display_file_path)
         end
         #FileUtils.rm file_path + 'Archive_TIFFs/' + image + '.tif'

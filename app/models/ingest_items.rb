@@ -21,17 +21,19 @@ class IngestItems
       f.close
       count, failed_lines = process_file(file_path, csv, content, rights, parent)
       message = count.to_s + ' line(s) processed.'
-    rescue
+      rescue => error
+      puts error
       message = 'There was a problem processing your file. Is it a valid CSV file?'
     end
     return message, failed_lines
   end
 
   def process_file(file_path, csv, content, rights, parent)
-    main_file = ''
     additional_files = []
     count = 0
     failed_lines = {}
+    main_file = ''
+    additional_files = []
     csv.group_by { |row| row[''] }.values.each do |group|
       group.each do |i|
         begin
@@ -71,13 +73,17 @@ class IngestItems
               when 'dc:date'
                 file_output.date += [pair[1]]
               when 'parent'
-                if pair[0] != ''
+                if pair[1] != ''
                   parent = pair[1]
                 end
               when 'main'
-                main_file = pair[1]
+                if pair[1] != nil
+                  main_file = pair[1]
+                end
               when 'additional'
-                additional_files += [pair[1]]
+                if pair[1] != nil
+                  additional_files += [pair[1]]
+                end
             end
           end
 
@@ -130,40 +136,35 @@ class IngestItems
           end
 
           begin
-            puts 'i am putting'
-            puts main_file
             if main_file != '' and !main_file.nil?
-              main_file_path = Settings.tmppath + SecureRandom.uuid + '.pdf'
-              FileUtils.copy file_path + main_file, main_file_path
-              #FileUtils.rm file_path + main_file
+              main_file_path = file_path + main_file
             end
             if additional_files != [] and !additional_files.nil?
               additional_files_paths = []
               additional_files.each do |i|
-                path = Settings.tmppath + SecureRandom.uuid + '.pdf'
-                additional_files_paths += [path]
-                FileUtils.copy file_path + i, path
-                FileUtils.rm file_path + i
+                additional_files_paths += [file_path + i]
               end
             end
-          rescue
+          rescue => error
             failed_lines[title] = 'could not find file'
+            puts error
             raise
           end
-
           wf_client_file_path = Settings.tmppath + SecureRandom.uuid + '.wf.client'
+
           File.open(wf_client_file_path, "w+") do |f|
             f.write(get_workflow_client_thesis_xml(metadata_file_path, parent, main_file_path, additional_files_paths).to_xml)
           end
 
-          #publish()
-          #publish :'workflow_queue', get_workflow_client_thesis_xml(file_output, parent,main_file_path,additional_files_paths).to_xml, {'suppress_content_length' => true}
+          #publish to the workflow queue
+          publish :'workflow_queue', get_workflow_client_thesis_xml(metadata_file_path, parent,main_file_path,additional_files_paths).to_xml, {'suppress_content_length' => true}
           count += 1
-        rescue
+        rescue => error
+          puts error
           if !failed_lines.has_key?(title)
             failed_lines[title] = 'error'
           end
-          cleanup(metadata_file_path, wf_client_file_path, additional_files_paths, main_file_path)
+          #cleanup(metadata_file_path, wf_client_file_path, additional_files_paths, main_file_path)
         end
       end
     end
@@ -172,8 +173,8 @@ class IngestItems
 
   # Use default collection specified in settings unless otherwise specified
   def get_workflow_client_thesis_xml(metadata_file, parent, main_file=nil, additional_files=nil)
-    if parent.nil?
-      Settings.thesis.parentcollection
+    if parent == '' or parent.nil?
+      parent = Settings.thesis.parentcollection
     end
     builder = Nokogiri::XML::Builder.new do |xml|
       xml['wf'].workflow('xmlns:wf' => 'http://dlib.york.ac.uk/workflow') {

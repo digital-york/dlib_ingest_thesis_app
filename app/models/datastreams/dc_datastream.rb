@@ -1,7 +1,7 @@
 class DcDatastream < ActiveFedora::OmDatastream
 
     set_terminology do |t|
-      t.root(:path=>"oai_dc", :xmlns=>'http://www.openarchives.org/OAI/2.0/oai_dc/')
+      t.root(:path=>"dc")
       t.title(:path=>"title", :namespace_prefix => 'dc')
       t.contributor(:path=>"contributor", :namespace_prefix => 'dc')
       t.coverage(:path=>"coverage", :namespace_prefix => 'dc')
@@ -21,12 +21,11 @@ class DcDatastream < ActiveFedora::OmDatastream
 
     def self.xml_template
        builder = Nokogiri::XML::Builder.new do |xml|
-         xml.oai_dc("xmlns"=>'http://www.openarchives.org/OAI/2.0/oai_dc/',
-                "xmlns:dcterms"=>'http://purl.org/dc/terms/',
-                "xmlns:dc"=>"http://purl.org/dc/elements/1.1/",
-                "xmlns:xsi"=>'http://www.w3.org/2001/XMLSchema-instance') { }
+         xml['oai_dc'].dc('xmlns:oai_dc' => 'http://www.openarchives.org/OAI/2.0/oai_dc/',
+                "xmlns:dc"=>"http://purl.org/dc/elements/1.1/") { }
        end
        return builder.doc
+      #builder.to_xml
      end
 
 end

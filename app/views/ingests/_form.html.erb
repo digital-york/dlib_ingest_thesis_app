@@ -75,6 +75,10 @@
         <%= f.label "Parent Collection (in the form york:1234, leave blank if this info is in the csv file)" %><br />
         <%= f.text_field :parent %>
     </div>
+    <div class="field">
+        <%= f.label "Dry run" %><br />
+        <%= f.check_box :dryrun %>
+    </div>
 
     <br />
     <div class="actions">
