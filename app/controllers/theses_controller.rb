@@ -3,8 +3,8 @@ require 'nokogiri-pretty'
 
 require 'dotenv'
 
-require 'activemessaging'
-include ActiveMessaging::MessageSender
+#require 'activemessaging'
+#include ActiveMessaging::MessageSender
 
 class ThesesController < ApplicationController
   before_action :set_thesis, only: [:show, :edit, :update, :destroy]
@@ -59,7 +59,7 @@ class ThesesController < ApplicationController
       f.write(get_workflow_client_thesis_xml(metadata_file_path).to_xml)
     end
 
-    publish :'workflow_queue', get_workflow_client_thesis_xml(metadata_file_path).to_xml, {'suppress_content_length' => true}
+    #publish :'workflow_queue', get_workflow_client_thesis_xml(metadata_file_path).to_xml, {'suppress_content_length' => true}
 
 
     @thesis = Thesis.new(thesis_params)

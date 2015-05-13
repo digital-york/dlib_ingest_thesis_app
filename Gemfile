@@ -44,7 +44,7 @@ gem 'dotenv-rails'
 gem 'devise'
 gem 'devise_ldap_authenticatable'
 
-gem "activemessaging"
+#gem "activemessaging"
 gem 'stomp'
 
 
