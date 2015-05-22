@@ -93,6 +93,10 @@ GEM
     dotenv (1.0.2)
     dotenv-rails (1.0.2)
       dotenv (= 1.0.2)
+    dragonfly (1.0.10)
+      addressable (~> 2.3)
+      multi_json (~> 1.0)
+      rack (>= 1.3.0)
     ebnf (0.3.9)
       rdf (~> 1.1)
       sxp (~> 0.1, >= 0.1.3)
@@ -171,6 +175,8 @@ GEM
       solrizer (~> 3.3)
     orm_adapter (0.5.0)
     rack (1.6.0)
+    rack-cache (1.2)
+      rack (>= 0.4)
     rack-test (0.6.3)
       rack (>= 1.0)
     rails (4.2.0)
@@ -252,6 +258,7 @@ GEM
     rdoc (4.2.0)
       json (~> 1.4)
     ref (1.0.5)
+    remotipart (1.2.1)
     responders (2.1.0)
       railties (>= 4.2.0, < 5)
     rest-client (1.8.0)
@@ -349,15 +356,18 @@ DEPENDENCIES
   devise
   devise_ldap_authenticatable
   dotenv-rails
+  dragonfly
   jbuilder (~> 2.0)
   jquery-rails
   nokogiri-pretty
   om (~> 3.1.0)
+  rack-cache
   rails (= 4.2.0)
   rails_config
+  remotipart (~> 1.2)
   sass-rails (~> 5.0)
   sdoc (~> 0.4.0)
-  spring
+  spring (= 1.3.3)
   sqlite3
   stomp
   therubyracer
