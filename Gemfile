@@ -44,7 +44,7 @@ gem 'dotenv-rails'
 gem 'devise'
 gem 'devise_ldap_authenticatable'
 
-gem "activemessaging", :git => "https://github.com/digital-york/activemesaging.git"
+gem "activemessaging", :git => "https://github.com/digital-york/activemessaging.git"
 gem 'stomp'
 
 

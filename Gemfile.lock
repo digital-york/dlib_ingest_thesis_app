@@ -1,3 +1,10 @@
+GIT
+  remote: https://github.com/digital-york/activemessaging.git
+  revision: d5144a8fe0295d888d1b68f4b316b817a893ca3f
+  specs:
+    activemessaging (0.13.0)
+      activesupport (>= 2.3.11)
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -342,6 +349,7 @@ PLATFORMS
 
 DEPENDENCIES
   active-fedora (~> 7.1.0)
+  activemessaging!
   bootstrap-sass (= 3.2.0.0)
   byebug
   coffee-rails (~> 4.1.0)
