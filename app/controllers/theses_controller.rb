@@ -3,8 +3,8 @@ require 'nokogiri-pretty'
 
 require 'dotenv'
 
-#require 'activemessaging'
-#include ActiveMessaging::MessageSender
+require 'activemessaging'
+include ActiveMessaging::MessageSender
 
 class ThesesController < ApplicationController
   before_action :set_thesis, only: [:show, :edit, :update, :destroy]
@@ -39,7 +39,9 @@ class ThesesController < ApplicationController
     if self.current_user!=nil and self.current_user.department!=nil
       @thesis.department = self.current_user.department
     end
-    
+
+    @uploaded_file = UploadedFile.new
+
   end
 
   # GET /theses/1/edit
@@ -49,6 +51,8 @@ class ThesesController < ApplicationController
   # POST /theses
   # POST /theses.json
   def create
+    #@uploaded_file = UploadedFile.new(uploaded_file_params)
+
     metadata_file_path = '/var/tmp/' + SecureRandom.uuid + '.dc'
     File.open(metadata_file_path, "w+") do |f|
       f.write(add_bioler_plate_fields(get_thesis_xml.to_xml))
@@ -59,7 +63,22 @@ class ThesesController < ApplicationController
       f.write(get_workflow_client_thesis_xml(metadata_file_path).to_xml)
     end
 
-    #publish :'workflow_queue', get_workflow_client_thesis_xml(metadata_file_path).to_xml, {'suppress_content_length' => true}
+    uf = params[:uploaded_files]
+    #puts '=============@thesis uploaded files============='
+    #puts uf.inspect
+    #puts uf.original_filename
+    #puts File.absolute_path(uf.tempfile)
+    #puts uf.content_type
+    #puts uf.headers
+    #puts '=============end of @thesis uploaded files============='
+
+    publish :'workflow_queue', get_workflow_client_thesis_xml(metadata_file_path).to_xml, {'suppress_content_length' => true}
+    #publish :'workflow_queue', get_workflow_client_thesis_xml_single_file(metadata_file_path, File.absolute_path(uf.tempfile), "true", "ture", uf.content_type).to_xml, {'suppress_content_length' => true}
+
+
+    #puts '=============@thesis_params============='
+    #puts thesis_params.inspect
+    #puts '=============@thesis_params============='
 
 
     @thesis = Thesis.new(thesis_params)
@@ -187,6 +206,19 @@ class ThesesController < ApplicationController
       end
     end
 
+    def get_workflow_client_thesis_xml_single_file(metadata_file, uploaded_file_name, uploaded_file_main, uploaded_file_storelocally, uploaded_file_mime)
+      builder = Nokogiri::XML::Builder.new do |xml|
+        xml['wf'].workflow('xmlns:wf' => 'http://dlib.york.ac.uk/workflow') {
+          xml['wf'].client(:scenarioid => Settings.thesis.scenarioid, :parent =>Settings.thesis.parentcollection, :submittedBy => Settings.thesis.submittedBy, :client => Settings.thesis.client, :stopOnError => Settings.thesis.stopOnError, :accesskey => Settings.thesis.accesskey) {
+            xml['wf'].file(:mime => 'text/xml', :id => 'DC', :file => metadata_file)
+
+            xml['wf'].file(:mime => uploaded_file_mime, :main => uploaded_file_main, :storelocally => uploaded_file_storelocally, :file => uploaded_file_name)
+          }
+        }
+      end
+    end
+
+
 
 
   private
@@ -197,6 +229,11 @@ class ThesesController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def thesis_params
-      params.require(:thesis).permit(:name, :title, :date, :abstract, :degreetype, :supervisor, :department, :subjectkeyword, :rightsholder, :licence)
+      params.require(:thesis).permit(:name, :title, :date, :abstract, :degreetype, :supervisor, :department, :subjectkeyword, :rightsholder, :licence, :uploaded_files)
+      #params.require(:thesis).permit!
     end
+
+    # def uploaded_file_params
+    #   params.require(:uploaded_file).permit(:file_uid, :title)
+    # end
 end

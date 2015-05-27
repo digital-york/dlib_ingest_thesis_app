@@ -1,6 +1,16 @@
 <p id="notice"><%= notice %></p>
 
 <p>
+  <strong>Uploaded files:</strong>
+  <%@thesis.uploaded_files.each do |f|%>
+     *<li><%= f %></li>
+  <%
+  end
+  %>
+</p>
+
+
+<p>
   <strong>Name:</strong>
   <%= @thesis.name %>
 </p>

@@ -13,6 +13,26 @@
   <% end %>
 
 <div class="form-group">
+
+  <div class="control-label col-xs-2 form-fields">
+    List of uploaded files
+  </div>
+  <div class="col-xs-10 form-fields">
+    <%= render @thesis.uploaded_files %>
+  </div>
+
+
+  <div class="control-label col-xs-2 form-fields">
+    <%= f.label "File upload" %>
+  </div>
+  <div class="col-xs-10 form-fields">
+    <%= f.file_field :uploaded_files, required: true, multiple: true, name: 'uploaded_files' %>
+  </div>
+
+  <br/>
+  <hr/>
+  <br/>
+
   <div class="control-label col-xs-2 form-fields">
    <%= f.label "Author's name" %>
   </div>
