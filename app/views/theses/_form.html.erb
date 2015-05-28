@@ -1,3 +1,10 @@
+<% content_for :javascript_includes do %>
+   <%= javascript_include_tag "form.js" %>
+<% end %>
+
+
+<div id="dropzone" class="fade">Drop files here</div>
+
 <%= form_for(@thesis) do |f| %>
 <div class="form-group">
   <% if @thesis.errors.any? %>
@@ -11,22 +18,32 @@
       </ul>
     </div>
   <% end %>
+</div>
 
 <div class="form-group">
-
-  <div class="control-label col-xs-2 form-fields">
-    List of uploaded files
-  </div>
-  <div class="col-xs-10 form-fields">
-    <%= render @thesis.uploaded_files %>
-  </div>
-
+  <!--<div class="control-label col-xs-2 form-fields">-->
+    <!--List of uploaded files-->
+  <!--</div>-->
 
   <div class="control-label col-xs-2 form-fields">
     <%= f.label "File upload" %>
   </div>
   <div class="col-xs-10 form-fields">
     <%= f.file_field :uploaded_files, required: true, multiple: true, name: 'uploaded_files' %>
+  </div>
+
+  <div class="progress-wrapper">
+    <p>Bitrate: <span class="bitrate"></span></p>
+    <div class="progress">
+      <div class="progress-bar" role="progressbar">
+        0%
+      </div>
+    </div>
+  </div>
+
+  <br/><h5>Uploaded files</h5>
+  <div class="col-xs-10 form-fields">
+    <%= render @thesis.uploaded_files %>
   </div>
 
   <br/>

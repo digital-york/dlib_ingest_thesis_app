@@ -13,5 +13,7 @@
 //= require jquery
 //= require jquery_ujs
 //= require turbolinks
-//= require_tree .
 //= require bootstrap
+//= require jquery.remotipart
+//= require jquery-fileupload/basic
+//= require_tree .
