@@ -12,14 +12,35 @@ default: &default
 development:
   <<: *default
   database: db/development.sqlite3
+  #adapter:  <%= ENV["development.database.adapter"] %>
+  #encoding: <%= ENV["development.database.encoding"] %>
+  #database: <%= ENV["development.database.database"] %>
+  #username: <%= ENV["development.database.username"] %>
+  #password: <%= ENV["development.database.password"] %>
+  #host:     <%= ENV["development.database.host"] %>
+  #port:     <%= ENV["development.database.port"] %>
 
 # Warning: The database defined as "test" will be erased and
 # re-generated from your development database when you run "rake".
 # Do not set this db to the same as development or production.
 test:
-  <<: *default
-  database: db/test.sqlite3
+  #<<: *default
+  #database: db/test.sqlite3
+  adapter:  <%= ENV["test.database.adapter"] %>
+  encoding: <%= ENV["test.database.encoding"] %>
+  database: <%= ENV["test.database.database"] %>
+  username: <%= ENV["test.database.username"] %>
+  password: <%= ENV["test.database.password"] %>
+  host:     <%= ENV["test.database.host"] %>
+  port:     <%= ENV["test.database.port"] %>
 
 production:
-  <<: *default
-  database: db/production.sqlite3
+  #<<: *default
+  #database: db/production.sqlite3
+  adapter:  <%= ENV["production.database.adapter"] %>
+  encoding: <%= ENV["production.database.encoding"] %>
+  database: <%= ENV["production.database.database"] %>
+  username: <%= ENV["production.database.username"] %>
+  password: <%= ENV["production.database.password"] %>
+  host:     <%= ENV["production.database.host"] %>
+  port:     <%= ENV["production.database.port"] %>

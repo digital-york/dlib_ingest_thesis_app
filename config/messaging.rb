@@ -8,5 +8,5 @@ ActiveMessaging::Gateway.define do |s|
   #s.processor_group :group1, :order_processor
   
   s.destination :thesis_message_processor, '/queue/ThesisMessageProcessor'
-  s.queue :workflow_queue, 'yodldev0.genericworkflow.messages'  
+  s.queue :workflow_queue, 'yodl.genericworkflow.messages'
 end

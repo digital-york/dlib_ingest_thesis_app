@@ -43,7 +43,6 @@ Rails.application.configure do
   config.action_mailer.smtp_settings = {
       address:   ENV['email.server'],
       port:      ENV['email.port'].to_i,
-      #domain : "york.ac.uk" , Do not need this
       authentication: ENV['email.authentication'],
       user_name: ENV['email.username'],
       password:  ENV['email.password'],
