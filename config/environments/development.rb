@@ -39,6 +39,9 @@ Rails.application.configure do
   # Raises error for missing translations
   # config.action_view.raise_on_missing_translations = true
 
+  # Config theses application in the subfolder /theses
+  config.action_controller.relative_url_root = "/theses"
+
   config.action_mailer.delivery_method = :smtp
   config.action_mailer.smtp_settings = {
       address:   ENV['email.server'],
