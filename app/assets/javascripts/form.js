@@ -46,9 +46,25 @@ $(document).ready(function() {
         progress_bar.width(0);
     });
 
+    //multiple_photos_form.on('fileuploadsubmit', function (e, data) {
+    //    data.formData = {'photo[author]': $('#photo_author').val()};
+    //});
     multiple_photos_form.on('fileuploadsubmit', function (e, data) {
-        data.formData = {'photo[author]': $('#photo_author').val()};
+        data.formData = {'thesis[name]':           $('#thesis_name').val(),
+            'thesis[title]':          $('#thesis_title').val(),
+            'thesis[date]':           $('#thesis_date').val(),
+            'thesis[abstract]':       $('#thesis_abstract').val(),
+            'thesis[degreetype]':     $('#thesis_degreetype').val(),
+            'thesis[supervisor]':     $('#thesis_supervisor').val(),
+            'thesis[department]':     $('#thesis_department').val(),
+            'thesis[subjectkeyword]': $('#thesis_subjectkeyword').val(),
+            'thesis[rightsholder]':   $('#thesis_rightsholder').val(),
+            'thesis[licence]':        $('#thesis_licence').val(),
+
+            'thesis[uploaded_files]': $('#thesis_uploaded_files').val()
+        };
     });
+
 
     multiple_photos_form.on('fileuploadprogressall', function (e, data) {
         bitrate.text((data.bitrate / 1024).toFixed(2) + 'Kb/s');

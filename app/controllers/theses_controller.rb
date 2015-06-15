@@ -40,7 +40,7 @@ class ThesesController < ApplicationController
       @thesis.department = self.current_user.department
     end
 
-    @uploaded_file = UploadedFile.new
+    # @uploaded_file = UploadedFile.new
 
   end
 
@@ -51,10 +51,6 @@ class ThesesController < ApplicationController
   # POST /theses
   # POST /theses.json
   def create
-
-    
-
-
     #@uploaded_file = UploadedFile.new(uploaded_file_params)
 
     metadata_file_path = '/var/tmp/' + SecureRandom.uuid + '.dc'
@@ -67,14 +63,27 @@ class ThesesController < ApplicationController
       f.write(get_workflow_client_thesis_xml(metadata_file_path).to_xml)
     end
 
-    uf = params[:uploaded_files]
+    #uf = params[:uploaded_files]
+    uf = thesis_params[:uploaded_files]
     puts '=============@thesis uploaded files============='
+    # puts uf.inspect
+    # puts uf.original_filename
+    # puts File.absolute_path(uf.tempfile)
+    # puts uf.content_type
+    # puts uf.headers
+
+    # unless uf.nil?
+    #   uf.each do |file|
+    #     puts file.inspect
+    #   end
+    # end
+
     puts uf.inspect
-    puts uf.original_filename
-    puts File.absolute_path(uf.tempfile)
-    puts uf.content_type
-    puts uf.headers
+
     puts '=============end of @thesis uploaded files============='
+
+
+
 
     #publish :'workflow_queue', get_workflow_client_thesis_xml(metadata_file_path).to_xml, {'suppress_content_length' => true}
     #publish :'workflow_queue', get_workflow_client_thesis_xml_single_file(metadata_file_path, File.absolute_path(uf.tempfile), "true", "ture", uf.content_type).to_xml, {'suppress_content_length' => true}

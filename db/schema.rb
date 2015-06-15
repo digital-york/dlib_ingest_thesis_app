@@ -38,6 +38,7 @@ ActiveRecord::Schema.define(version: 20150522141148) do
     t.string   "subjectkeyword"
     t.string   "rightsholder"
     t.string   "licence"
+    t.string   "uf_uid"
     t.datetime "created_at",     null: false
     t.datetime "updated_at",     null: false
   end
