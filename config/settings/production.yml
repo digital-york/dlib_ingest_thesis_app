@@ -5,6 +5,8 @@ thesis:
   client: ThesisClient
   stopOnError: false
   accesskey: <%= ENV['LIVE.WORKFLOW_API_KEY'] %>
+  tmpfilepath: /public/uploadedfiles/
+  tmpfileurl:  /uploadedfiles/
 image:
   scenarioid: 'York-Fedora-StillImage-Object'
 filestore:

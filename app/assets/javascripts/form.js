@@ -50,18 +50,21 @@ $(document).ready(function() {
     //    data.formData = {'photo[author]': $('#photo_author').val()};
     //});
     multiple_photos_form.on('fileuploadsubmit', function (e, data) {
-        data.formData = {'thesis[name]':           $('#thesis_name').val(),
-            'thesis[title]':          $('#thesis_title').val(),
-            'thesis[date]':           $('#thesis_date').val(),
-            'thesis[abstract]':       $('#thesis_abstract').val(),
-            'thesis[degreetype]':     $('#thesis_degreetype').val(),
-            'thesis[supervisor]':     $('#thesis_supervisor').val(),
-            'thesis[department]':     $('#thesis_department').val(),
-            'thesis[subjectkeyword]': $('#thesis_subjectkeyword').val(),
-            'thesis[rightsholder]':   $('#thesis_rightsholder').val(),
-            'thesis[licence]':        $('#thesis_licence').val(),
-
-            'thesis[uploaded_files]': $('#thesis_uploaded_files').val()
+        data.formData = {
+            //'thesis[name]':           $('#thesis_name').val(),
+            //'thesis[title]':          $('#thesis_title').val(),
+            //'thesis[date]':           $('#thesis_date').val(),
+            //'thesis[abstract]':       $('#thesis_abstract').val(),
+            //'thesis[degreetype]':     $('#thesis_degreetype').val(),
+            //'thesis[supervisor]':     $('#thesis_supervisor').val(),
+            //'thesis[department]':     $('#thesis_department').val(),
+            //'thesis[subjectkeyword]': $('#thesis_subjectkeyword').val(),
+            //'thesis[rightsholder]':   $('#thesis_rightsholder').val(),
+            //'thesis[licence]':        $('#thesis_licence').val(),
+            //
+            //'thesis[uploaded_files]': $('#thesis_uploaded_files').val()
+            'submission_type':   'upload',
+            'uploaded_files':   $('#thesis_uploaded_files').val()
         };
     });
 
@@ -76,12 +79,12 @@ $(document).ready(function() {
         dataType: 'script',
         dropZone: $('#dropzone'),
         add: function (e, data) {
-            types = /(\.|\/)(pdf|doc|docx|gif|jpe?g|png|bmp)$/i;
+            types = /(\.|\/)(pdf|doc|docx|jpe?g|png|zip)$/i;
             file = data.files[0];
             if (types.test(file.type) || types.test(file.name)) {
                 data.submit();
             }
-            else { alert(file.name + ": only PDF, DOC, DOCX, GIF, JPEG, BMP or PNG file allowed."); }
+            else { alert(file.name + ": only PDF, DOC, DOCX, JPEG, PNG, OR ZIP file allowed."); }
         }
     });
 

@@ -1,151 +1,155 @@
 <% content_for :javascript_includes do %>
-   <%= javascript_include_tag "form.js" %>
+    <%= javascript_include_tag "form.js" %>
 <% end %>
 
+
+<% if !@uploaded_files.nil? %>
+    <h3>Uploaded Files</h3>
+    <ul class="row" style="list-style-type: none;" id="photo-list">
+        <% @uploaded_files.each do |file| %>
+            <li class="col-xs-3">
+              <%= link_to image_tag(file.thumbnail, alt: file.title, class: 'img-thumbnail', size: '100x100'),
+                          file.thumbnail, target: '_blank'%>
+              <p><%=file.title %></p>
+            </li>
+        <% end %>
+    </ul>
+<% end %>
 
 <div id="dropzone" class="fade">Drop files here</div>
 
 <%= form_for(@thesis) do |f| %>
-<div class="form-group">
-  <% if @thesis.errors.any? %>
-    <div id="error_explanation">
-      <h2><%= pluralize(@thesis.errors.count, "error") %> prohibited this thesis from being saved:</h2>
+    <div class="form-group">
+      <% if @thesis.errors.any? %>
+          <div id="error_explanation">
+            <h2><%= pluralize(@thesis.errors.count, "error") %> prohibited this thesis from being saved:</h2>
 
-      <ul>
-      <% @thesis.errors.full_messages.each do |message| %>
-        <li><%= message %></li>
+            <ul>
+              <% @thesis.errors.full_messages.each do |message| %>
+                  <li><%= message %></li>
+              <% end %>
+            </ul>
+          </div>
       <% end %>
-      </ul>
     </div>
-  <% end %>
-</div>
 
-<div class="form-group">
-  <!--<div class="control-label col-xs-2 form-fields">-->
-    <!--List of uploaded files-->
-  <!--</div>-->
+    <div class="form-group">
+      <!--<div class="control-label col-xs-2 form-fields">-->
+      <!--List of uploaded files-->
+      <!--</div>-->
 
-  <div class="control-label col-xs-2 form-fields">
-    <%= f.label "File upload" %>
-  </div>
-  <div class="col-xs-10 form-fields">
-    <%= f.file_field :uploaded_files, required: true, multiple: true, name: 'thesis[uploaded_files]' %>
-  </div>
-
-  <div class="progress-wrapper">
-    <p>Bitrate: <span class="bitrate"></span></p>
-    <div class="progress">
-      <div class="progress-bar" role="progressbar">
-        0%
+      <div class="control-label col-xs-2 form-fields">
+        <%= f.label "File upload" %>
       </div>
-    </div>
-  </div>
+      <div class="col-xs-10 form-fields">
+        <%= f.file_field :uploaded_files, required: true, multiple: true, name: 'uploaded_files' %>
+      </div>
 
-  <br/><h5>Uploaded files</h5>
-  <div class="col-xs-10 form-fields">
-    <%= render @thesis.uploaded_files %>
-  </div>
+      <div class="progress-wrapper">
+        <p>Bitrate: <span class="bitrate"></span></p>
+        <div class="progress">
+          <div class="progress-bar" role="progressbar">
+            0%
+          </div>
+        </div>
+      </div>
 
-  <br/>
-  <hr/>
-  <br/>
+      <div class="control-label col-xs-2 form-fields">
+        <%= f.label "Author's name" %>
+      </div>
+      <div class="col-xs-10 form-fields">
+        <%= f.text_field :name, :size=>"80", placeholder: "Author's name" %>
+      </div>
 
-  <div class="control-label col-xs-2 form-fields">
-   <%= f.label "Author's name" %>
-  </div>
-  <div class="col-xs-10 form-fields">
-    <%= f.text_field :name, :size=>"80", placeholder: "Author's name" %>
-  </div>
+      <div class="control-label col-xs-2 form-fields">
+        <%= f.label "Dissertation title" %>
+      </div>
+      <div class="col-xs-10 form-fields">
+        <%= f.text_field :title, :size=>"80", placeholder: "Dissertation title"  %>
+      </div>
 
-  <div class="control-label col-xs-2 form-fields">
-    <%= f.label "Dissertation title" %>
-  </div>
-  <div class="col-xs-10 form-fields">
-    <%= f.text_field :title, :size=>"80", placeholder: "Dissertation title"  %>
-  </div>
+      <div class="control-label col-xs-2 form-fields">
+        <%= f.label :date %>
+      </div>
+      <div class="col-xs-10 form-fields">
+        <%= f.collection_select :date, @years, :to_s, :to_s, include_blank: false %>
+      </div>
+      <br/>
 
-  <div class="control-label col-xs-2 form-fields">
-    <%= f.label :date %>
-  </div>
-  <div class="col-xs-10 form-fields">
-    <%= f.collection_select :date, @years, :to_s, :to_s, include_blank: false %>
-  </div>
-  <br/>
+      <div class="control-label col-xs-2 big-form-fields">
+        <%= f.label :abstract %>
+      </div>
+      <div class="col-xs-10 big-form-fields">
+        <%= f.text_area :abstract, :size => "80x5", placeholder: "Abstract" %>
+      </div>
+      <br/>
 
-  <div class="control-label col-xs-2 big-form-fields">
-    <%= f.label :abstract %>
-  </div>
-  <div class="col-xs-10 big-form-fields">
-    <%= f.text_area :abstract, :size => "80x5", placeholder: "Abstract" %>
-  </div>
-  <br/>
+      <div class="control-label col-xs-2 form-fields">
+        <%= f.label "Degree type"  %>
+      </div>
+      <div class="col-xs-10 form-fields">
+        <%= f.collection_select :degreetype, @degree_types, :to_s, :to_s, include_blank: false %>
+      </div>
+      <br/>
 
-  <div class="control-label col-xs-2 form-fields">
-    <%= f.label "Degree type"  %>
-  </div>
-  <div class="col-xs-10 form-fields">
-    <%= f.collection_select :degreetype, @degree_types, :to_s, :to_s, include_blank: false %>
-  </div>
-  <br/>
+      <div class="control-label col-xs-2 form-fields">
+        <%= f.label "Degree supervisor" %>
+      </div>
+      <div class="col-xs-10 form-fields">
+        <%= f.text_field :supervisor, :size=>"80", placeholder: "Degree supervisor" %>
+      </div>
+      <br/>
 
-  <div class="control-label col-xs-2 form-fields">
-    <%= f.label "Degree supervisor" %>
-  </div>
-  <div class="col-xs-10 form-fields">
-    <%= f.text_field :supervisor, :size=>"80", placeholder: "Degree supervisor" %>
-  </div>
-  <br/>
+      <div class="control-label col-xs-2 form-fields">
+        <%= f.label :department %>
+      </div>
+      <div class="col-xs-10 form-fields">
+        <%= f.collection_select :department, @departments, :to_s, :to_s, include_blank: false %>
+      </div>
+      <br/>
 
-  <div class="control-label col-xs-2 form-fields">
-    <%= f.label :department %>
-  </div>
-  <div class="col-xs-10 form-fields">
-    <%= f.collection_select :department, @departments, :to_s, :to_s, include_blank: false %>
-  </div>
-  <br/>
+      <div class="control-label col-xs-2 form-fields">
+        <%= f.label "Subject keyword" %>
+      </div>
+      <div class="col-xs-10 form-fields">
+        <%= f.text_field :subjectkeyword, :size=>"80", placeholder: "Subject keyword" %>
+      </div>
+      <br/>
 
-  <div class="control-label col-xs-2 form-fields">
-    <%= f.label "Subject keyword" %>
-  </div>
-  <div class="col-xs-10 form-fields">
-    <%= f.text_field :subjectkeyword, :size=>"80", placeholder: "Subject keyword" %>
-  </div>
-  <br/>
+      <div class="control-label col-xs-2 form-fields">
+        <%= f.label "Rights holder" %>
+      </div>
+      <div class="col-xs-10 form-fields">
+        <%= f.text_field :rightsholder, :size=>"80", placeholder: "Rights holder" %>
+      </div>
+      <br/>
 
-  <div class="control-label col-xs-2 form-fields">
-    <%= f.label "Rights holder" %>
-  </div>
-  <div class="col-xs-10 form-fields">
-    <%= f.text_field :rightsholder, :size=>"80", placeholder: "Rights holder" %>
-  </div>
-  <br/>
-
-  <div class="control-label col-xs-2 form-fields">
-    <%= f.label :licence %>
-  </div>
-  <div class="col-xs-10 medium-form-fields">
-    <% first_time = true %>
-    <% @licences.each do |licence| %>
-        <% if first_time == true %>
-          <%= radio_button_tag 'licence', licence[0], true %>
-          <% first_time = false %>
-        <% else %>
-          <%= radio_button_tag 'licence', licence[0], false %>
+      <div class="control-label col-xs-2 form-fields">
+        <%= f.label :licence %>
+      </div>
+      <div class="col-xs-10 medium-form-fields">
+        <% first_time = true %>
+        <% @licences.each do |licence| %>
+            <% if first_time == true %>
+                <%= radio_button_tag 'licence', licence[0], true %>
+                <% first_time = false %>
+            <% else %>
+                <%= radio_button_tag 'licence', licence[0], false %>
+            <% end %>
+            <%= licence[1] %><br/>
         <% end %>
-      <%= licence[1] %><br/>
-    <% end %>
-  </div>
-  <br/>
-  <br/>
-  <br/>
-  <br/>
-  <div class="form-fields">
-  </div>
+      </div>
+      <br/>
+      <br/>
+      <br/>
+      <br/>
+      <div class="form-fields">
+      </div>
 
-  <div class="col-xs-offset-2 col-xs-10 form-fields">
-    <%= f.submit "Submit Thesis", :class => 'btn btn-primary' %>
-  </div>
-  <br/>
-</div>
+      <div class="col-xs-offset-2 col-xs-10 form-fields">
+        <%= f.submit "Submit Thesis", :class => 'btn btn-primary' %>
+      </div>
+      <br/>
+    </div>
 
 <% end %>

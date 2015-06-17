@@ -2,6 +2,7 @@ require 'nokogiri'
 require 'nokogiri-pretty'
 
 require 'dotenv'
+require 'fileutils'
 
 require 'activemessaging'
 include ActiveMessaging::MessageSender
@@ -14,6 +15,8 @@ class ThesesController < ApplicationController
   def index
     #Dotenv.load
     @theses = Thesis.all
+
+    @uploaded_files = UploadedFile.all
   end
 
   # GET /theses/1
@@ -23,6 +26,9 @@ class ThesesController < ApplicationController
 
   # GET /theses/new
   def new
+    owner = 'admin'
+    @uploaded_file = UploadedFile.new
+
     @thesis = Thesis.new
     if self.current_user!=nil and self.current_user.surname!=nil and self.current_user.givenname!=nil
         @thesis.name = self.current_user.surname + ', ' + self.current_user.givenname
@@ -40,7 +46,24 @@ class ThesesController < ApplicationController
       @thesis.department = self.current_user.department
     end
 
+    if self.current_user!=nil and self.current_user.department!=nil
+      owner = current_user.login
+    end
+
     # @uploaded_file = UploadedFile.new
+    @uploaded_files = UploadedFile.where("owner='"+owner+"'")
+    puts "@uploaded_files"
+
+    # puts "----------@uploaded_files------------"
+    # puts @uploaded_files.inspect
+    # @uploaded_files.each do |file|
+    #   puts "owner: "
+    #   puts file.owner
+    #   puts "original name: "
+    #   puts file.original_name
+    # end
+    # puts "----------------------"
+    # puts "END of @uploaded_files"
 
   end
 
@@ -51,67 +74,171 @@ class ThesesController < ApplicationController
   # POST /theses
   # POST /theses.json
   def create
-    #@uploaded_file = UploadedFile.new(uploaded_file_params)
+    submission_type    = params[:submission_type]
+    default_thumbnails = Settings.thesis.thumbnails.default_icons.to_hash
 
-    metadata_file_path = '/var/tmp/' + SecureRandom.uuid + '.dc'
-    File.open(metadata_file_path, "w+") do |f|
-      f.write(add_bioler_plate_fields(get_thesis_xml.to_xml))
-    end
+    if 'upload' == submission_type
+      #@uploaded_file = UploadedFile.new(uploaded_file_params)
+      uf = params[:uploaded_files]
+      # puts '=============@thesis uploaded files (ONLY)============='
+      s = uf.inspect
+      start_index = s.index('UploadedFile:')+'UploadedFile:'.length
+      end_index   = start_index + 16
 
-    wf_client_file_path = '/var/tmp/' + SecureRandom.uuid + '.wf.client'
-    File.open(wf_client_file_path, "w+") do |f|
-      f.write(get_workflow_client_thesis_xml(metadata_file_path).to_xml)
-    end
+      uf_uid = s[start_index..end_index].strip
+      puts "uf_uid: "
+      puts uf_uid
+      # puts uf.original_filename
+      # puts File.absolute_path(uf.tempfile)
+      # puts uf.content_type
+      # puts uf.headers
 
-    #uf = params[:uploaded_files]
-    uf = thesis_params[:uploaded_files]
-    puts '=============@thesis uploaded files============='
-    # puts uf.inspect
-    # puts uf.original_filename
-    # puts File.absolute_path(uf.tempfile)
-    # puts uf.content_type
-    # puts uf.headers
+      respond_to do |format|
+        owner = 'admin'
+        if self.current_user!=nil and self.current_user.department!=nil
+          owner = current_user.login
+        end
 
-    # unless uf.nil?
-    #   uf.each do |file|
-    #     puts file.inspect
-    #   end
-    # end
+        filepath   = Rails.root.to_s + Settings.thesis.tmpfilepath
+        tmpfileurl = Settings.thesis.tmpfileurl
+        if !dir_exist?(filepath)
+          Dir.mkdir filepath
+        end
+        fulltmpfilename = File.absolute_path(uf.tempfile).to_s
+        tmpfilename     = fulltmpfilename[(fulltmpfilename.rindex('/')+1)..-1].downcase
+        puts '-------------info--------------'
+        puts filepath
+        puts tmpfilename
+        FileUtils.mv(fulltmpfilename, filepath + tmpfilename)
 
-    puts uf.inspect
+        thumbnail = 'nothumbnail.png'
+        puts 'default_thumbnails.inspect'
+        puts default_thumbnails.inspect
 
-    puts '=============end of @thesis uploaded files============='
+        if tmpfilename.end_with? 'pdf'
+          thumbnail = default_thumbnails['pdf'.to_sym]
+        elsif tmpfilename.end_with? 'doc'
+          thumbnail = default_thumbnails['doc'.to_sym]
+        elsif tmpfilename.end_with? 'docx'
+          thumbnail = default_thumbnails['docx'.to_sym]
+        elsif tmpfilename.end_with? 'zip'
+          thumbnail = default_thumbnails['zip'.to_sym]
+        elsif (tmpfilename.end_with? 'jpg') || (tmpfilename.end_with? 'jpeg') || (tmpfilename.end_with? 'png')
+          puts 'Generating thumbnail'
+          thumbnail = tmpfilename + Settings.thesis.thumbnails.fileextension.to_s
+          cmd = 'convert -resize x100 ' + filepath + tmpfilename + ' ' + filepath + thumbnail
+          thumbnail = tmpfileurl + thumbnail
+          puts cmd
+          system(cmd)
+        else
+          thumbnail = default_thumbnails['nothum'.to_sym]
+        end
+        puts 'thumbnail'
+        puts thumbnail
 
+        t = Time.new
+        newfile = UploadedFile.new(uf_uid: uf_uid,
+                                   uf_name: uf.original_filename,
+                                   title: uf.original_filename,
+                                   original_name: uf.original_filename,
+                                   #tmp_name: File.absolute_path(uf.tempfile),
+                                   tmp_name: filepath + tmpfilename,
+                                   content_type: uf.content_type,
+                                   thumbnail: thumbnail,
+                                   owner: owner,
+                                   created_at: t,
+                                   updated_at: t)
+        newfile.save
+        #Rails.logger.info(newfile.errors.inspect)
+        # @uploaded_files = UploadedFile.where("owner='"+owner+"'")
+        # puts "@uploaded_files"
+        # puts "----------------------"
+        # puts @uploaded_files.inspect
+        # puts "----------------------"
+        # puts "END of @uploaded_files"
 
+        @thesis = Thesis.new
+        if self.current_user!=nil and self.current_user.surname!=nil and self.current_user.givenname!=nil
+          @thesis.name = self.current_user.surname + ', ' + self.current_user.givenname
+        end
 
+        @years        = Time.now.year.step(1960, -1)
+        @thesis.date  = Time.now.year
 
-    #publish :'workflow_queue', get_workflow_client_thesis_xml(metadata_file_path).to_xml, {'suppress_content_length' => true}
-    #publish :'workflow_queue', get_workflow_client_thesis_xml_single_file(metadata_file_path, File.absolute_path(uf.tempfile), "true", "ture", uf.content_type).to_xml, {'suppress_content_length' => true}
+        @degree_types = Settings.thesis.degreetype.to_hash.values
+        @departments  = Settings.thesis.ldap.department.to_hash.values
+        #@licences     = Settings.thesis.licencetype.to_hash.invert
+        @licences     = Settings.thesis.licencetype.to_hash
 
-    #puts '=============workflow client xml============='
-    #puts get_workflow_client_thesis_xml_single_file(metadata_file_path, File.absolute_path(uf.tempfile), "true", "ture", uf.content_type).to_xml
-    #puts '=============end of wf client xml============='
+        if self.current_user!=nil and self.current_user.department!=nil
+          @thesis.department = self.current_user.department
+        end
 
-    puts '=============@thesis_params============='
-    puts thesis_params.inspect
-    puts '=============@thesis_params============='
-
-
-    @thesis = Thesis.new(thesis_params)
-
-    if self.current_user!=nil and self.current_user.email!=nil
-      ThesisMailer.submitted(self.current_user.email).deliver
-    end
-
-    respond_to do |format|
-      if @thesis.save
-        format.html { redirect_to @thesis, notice: 'Thesis was successfully created.' }
-        format.json { render :show, status: :created, location: @thesis }
-      else
         format.html { render :new }
-        format.json { render json: @thesis.errors, status: :unprocessable_entity }
+        # format.json { render json: @thesis.errors, status: :unprocessable_entity }
+      end
+    elsif 'submit' == submission_type # processing metadata submission
+      metadata_file_path = '/var/tmp/' + SecureRandom.uuid + '.dc'
+      File.open(metadata_file_path, "w+") do |f|
+        f.write(add_bioler_plate_fields(get_thesis_xml.to_xml))
+      end
+
+      wf_client_file_path = '/var/tmp/' + SecureRandom.uuid + '.wf.client'
+      File.open(wf_client_file_path, "w+") do |f|
+        f.write(get_workflow_client_thesis_xml(metadata_file_path).to_xml)
+      end
+
+      #uf = params[:uploaded_files]
+      uf = thesis_params[:uploaded_files]
+      puts '=============@thesis uploaded files============='
+      # puts uf.inspect
+      # puts uf.original_filename
+      # puts File.absolute_path(uf.tempfile)
+      # puts uf.content_type
+      # puts uf.headers
+
+      # unless uf.nil?
+      #   uf.each do |file|
+      #     puts file.inspect
+      #   end
+      # end
+
+      puts uf.inspect
+
+      puts '=============end of @thesis uploaded files============='
+
+
+
+
+      #publish :'workflow_queue', get_workflow_client_thesis_xml(metadata_file_path).to_xml, {'suppress_content_length' => true}
+      #publish :'workflow_queue', get_workflow_client_thesis_xml_single_file(metadata_file_path, File.absolute_path(uf.tempfile), "true", "ture", uf.content_type).to_xml, {'suppress_content_length' => true}
+
+      #puts '=============workflow client xml============='
+      #puts get_workflow_client_thesis_xml_single_file(metadata_file_path, File.absolute_path(uf.tempfile), "true", "ture", uf.content_type).to_xml
+      #puts '=============end of wf client xml============='
+
+      puts '=============@thesis_params============='
+      puts thesis_params.inspect
+      puts '=============@thesis_params============='
+
+
+      @thesis = Thesis.new(thesis_params)
+
+      if self.current_user!=nil and self.current_user.email!=nil
+        ThesisMailer.submitted(self.current_user.email).deliver
+      end
+
+      respond_to do |format|
+        if @thesis.save
+          format.html { redirect_to @thesis, notice: 'Thesis was successfully created.' }
+          format.json { render :show, status: :created, location: @thesis }
+        else
+          format.html { render :new }
+          format.json { render json: @thesis.errors, status: :unprocessable_entity }
+        end
       end
     end
+
   end
 
   # PATCH/PUT /theses/1
@@ -245,11 +372,15 @@ class ThesesController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def thesis_params
-      params.require(:thesis).permit(:name, :title, :date, :abstract, :degreetype, :supervisor, :department, :subjectkeyword, :rightsholder, :licence, :uploaded_files)
+      params.require(:thesis).permit(:name, :title, :date, :abstract, :degreetype, :supervisor, :department, :subjectkeyword, :rightsholder, :licence)
       #params.require(:thesis).permit!
     end
 
-    # def uploaded_file_params
-    #   params.require(:uploaded_file).permit(:file_uid, :title)
-    # end
+    def uploaded_file_params
+      params.permit(:file_uid, :title, :original_name, :tmp_name, :content_type, :owner)
+    end
+
+    def dir_exist?(directory)
+      File.directory?(directory)
+    end
 end
