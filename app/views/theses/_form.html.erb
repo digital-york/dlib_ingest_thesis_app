@@ -2,19 +2,23 @@
     <%= javascript_include_tag "form.js" %>
 <% end %>
 
-
-<% if !@uploaded_files.nil? %>
+<% if !@uploaded_files.nil? && @uploaded_files.length >0 %>
     <h3>Uploaded Files</h3>
-    <ul class="row" style="list-style-type: none;" id="photo-list">
-        <% @uploaded_files.each do |file| %>
-            <li class="col-xs-3">
-              <%= link_to image_tag(file.thumbnail, alt: file.title, class: 'img-thumbnail', size: '100x100'),
-                          file.thumbnail, target: '_blank'%>
-              <p><%=file.title %></p>
-            </li>
-        <% end %>
-    </ul>
 <% end %>
+
+<ul class="row" style="list-style-type: none;" id="photos-list">
+    <% if !@uploaded_files.nil? && @uploaded_files.length >0 %>
+      <% @uploaded_files.each do |file| %>
+          <li class="col-xs-3">
+            <%= link_to image_tag(file.thumbnail, alt: file.title, class: 'img-thumbnail', size: '100x100'),
+                        file.thumbnail, target: '_blank'%>
+            <% if file.title.present? %>
+                <p><%=file.title %></p>
+            <% end %>
+          </li>
+      <% end %>
+    <% end %>
+</ul>
 
 <div id="dropzone" class="fade">Drop files here</div>
 

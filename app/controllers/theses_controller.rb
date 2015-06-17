@@ -27,7 +27,7 @@ class ThesesController < ApplicationController
   # GET /theses/new
   def new
     owner = 'admin'
-    @uploaded_file = UploadedFile.new
+    #@uploaded_file = UploadedFile.new
 
     @thesis = Thesis.new
     if self.current_user!=nil and self.current_user.surname!=nil and self.current_user.givenname!=nil
@@ -50,9 +50,12 @@ class ThesesController < ApplicationController
       owner = current_user.login
     end
 
-    # @uploaded_file = UploadedFile.new
+    # @uploaded_files = UploadedFile.new
     @uploaded_files = UploadedFile.where("owner='"+owner+"'")
-    puts "@uploaded_files"
+    #if !@uploaded_files.nil?
+    #  @uploaded_file = @uploaded_files.first
+    #end
+    #puts "@uploaded_files"
 
     # puts "----------@uploaded_files------------"
     # puts @uploaded_files.inspect
@@ -78,7 +81,7 @@ class ThesesController < ApplicationController
     default_thumbnails = Settings.thesis.thumbnails.default_icons.to_hash
 
     if 'upload' == submission_type
-      #@uploaded_file = UploadedFile.new(uploaded_file_params)
+      #@uploaded_files = UploadedFile.new(uploaded_file_params)
       uf = params[:uploaded_files]
       # puts '=============@thesis uploaded files (ONLY)============='
       s = uf.inspect
@@ -106,14 +109,9 @@ class ThesesController < ApplicationController
         end
         fulltmpfilename = File.absolute_path(uf.tempfile).to_s
         tmpfilename     = fulltmpfilename[(fulltmpfilename.rindex('/')+1)..-1].downcase
-        puts '-------------info--------------'
-        puts filepath
-        puts tmpfilename
         FileUtils.mv(fulltmpfilename, filepath + tmpfilename)
 
         thumbnail = 'nothumbnail.png'
-        puts 'default_thumbnails.inspect'
-        puts default_thumbnails.inspect
 
         if tmpfilename.end_with? 'pdf'
           thumbnail = default_thumbnails['pdf'.to_sym]
@@ -128,16 +126,16 @@ class ThesesController < ApplicationController
           thumbnail = tmpfilename + Settings.thesis.thumbnails.fileextension.to_s
           cmd = 'convert -resize x100 ' + filepath + tmpfilename + ' ' + filepath + thumbnail
           thumbnail = tmpfileurl + thumbnail
-          puts cmd
+          #puts cmd
           system(cmd)
         else
           thumbnail = default_thumbnails['nothum'.to_sym]
         end
-        puts 'thumbnail'
-        puts thumbnail
+        # puts 'thumbnail'
+        # puts thumbnail
 
         t = Time.new
-        newfile = UploadedFile.new(uf_uid: uf_uid,
+        @uploaded_file = UploadedFile.new(uf_uid: uf_uid,
                                    uf_name: uf.original_filename,
                                    title: uf.original_filename,
                                    original_name: uf.original_filename,
@@ -148,7 +146,7 @@ class ThesesController < ApplicationController
                                    owner: owner,
                                    created_at: t,
                                    updated_at: t)
-        newfile.save
+        @uploaded_file.save
         #Rails.logger.info(newfile.errors.inspect)
         # @uploaded_files = UploadedFile.where("owner='"+owner+"'")
         # puts "@uploaded_files"
@@ -174,8 +172,10 @@ class ThesesController < ApplicationController
           @thesis.department = self.current_user.department
         end
 
-        format.html { render :new }
+        #format.html { render :new }
         # format.json { render json: @thesis.errors, status: :unprocessable_entity }
+        format.html {redirect_to new_theses_path}
+        format.js
       end
     elsif 'submit' == submission_type # processing metadata submission
       metadata_file_path = '/var/tmp/' + SecureRandom.uuid + '.dc'
