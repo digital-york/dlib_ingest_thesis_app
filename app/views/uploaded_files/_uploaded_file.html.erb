@@ -1,7 +1,16 @@
 <li class="col-xs-3">
-  <%= link_to image_tag(@uploaded_file.thumbnail, alt: @uploaded_file.title, class: 'img-thumbnail', size: '100x100'),
-              @uploaded_file.thumbnail, target: '_blank'%>
-  <% if @uploaded_file.title.present? %>
-     <p><%=@uploaded_file.title %></p>
-  <% end %>
+  <div class="fileview">
+    <div class="imagewrapper">
+      <%= link_to image_tag(@uploaded_file.thumbnail, alt: @uploaded_file.title, class: 'img-thumbnail', size: '100x100'),
+                  @uploaded_file.thumbnail, target: '_blank'%>
+    </div>
+    <div class="imagetitle">
+      <% if @uploaded_file.title.present? %>
+          <%=@uploaded_file.title %>
+      <% end %>
+    </div>
+    <div class="imagedel">
+      <%= image_tag("remove.gif", alt: "Delete", size: '16x16')%>
+    </div>
+  </div>
 </li>
