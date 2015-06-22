@@ -1,6 +1,7 @@
 // javascript code for submission form
 $(document).ready(function() {
     var multiple_photos_form = $('#new_thesis');
+    var submit_btn           = $('#btnSubmit');
     var wrapper      = multiple_photos_form.find('.progress-wrapper');
     var bitrate      = wrapper.find('.bitrate');
     var progress_bar = wrapper.find('.progress-bar');
@@ -56,7 +57,7 @@ $(document).ready(function() {
             //'thesis[date]':           $('#thesis_date').val(),
             //'thesis[abstract]':       $('#thesis_abstract').val(),
             //'thesis[degreetype]':     $('#thesis_degreetype').val(),
-            //'thesis[supervisor]':     $('#thesis_supervisor').val(),
+            //'thesis[supervisorfiledo]':     $('#thesis_supervisor').val(),
             //'thesis[department]':     $('#thesis_department').val(),
             //'thesis[subjectkeyword]': $('#thesis_subjectkeyword').val(),
             //'thesis[rightsholder]':   $('#thesis_rightsholder').val(),
@@ -67,7 +68,6 @@ $(document).ready(function() {
             'uploaded_files':   $('#thesis_uploaded_files').val()
         };
     });
-
 
     multiple_photos_form.on('fileuploadprogressall', function (e, data) {
         bitrate.text((data.bitrate / 1024).toFixed(2) + 'Kb/s');
@@ -86,6 +86,46 @@ $(document).ready(function() {
             }
             else { alert(file.name + ": only PDF, DOC, DOCX, JPEG, PNG, OR ZIP file allowed."); }
         }
+    });
+
+    submit_btn.on('click', function (e, data) {
+        alert('Submitting...');
+        //data.formData = {
+        //    'thesis[name]':             $('#thesis_name').val(),
+        //    'thesis[title]':            $('#thesis_title').val(),
+        //    'thesis[date]':             $('#thesis_date').val(),
+        //    'thesis[abstract]':         $('#thesis_abstract').val(),
+        //    'thesis[degreetype]':       $('#thesis_degreetype').val(),
+        //    'thesis[supervisor]': $('#thesis_supervisor').val(),
+        //    'thesis[department]':       $('#thesis_department').val(),
+        //    'thesis[subjectkeyword]':   $('#thesis_subjectkeyword').val(),
+        //    'thesis[rightsholder]':     $('#thesis_rightsholder').val(),
+        //    'thesis[licence]':          $('#thesis_licence').val(),
+        //
+        //    'submission_type':        'submit'
+        //};
+
+        $.ajax({
+                url: "/theses",
+                type: "POST",
+                data: {thesis: {
+                                 name:            $('#thesis_name').val(),
+                                 title:            $('#thesis_title').val(),
+                                 date:            $('#thesis_date').val(),
+                                 abstract:        $('#thesis_abstract').val(),
+                                 degreetype:      $('#thesis_degreetype').val(),
+                                 supervisor:      $('#thesis_supervisor').val(),
+                                 department:      $('#thesis_department').val(),
+                                 subjectkeyword:  $('#thesis_subjectkeyword').val(),
+                                 rightsholder:    $('#thesis_rightsholder').val(),
+                                 licence:         $('#thesis_licence').val()
+                               },
+                        submission_type: 'submit'
+                      },
+                success: function(resp){
+
+                }
+        });
     });
 
 });

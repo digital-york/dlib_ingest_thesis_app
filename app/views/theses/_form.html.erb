@@ -21,8 +21,8 @@
                     <% end %>
                 </div>
                 <div class="imagedel">
-                    <%= image_tag("remove.gif", alt: "Delete", size: '16x16')%>
-                  **<%=file.uf_uid %>**
+
+                  <%= link_to 'Delete', file, method: :delete, data: {confirm: 'Are you sure?'}, :remote => true, :class => 'delete_file', :id => 'delete'+file.id.to_s %>
 
                 </div>
             </div>
@@ -162,7 +162,7 @@
       </div>
 
       <div class="col-xs-offset-2 col-xs-10 form-fields">
-        <%= f.submit "Submit Thesis", :class => 'btn btn-primary' %>
+        <%= f.label "Submit Thesis", :id => 'btnSubmit', :class => 'btn btn-primary' %>
       </div>
       <br/>
     </div>

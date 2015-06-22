@@ -9,8 +9,9 @@
           <%=@uploaded_file.title %>
       <% end %>
     </div>
+
     <div class="imagedel">
-      <%= image_tag("remove.gif", alt: "Delete", size: '16x16')%>
+      <%= link_to 'Delete', @uploaded_file, method: :delete, data: {confirm: 'Are you sure?'}, :remote => true, :class => 'delete_file', :id => 'delete'+@uploaded_file.id.to_s %>
     </div>
   </div>
 </li>

@@ -22,6 +22,7 @@ class ThesesController < ApplicationController
   # GET /theses/1
   # GET /theses/1.json
   def show
+
   end
 
   # GET /theses/new
@@ -109,7 +110,10 @@ class ThesesController < ApplicationController
         end
         fulltmpfilename = File.absolute_path(uf.tempfile).to_s
         tmpfilename     = fulltmpfilename[(fulltmpfilename.rindex('/')+1)..-1].downcase
-        FileUtils.mv(fulltmpfilename, filepath + tmpfilename)
+        puts "Moving file: "
+        puts fulltmpfilename
+        puts filepath + tmpfilename
+        FileUtils.copy(fulltmpfilename, filepath + tmpfilename)
 
         thumbnail = 'nothumbnail.png'
 
@@ -178,6 +182,9 @@ class ThesesController < ApplicationController
         format.js
       end
     elsif 'submit' == submission_type # processing metadata submission
+      puts "Received post request: submit"
+      puts "-------------------------"
+      puts get_thesis_xml.to_xml
       metadata_file_path = '/var/tmp/' + SecureRandom.uuid + '.dc'
       File.open(metadata_file_path, "w+") do |f|
         f.write(add_bioler_plate_fields(get_thesis_xml.to_xml))
@@ -185,11 +192,11 @@ class ThesesController < ApplicationController
 
       wf_client_file_path = '/var/tmp/' + SecureRandom.uuid + '.wf.client'
       File.open(wf_client_file_path, "w+") do |f|
-        f.write(get_workflow_client_thesis_xml(metadata_file_path).to_xml)
+        f.write(get_workflow_client_thesis_xml_multi_files_from_db(metadata_file_path).to_xml)
       end
 
       #uf = params[:uploaded_files]
-      uf = thesis_params[:uploaded_files]
+      #uf = thesis_params[:uploaded_files]
       puts '=============@thesis uploaded files============='
       # puts uf.inspect
       # puts uf.original_filename
@@ -362,6 +369,28 @@ class ThesesController < ApplicationController
     end
 
 
+    def get_workflow_client_thesis_xml_multi_files_from_db(metadata_file)
+      owner = 'admin'
+      if self.current_user!=nil and self.current_user.department!=nil
+        owner = current_user.login
+      end
+
+      builder = Nokogiri::XML::Builder.new do |xml|
+        xml['wf'].workflow('xmlns:wf' => 'http://dlib.york.ac.uk/workflow') {
+          xml['wf'].client(:scenarioid => Settings.thesis.scenarioid, :parent =>Settings.thesis.parentcollection, :submittedBy => Settings.thesis.submittedBy, :client => Settings.thesis.client, :stopOnError => Settings.thesis.stopOnError, :accesskey => Settings.thesis.accesskey) {
+            xml['wf'].file(:mime => 'text/xml', :id => 'DC', :file => metadata_file)
+
+            files = UploadedFile.where("owner=?", owner)
+
+            if !files.nil?
+              files.each do |f|
+                xml['wf'].file(:mime => f.content_type, :main => "false", :storelocally => "true", :file => f.tmp_name)
+              end
+            end
+          }
+        }
+      end
+    end
 
 
   private

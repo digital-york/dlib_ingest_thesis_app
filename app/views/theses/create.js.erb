@@ -1,5 +1,9 @@
-<% if @uploaded_file.new_record? %>
-    alert('The file(s) could not be uploaded: <%= j @uploaded_file.errors.full_messages.join(', ').html_safe %>');
-<% else %>
-    $('#files-list').prepend('<%= j render @uploaded_file %>');
+<% if !@uploaded_file.nil? %>
+
+    <% if @uploaded_file.new_record? %>
+        alert('The file(s) could not be uploaded: <%= j @uploaded_file.errors.full_messages.join(', ').html_safe %>');
+    <% else %>
+        $('#files-list').prepend('<%= j render @uploaded_file %>');
+    <% end %>
+
 <% end %>

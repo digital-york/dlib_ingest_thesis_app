@@ -1,16 +1,6 @@
 <p id="notice"><%= notice %></p>
 
 <p>
-  <strong>Uploaded files:</strong>
-  <%@thesis.uploaded_files.each do |f|%>
-     *<li><%= f %></li>
-  <%
-  end
-  %>
-</p>
-
-
-<p>
   <strong>Name:</strong>
   <%= @thesis.name %>
 </p>
@@ -60,5 +50,4 @@
   <%= @thesis.licence %>
 </p>
 
-<%= link_to 'Edit', edit_thesis_path(@thesis) %> |
-<%= link_to 'Back', theses_path %>
+<%= link_to 'Back', "/" %>
