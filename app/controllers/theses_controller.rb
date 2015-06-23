@@ -84,7 +84,6 @@ class ThesesController < ApplicationController
     default_thumbnails = Settings.thesis.thumbnails.default_icons.to_hash
 
     if 'upload' == submission_type
-      #@uploaded_files = UploadedFile.new(uploaded_file_params)
       uf = params[:uploaded_files]
       # puts '=============@thesis uploaded files (ONLY)============='
       s = uf.inspect
@@ -94,10 +93,6 @@ class ThesesController < ApplicationController
       uf_uid = s[start_index..end_index].strip
       puts "uf_uid: "
       puts uf_uid
-      # puts uf.original_filename
-      # puts File.absolute_path(uf.tempfile)
-      # puts uf.content_type
-      # puts uf.headers
 
       respond_to do |format|
         owner = 'admin'
@@ -139,7 +134,7 @@ class ThesesController < ApplicationController
         end
         # puts 'thumbnail'
         # puts thumbnail
-
+        
         t = Time.new
         @uploaded_file = UploadedFile.new(uf_uid: uf_uid,
                                    uf_name: uf.original_filename,
@@ -150,6 +145,7 @@ class ThesesController < ApplicationController
                                    content_type: uf.content_type,
                                    thumbnail: thumbnail,
                                    owner: owner,
+                                   main: "false",   #By default, newly uploaded file is not the main file
                                    created_at: t,
                                    updated_at: t)
         @uploaded_file.save
@@ -184,9 +180,11 @@ class ThesesController < ApplicationController
         format.js
       end
     elsif 'submit' == submission_type # processing metadata submission
+      mainfileid = params[:mainfile]
+
       puts "Received post request: submit"
-      puts "-------------------------"
-      puts get_thesis_xml.to_xml
+      #puts "-------------------------"
+      #puts get_thesis_xml.to_xml
       metadata_file_path = '/var/tmp/' + SecureRandom.uuid + '.dc'
       File.open(metadata_file_path, "w+") do |f|
         f.write(add_bioler_plate_fields(get_thesis_xml.to_xml))
@@ -194,30 +192,8 @@ class ThesesController < ApplicationController
 
       wf_client_file_path = '/var/tmp/' + SecureRandom.uuid + '.wf.client'
       File.open(wf_client_file_path, "w+") do |f|
-        f.write(get_workflow_client_thesis_xml_multi_files_from_db(metadata_file_path).to_xml)
+        f.write(get_workflow_client_thesis_xml_multi_files_from_db(metadata_file_path, mainfileid).to_xml)
       end
-
-      #uf = params[:uploaded_files]
-      #uf = thesis_params[:uploaded_files]
-      # puts '=============@thesis uploaded files============='
-      # puts uf.inspect
-      # puts uf.original_filename
-      # puts File.absolute_path(uf.tempfile)
-      # puts uf.content_type
-      # puts uf.headers
-
-      # unless uf.nil?
-      #   uf.each do |file|
-      #     puts file.inspect
-      #   end
-      # end
-
-      puts uf.inspect
-
-      puts '=============end of @thesis uploaded files============='
-
-
-
 
       #publish :'workflow_queue', get_workflow_client_thesis_xml(metadata_file_path).to_xml, {'suppress_content_length' => true}
       #publish :'workflow_queue', get_workflow_client_thesis_xml_single_file(metadata_file_path, File.absolute_path(uf.tempfile), "true", "ture", uf.content_type).to_xml, {'suppress_content_length' => true}
@@ -226,9 +202,9 @@ class ThesesController < ApplicationController
       #puts get_workflow_client_thesis_xml_single_file(metadata_file_path, File.absolute_path(uf.tempfile), "true", "ture", uf.content_type).to_xml
       #puts '=============end of wf client xml============='
 
-      puts '=============@thesis_params============='
-      puts thesis_params.inspect
-      puts '=============@thesis_params============='
+      #puts '=============@thesis_params============='
+      #puts thesis_params.inspect
+      #puts '=============@thesis_params============='
 
 
       @thesis = Thesis.new(thesis_params)
@@ -237,15 +213,20 @@ class ThesesController < ApplicationController
         ThesisMailer.submitted(self.current_user.email).deliver
       end
 
-      
-
       respond_to do |format|
         if @thesis.save
-          format.html { redirect_to @thesis, notice: 'Thesis was successfully created.' }
-          format.json { render :show, status: :created, location: @thesis }
+          puts "Thesis saved successfully, redirecting..."
+          format.html {
+            redirect_to @thesis, notice: 'Thesis was successfully created.'
+            return
+          }
+          format.json {
+            render :show, status: :created, location: @thesis
+          }
         else
           format.html { render :new }
           format.json { render json: @thesis.errors, status: :unprocessable_entity }
+          return
         end
       end
     end
@@ -373,7 +354,7 @@ class ThesesController < ApplicationController
     end
 
 
-    def get_workflow_client_thesis_xml_multi_files_from_db(metadata_file)
+    def get_workflow_client_thesis_xml_multi_files_from_db(metadata_file, mainfileid)
       owner = 'admin'
       if self.current_user!=nil and self.current_user.department!=nil
         owner = current_user.login
@@ -388,7 +369,11 @@ class ThesesController < ApplicationController
 
             if !files.nil?
               files.each do |f|
-                xml['wf'].file(:mime => f.content_type, :main => "false", :storelocally => "true", :file => f.tmp_name)
+                if f.id.to_s == mainfileid
+                  xml['wf'].file(:mime => f.content_type, :main => "true", :storelocally => "true", :file => f.tmp_name)
+                else
+                  xml['wf'].file(:mime => f.content_type, :main => "false", :storelocally => "true", :file => f.tmp_name)
+                end
               end
             end
           }
@@ -410,10 +395,37 @@ class ThesesController < ApplicationController
     end
 
     def uploaded_file_params
-      params.permit(:file_uid, :title, :original_name, :tmp_name, :content_type, :owner)
+      params.permit(:file_uid, :title, :original_name, :tmp_name, :content_type, :owner, :main)
     end
 
     def dir_exist?(directory)
       File.directory?(directory)
+    end
+
+    def remove_uploaded_files_after_submission()
+      owner = ''
+      if self.current_user!=nil and self.current_user.department!=nil
+        owner = current_user.login
+      end
+
+      if owner != ''
+        files = UploadedFile.where("owner=?", owner)
+
+        if !files.nil?
+          files.each do |f|
+            thumbnail = f.thumbnail
+
+            if(thumbnail.start_with?('/uploadedfiles/'))
+              fullpath = Rails.root.join('public', thumbnail).to_s
+              puts "Deleting " + fullpath
+              File.delete(fullpath) if File.exist?(fullpath)
+              puts "Done."
+            end
+
+            f.destroy
+          end
+        end
+      end
+
     end
 end

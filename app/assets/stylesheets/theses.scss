@@ -68,28 +68,36 @@
 }
 .fileview {
   min-width:  100px;
-  max-width:  100px;
-  min-height: 170px;
-  max-height: 170px;
+  max-width:  160px;
+  min-height: 155px;
+  max-height: 155px;
   overflow:   hidden;
 }
 .imagewrapper {
-  min-width:  100px;
-  max-width:  100px;
-  min-height: 100px;
-  max-height: 100px;
+  min-width:  80px;
+  max-width:  80px;
+  min-height: 80px;
+  max-height: 80px;
   overflow:   hidden;
 }
 .imagetitle {
-  min-width:  100px;
-  max-width:  100px;
-  min-height: 40px;
-  max-height: 40px;
+  min-width:  80px;
+  max-width:  160px;
+  min-height: 35px;
+  max-height: 35px;
+  text-align: left;
+  overflow:   hidden;
+}
+.defaultfile{
+  min-width:  80px;
+  max-width:  80px;
+  min-height: 20px;
+  max-height: 20px;
   overflow:   hidden;
 }
 .imagedel {
-  min-width:  100px;
-  max-width:  100px;
+  min-width:  80px;
+  max-width:  80px;
   min-height: 20px;
   max-height: 20px;
   overflow:   hidden;

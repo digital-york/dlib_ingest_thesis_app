@@ -10,6 +10,16 @@
       <% end %>
     </div>
 
+    <div class="defaultfile">
+      <% if @uploaded_file.original_name.downcase.end_with? "pdf" %>
+          <% if @uploaded_file.main.present? and @uploaded_file.main=='true'%>
+              default&nbsp;<input type="radio" name="defaultFile" id="file<%=@uploaded_file.id.to_s%>" value="<%=@uploaded_file.id.to_s%>" checked="checked">
+          <% else %>
+              default&nbsp;<input type="radio" name="defaultFile" id="file<%=@uploaded_file.id.to_s%>" value="<%=@uploaded_file.id.to_s%>">
+          <% end %>
+      <% end %>
+    </div>
+
     <div class="imagedel">
       <%= link_to 'Delete', @uploaded_file, method: :delete, data: {confirm: 'Are you sure?'}, :remote => true, :class => 'delete_file', :id => 'delete'+@uploaded_file.id.to_s %>
     </div>

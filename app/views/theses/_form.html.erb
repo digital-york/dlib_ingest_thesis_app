@@ -1,10 +1,7 @@
-<% content_for :javascript_includes do %>
-    <%= javascript_include_tag "form.js" %>
+<% if !@uploaded_files.nil? && @uploaded_files.length >0 %>
+    <h5>Uploaded Files</h5>
 <% end %>
 
-<% if !@uploaded_files.nil? && @uploaded_files.length >0 %>
-    <h3>Uploaded Files</h3>
-<% end %>
 
 <ul class="row" style="list-style-type: none;" id="files-list">
     <% if !@uploaded_files.nil? && @uploaded_files.length >0 %>
@@ -16,10 +13,21 @@
                             file.thumbnail, target: '_blank'%>
                 </div>
                 <div class="imagetitle">
-                    <% if file.title.present? %>
-                        <%=file.title %>
-                    <% end %>
+                  <% if file.title.present? %>
+                      <%=file.title %>
+                  <% end %>
                 </div>
+
+                <div class="defaultfile">
+                  <% if file.original_name.downcase.end_with? "pdf" %>
+                      <% if file.main.present? and file.main=='true' %>
+                          default&nbsp;<input type="radio" name="defaultFile" id="file<%=file.id.to_s%>" value="<%=file.id.to_s%>" checked="checked">
+                      <% else %>
+                          default&nbsp;<input type="radio" name="defaultFile" id="file<%=file.id.to_s%>" value="<%=file.id.to_s%>">
+                      <% end %>
+                  <% end %>
+                </div>
+
                 <div class="imagedel">
 
                   <%= link_to 'Delete', file, method: :delete, data: {confirm: 'Are you sure?'}, :remote => true, :class => 'delete_file', :id => 'delete'+file.id.to_s %>
@@ -30,7 +38,7 @@
       <% end %>
     <% end %>
 </ul>
-<br/>
+<br/><br/>
 <div id="dropzone" class="fade">Drop files here</div>
 
 <%= form_for(@thesis) do |f| %>

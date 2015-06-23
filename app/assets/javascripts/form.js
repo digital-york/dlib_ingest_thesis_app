@@ -89,7 +89,7 @@ $(document).ready(function() {
     });
 
     submit_btn.on('click', function (e, data) {
-        // alert('Submitting...');
+        //alert('Submitting...');
         //data.formData = {
         //    'thesis[name]':             $('#thesis_name').val(),
         //    'thesis[title]':            $('#thesis_title').val(),
@@ -104,6 +104,11 @@ $(document).ready(function() {
         //
         //    'submission_type':        'submit'
         //};
+        mfile = $('input[name=defaultFile]:checked').val();
+        if (typeof mfile === "undefined") {
+            alert('Please choose your main Theses file (PDF only) before submit!');
+            return;
+        }
 
         $.ajax({
                 url: "/theses",
@@ -120,12 +125,15 @@ $(document).ready(function() {
                                  rightsholder:    $('#thesis_rightsholder').val(),
                                  licence:         $('#thesis_licence').val()
                                },
-                        submission_type: 'submit'
+                        submission_type: 'submit',
+                        mainfile: mfile
                       },
                 success: function(resp){
 
                 }
         });
+
+        //alert('submit done.');
     });
 
 });

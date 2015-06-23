@@ -10,6 +10,7 @@ class CreateUploadedFiles < ActiveRecord::Migration
       t.string :thumbnail
 
       t.string :owner
+      t.string :main
 
       t.timestamps null: false
     end

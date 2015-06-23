@@ -51,6 +51,7 @@ ActiveRecord::Schema.define(version: 20150522092944) do
     t.string   "content_type"
     t.string   "thumbnail"
     t.string   "owner"
+    t.string   "main"
     t.datetime "created_at",    null: false
     t.datetime "updated_at",    null: false
   end
