@@ -208,6 +208,7 @@ class ThesesController < ApplicationController
 
       @thesis = Thesis.new(thesis_params)
 
+      
       if self.current_user!=nil and self.current_user.email!=nil
         ThesisMailer.submitted(self.current_user.email).deliver
       end
