@@ -8,7 +8,9 @@ require 'activemessaging'
 include ActiveMessaging::MessageSender
 
 class ThesesController < ApplicationController
-  before_action :set_thesis, only: [:show, :edit, :update, :destroy]
+  #before_action :set_thesis, only: [:show, :edit, :update, :destroy]
+  before_action :set_thesis, only: [:show]
+  before_action :authenticate_user!
 
   # GET /theses
   # GET /theses.json
@@ -197,7 +199,7 @@ class ThesesController < ApplicationController
 
       #uf = params[:uploaded_files]
       #uf = thesis_params[:uploaded_files]
-      puts '=============@thesis uploaded files============='
+      # puts '=============@thesis uploaded files============='
       # puts uf.inspect
       # puts uf.original_filename
       # puts File.absolute_path(uf.tempfile)
@@ -234,6 +236,8 @@ class ThesesController < ApplicationController
       if self.current_user!=nil and self.current_user.email!=nil
         ThesisMailer.submitted(self.current_user.email).deliver
       end
+
+      
 
       respond_to do |format|
         if @thesis.save

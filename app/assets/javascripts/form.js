@@ -89,7 +89,7 @@ $(document).ready(function() {
     });
 
     submit_btn.on('click', function (e, data) {
-        alert('Submitting...');
+        // alert('Submitting...');
         //data.formData = {
         //    'thesis[name]':             $('#thesis_name').val(),
         //    'thesis[title]':            $('#thesis_title').val(),
