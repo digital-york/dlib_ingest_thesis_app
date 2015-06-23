@@ -134,7 +134,7 @@ class ThesesController < ApplicationController
         end
         # puts 'thumbnail'
         # puts thumbnail
-        
+
         t = Time.new
         @uploaded_file = UploadedFile.new(uf_uid: uf_uid,
                                    uf_name: uf.original_filename,
@@ -205,7 +205,6 @@ class ThesesController < ApplicationController
       #puts '=============@thesis_params============='
       #puts thesis_params.inspect
       #puts '=============@thesis_params============='
-
 
       @thesis = Thesis.new(thesis_params)
 
