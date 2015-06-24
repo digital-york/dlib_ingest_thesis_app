@@ -161,7 +161,7 @@ $(document).ready(function() {
                         mainfile: mfile,
                       },
                 success: function(resp){
-                    window.location.href = "/";
+                    window.location.href = "/submit_success";
                 }
         });
 
