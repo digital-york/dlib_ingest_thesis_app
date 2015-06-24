@@ -2,7 +2,6 @@
     <h5>Uploaded Files</h5>
 <% end %>
 
-
 <ul class="row" style="list-style-type: none;" id="files-list">
     <% if !@uploaded_files.nil? && @uploaded_files.length >0 %>
       <% @uploaded_files.each do |file| %>
@@ -60,6 +59,7 @@
       <!--<div class="control-label col-xs-2 form-fields">-->
       <!--List of uploaded files-->
       <!--</div>-->
+      <%= image_tag("remove.gif", alt: "Delete",   title: "Delete",   size: "16x16", id: "delete_img_template", :class => "delete_img_template") %>
 
       <div class="control-label col-xs-2 form-fields">
         <%= f.label "File upload" %>
@@ -115,29 +115,39 @@
       </div>
       <br/>
 
-      <div class="control-label col-xs-2 form-fields">
-        <%= f.label "Degree supervisor" %>
-      </div>
-      <div class="col-xs-10 form-fields">
-        <%= f.text_field :supervisor, :size=>"80", placeholder: "Degree supervisor" %>
+      <div>
+          <div class="control-label col-xs-2 form-fields">
+            <%= f.label "Degree supervisor" %>
+          </div>
+
+          <div class="col-xs-10 form-fields" id="divSupervisor">
+            <%= f.text_field :supervisor, :size=>"80", placeholder: "Degree supervisor" %>
+            <%= image_tag("add.gif",    alt: "Add another supervisor", title: "Add another supervisor", size: "16x16", id: "add_supervisor",    :class => "add_image") %>
+          </div>
       </div>
       <br/>
 
-      <div class="control-label col-xs-2 form-fields">
-        <%= f.label :department %>
-      </div>
-      <div class="col-xs-10 form-fields">
-        <%= f.collection_select :department, @departments, :to_s, :to_s, include_blank: false %>
+      <div>
+          <div class="control-label col-xs-2 form-fields">
+            <%= f.label :department %>
+          </div>
+          <div class="col-xs-10 form-fields" id="divDepartment">
+            <%= f.collection_select :department, @departments, :to_s, :to_s, include_blank: false %>
+            <%= image_tag("add.gif", alt: "Add another department", title: "Add another department", size: "16x16", id: "add_department", class: "add_image") %>
+          </div>
       </div>
       <br/>
 
-      <div class="control-label col-xs-2 form-fields">
-        <%= f.label "Subject keyword" %>
+      <div>
+          <div class="control-label col-xs-2 form-fields">
+            <%= f.label "Subject keyword" %>
+          </div>
+          <div class="col-xs-10 form-fields" id="divSubjectKeyword">
+            <%= f.text_field :subjectkeyword, :size=>"80", placeholder: "Subject keyword" %>
+            <%= image_tag("add.gif", alt: "Add another subject keyword", title: "Add another subject keyword", size: "16x16", id: "add_subjectkeyword", class: "add_image") %>
+          </div>
+          <br/>
       </div>
-      <div class="col-xs-10 form-fields">
-        <%= f.text_field :subjectkeyword, :size=>"80", placeholder: "Subject keyword" %>
-      </div>
-      <br/>
 
       <div class="control-label col-xs-2 form-fields">
         <%= f.label "Rights holder" %>

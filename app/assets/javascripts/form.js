@@ -1,7 +1,11 @@
 // javascript code for submission form
 $(document).ready(function() {
-    var multiple_photos_form = $('#new_thesis');
-    var submit_btn           = $('#btnSubmit');
+    var multiple_photos_form   = $('#new_thesis');
+    var submit_btn             = $('#btnSubmit');
+    var add_supervisor_btn     = $('#add_supervisor');
+    var add_department_btn     = $('#add_department');
+    var add_subjectkeyword_btn = $('#add_subjectkeyword');
+
     var wrapper      = multiple_photos_form.find('.progress-wrapper');
     var bitrate      = wrapper.find('.bitrate');
     var progress_bar = wrapper.find('.progress-bar');
@@ -104,11 +108,36 @@ $(document).ready(function() {
         //
         //    'submission_type':        'submit'
         //};
+        licence = "";
+        var radioBtn1 = $('#licence_self:checked');
+        var radioBtn2 = $('#licence_other:checked');
+
+        if(typeof radioBtn1 != "undefined" && (typeof radioBtn1.val() != "undefined" )) {
+          licence = radioBtn1.val();
+        }else if(typeof radioBtn2 != "undefined" && (typeof radioBtn2.val() != "undefined" )) {
+          licence = radioBtn2.val();
+        }
+
         mfile = $('input[name=defaultFile]:checked').val();
         if (typeof mfile === "undefined") {
-            alert('Please choose your main Theses file (PDF only) before submit!');
+            alert('Please upload files / choose your main Theses file (PDF only) before submit!');
             return;
         }
+
+        var more_supervisors = [];
+        $("input[name='more_supervisors']").each(function() {
+            more_supervisors.push($(this).val());
+        });
+
+        var more_subject_keywords = [];
+        $("input[name='more_subject_keywords']").each(function() {
+            more_subject_keywords.push($(this).val());
+        });
+
+        var more_departments = [];
+        $("select[name='more_departments']").each(function() {
+            more_departments.push($(this).val());
+        });
 
         $.ajax({
                 url: "/theses",
@@ -123,17 +152,84 @@ $(document).ready(function() {
                                  department:      $('#thesis_department').val(),
                                  subjectkeyword:  $('#thesis_subjectkeyword').val(),
                                  rightsholder:    $('#thesis_rightsholder').val(),
-                                 licence:         $('#thesis_licence').val()
+                                 licence:         licence
                                },
-                        submission_type: 'submit',
-                        mainfile: mfile
+                        submission_type:       'submit',
+                        more_supervisors:      more_supervisors,
+                        more_subject_keywords: more_subject_keywords,
+                        more_departments:      more_departments,
+                        mainfile: mfile,
                       },
                 success: function(resp){
-
+                    window.location.href = "/";
                 }
         });
 
         //alert('submit done.');
+    });
+
+    add_supervisor_btn.on('click', function (e, data) {
+        var container = $("#divSupervisor");
+        var delImgSrc  = $(".delete_img_template").attr('src');
+
+        var newDiv1  = $(container).parent().append("<div class=\"control-label col-xs-2 form-fields\"></div>");
+        var $newDiv2  = $("<div class=\"col-xs-10 form-fields\"></div>");
+        $(container).parent().append($newDiv2);
+        var $inputElt = $("<input size=\"80\" placeholder=\"Degree supervisor\" type=\"text\" name=\"more_supervisors\">");
+        $inputElt.appendTo($newDiv2).after(" ");
+
+        $delImgElt = $("<img alt=\"Delete supervisor\" title=\"Delete supervisor\" name=\"delete_supervisor\" src=\""+delImgSrc+"\" width=\"16\" height=\"16\">");
+        $delImgElt.appendTo($newDiv2);
+
+        $delImgElt.on('click', function (e, data) {
+            var $parent = $(this).parent();
+            $parent.prev().remove();
+            $parent.remove();
+        });
+    });
+
+    add_department_btn.on('click', function (e, data) {
+        var container = $("#divDepartment");
+        var delImgSrc = $(".delete_img_template").attr('src');
+
+        var newDiv1   = $(container).parent().append("<div class=\"control-label col-xs-2 form-fields\"></div>");
+        var $newDiv2  = $("<div class=\"col-xs-10 form-fields\"></div>");
+        $(container).parent().append($newDiv2);
+
+        var $deptElt   = $("#thesis_department").clone();
+        $deptElt.removeAttr('id');
+        $deptElt.attr('name', 'more_departments');
+
+        $deptElt.appendTo($newDiv2).after(" ");
+
+        $delImgElt = $(" <img alt=\"Delete department\" title=\"Delete department\" name=\"delete_department\" src=\""+delImgSrc+"\" width=\"16\" height=\"16\">");
+        $delImgElt.appendTo($newDiv2);
+
+        $delImgElt.on('click', function (e, data) {
+            var $parent = $(this).parent();
+            $parent.prev().remove();
+            $parent.remove();
+        });
+    });
+
+    add_subjectkeyword_btn.on('click', function (e, data) {
+        var container = $("#divSubjectKeyword");
+        var delImgSrc  = $(".delete_img_template").attr('src');
+
+        var newDiv1  = $(container).parent().append("<div class=\"control-label col-xs-2 form-fields\"></div>");
+        var $newDiv2  = $("<div class=\"col-xs-10 form-fields\"></div>");
+        $(container).parent().append($newDiv2);
+        var $inputElt = $("<input size=\"80\" placeholder=\"Subject keyword\" type=\"text\" name=\"more_subject_keywords\">");
+        $inputElt.appendTo($newDiv2).after(" ");
+
+        $delImgElt = $(" <img alt=\"Delete subject keyword\" title=\"Delete subject keyword\" name=\"delete_subject_keyword\" src=\""+delImgSrc+"\" width=\"16\" height=\"16\">");
+        $delImgElt.appendTo($newDiv2);
+
+        $delImgElt.on('click', function (e, data) {
+            var $parent = $(this).parent();
+            $parent.prev().remove();
+            $parent.remove();
+        });
     });
 
 });

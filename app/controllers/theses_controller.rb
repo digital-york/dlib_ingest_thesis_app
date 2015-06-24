@@ -182,12 +182,27 @@ class ThesesController < ApplicationController
     elsif 'submit' == submission_type # processing metadata submission
       mainfileid = params[:mainfile]
 
+
       puts "Received post request: submit"
+
+      more_supervisors = params[:more_supervisors]
+      puts "---------more supervisors--------"
+      puts more_supervisors
+
+      more_departments = params[:more_departments]
+      puts "---------more_departments--------"
+      puts more_departments
+
+      more_subject_keywords = params[:more_subject_keywords]
+      puts "---------more_subject_keywords--------"
+      puts more_subject_keywords
+
       #puts "-------------------------"
       #puts get_thesis_xml.to_xml
       metadata_file_path = '/var/tmp/' + SecureRandom.uuid + '.dc'
       File.open(metadata_file_path, "w+") do |f|
-        f.write(add_bioler_plate_fields(get_thesis_xml.to_xml))
+        # f.write(add_bioler_plate_fields(get_thesis_xml.to_xml))
+        f.write(add_bioler_plate_fields(get_thesis_xml(more_supervisors, more_departments, more_subject_keywords).to_xml))
       end
 
       wf_client_file_path = '/var/tmp/' + SecureRandom.uuid + '.wf.client'
@@ -208,7 +223,7 @@ class ThesesController < ApplicationController
 
       @thesis = Thesis.new(thesis_params)
 
-      
+
       if self.current_user!=nil and self.current_user.email!=nil
         ThesisMailer.submitted(self.current_user.email).deliver
       end
@@ -259,15 +274,15 @@ class ThesesController < ApplicationController
 
   private
     def get_thesis_xml
-      creator     = thesis_params[:creator]
+      creator     = thesis_params[:name]
       title       = thesis_params[:title]
       date        = thesis_params[:date]
-      desc        = thesis_params[:description]
+      desc        = thesis_params[:abstract]
       degreetype  = thesis_params[:degree_type]
-      contributor = thesis_params[:contributor]
-      publisher   = thesis_params[:publisher]
-      subject     = thesis_params[:subject]
-      rights      = thesis_params[:rights]
+      contributor = thesis_params[:supervisor]
+      publisher   = thesis_params[:department]
+      subject     = thesis_params[:subjectkeyword]
+      rights      = thesis_params[:rightsholder]
       licence     = thesis_params[:licence]
 
       builder = Nokogiri::XML::Builder.new do |xml|
@@ -282,6 +297,53 @@ class ThesesController < ApplicationController
           xml['dc'].subject subject
           xml['dc'].rights rights
           xml['dc'].licence licence
+        }
+      end
+    end
+
+    def get_thesis_xml(more_supervisors, more_departments, more_subject_keywords)
+      creator     = thesis_params[:name]
+      title       = thesis_params[:title]
+      date        = thesis_params[:date]
+      desc        = thesis_params[:abstract]
+      degreetype  = thesis_params[:degreetype]
+      contributor = thesis_params[:supervisor]
+      publisher   = thesis_params[:department]
+      subject     = thesis_params[:subjectkeyword]
+      rights      = thesis_params[:rightsholder]
+      licence     = thesis_params[:licence]
+
+      builder = Nokogiri::XML::Builder.new do |xml|
+        xml['oai_dc'].dc('xmlns:oai_dc' => 'http://www.openarchives.org/OAI/2.0/oai_dc/', 'xmlns:dc' => 'http://purl.org/dc/elements/1.1/') {
+          xml['dc'].creator creator
+          xml['dc'].title title
+          xml['dc'].date date
+          xml['dc'].description desc
+          xml['dc'].type degreetype
+
+          xml['dc'].contributor contributor
+          if !more_supervisors.nil?
+            more_supervisors.each do |sup|
+              xml['dc'].contributor sup
+            end
+          end
+
+          xml['dc'].publisher publisher
+          if !more_departments.nil?
+            more_departments.each do |dep|
+              xml['dc'].publisher dep
+            end
+          end
+
+          xml['dc'].subject subject
+          if !more_subject_keywords.nil?
+            more_subject_keywords.each do |sub|
+              xml['dc'].subject sub
+            end
+          end
+
+          xml['dc'].rights rights
+          # xml['dc'].licence licence
         }
       end
     end
@@ -311,6 +373,9 @@ class ThesesController < ApplicationController
         key_str = key.to_s
         key_str.sub! '_', ':'
         if key_str!='dc:rights'
+          if key_str.start_with? "dc:type"
+            key_str = "dc:type"
+          end
           Settings.thesis.boiler_plate[key].to_hash.values.each do |value|
             root.add_child('<'+key_str+'>'+value.to_s+'</'+key_str+'>')
           end
@@ -330,7 +395,6 @@ class ThesesController < ApplicationController
       #t = doc.to_xml(:indent => 2)
       t = doc.human
     end
-
     def get_workflow_client_thesis_xml(metadata_file)
       builder = Nokogiri::XML::Builder.new do |xml|
         xml['wf'].workflow('xmlns:wf' => 'http://dlib.york.ac.uk/workflow') {
@@ -340,7 +404,6 @@ class ThesesController < ApplicationController
         }
       end
     end
-
     def get_workflow_client_thesis_xml_single_file(metadata_file, uploaded_file_name, uploaded_file_main, uploaded_file_storelocally, uploaded_file_mime)
       builder = Nokogiri::XML::Builder.new do |xml|
         xml['wf'].workflow('xmlns:wf' => 'http://dlib.york.ac.uk/workflow') {
@@ -352,8 +415,6 @@ class ThesesController < ApplicationController
         }
       end
     end
-
-
     def get_workflow_client_thesis_xml_multi_files_from_db(metadata_file, mainfileid)
       owner = 'admin'
       if self.current_user!=nil and self.current_user.department!=nil
@@ -380,7 +441,6 @@ class ThesesController < ApplicationController
         }
       end
     end
-
 
   private
     # Use callbacks to share common setup or constraints between actions.
