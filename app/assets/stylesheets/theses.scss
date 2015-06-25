@@ -108,3 +108,23 @@
 .delete_img_template{
   visibility: hidden;
 }
+.theses_title{
+  background-color: #FFFF00;
+}
+div#spinner
+{
+  display: none;
+  background-color: #111;
+  opacity: 0.8;
+  transform: translate(-50%, -50%);
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  z-index: 2000;
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+  background-image: url('uploading.gif');
+  background-position: center;
+  background-repeat: no-repeat;
+}

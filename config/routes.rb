@@ -20,6 +20,11 @@ Rails.application.routes.draw do
   get '/contact',        to: 'static_pages#contact'
   get '/submit_success', to: 'static_pages#submit_success'
 
+
+  match '/404',          to: 'errors#file_not_found',        via: :all
+  match '/422',          to: 'errors#unprocessable',         via: :all
+  match '/500',          to: 'errors#internal_server_error', via: :all
+
   resources :ingests
 
   resources :uploaded_file

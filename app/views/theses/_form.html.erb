@@ -81,14 +81,14 @@
         <%= f.label "Author's name" %>
       </div>
       <div class="col-xs-10 form-fields">
-        <%= f.text_field :name, :size=>"80", placeholder: "Author's name" %>
+        <%= f.text_field :name, :size=>"80", placeholder: "Surname, Forename" %>
       </div>
 
       <div class="control-label col-xs-2 form-fields">
-        <%= f.label "Dissertation title" %>
+        <%= f.label "Dissertation title" %><span style="color:red;font-size:14px;">*</span>
       </div>
       <div class="col-xs-10 form-fields">
-        <%= f.text_field :title, :size=>"80", placeholder: "Dissertation title"  %>
+        <%= f.text_field :title, :size=>"80", placeholder: "Dissertation title", class: "theses_title"  %>
       </div>
 
       <div class="control-label col-xs-2 form-fields">
@@ -121,7 +121,7 @@
           </div>
 
           <div class="col-xs-10 form-fields" id="divSupervisor">
-            <%= f.text_field :supervisor, :size=>"80", placeholder: "Degree supervisor" %>
+            <%= f.text_field :supervisor, :size=>"80", placeholder: "Surname, Forename" %>
             <%= image_tag("add.gif",    alt: "Add another supervisor", title: "Add another supervisor", size: "16x16", id: "add_supervisor",    :class => "add_image") %>
           </div>
       </div>
@@ -172,6 +172,11 @@
             <%= licence[1] %><br/>
         <% end %>
       </div>
+      <div class="form-fields">
+      </div>
+      <div class="col-xs-offset-2 col-xs-10 form-fields">
+        <span style="font-weight: bold;">* Mandatory field</span>
+      </div>
       <br/>
       <br/>
       <br/>
@@ -180,9 +185,16 @@
       </div>
 
       <div class="col-xs-offset-2 col-xs-10 form-fields">
-        <%= f.label "Submit Thesis", :id => 'btnSubmit', :class => 'btn btn-primary' %>
+        <%= f.label "Upload Dissertation", :id => 'btnSubmit', :class => 'btn btn-primary' %>
       </div>
+
+
       <br/>
+    </div>
+
+    <div id="spinner">
+    PLEASE WAIT WHILE YOUR<BR/>
+    YOUR DISSERTATION IS BEING UPLOADED
     </div>
 
 <% end %>

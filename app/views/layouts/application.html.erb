@@ -8,10 +8,17 @@
 
   <%= yield :javascript_includes %>
 
+  <SCRIPT type="text/javascript">
+      window.history.forward();
+      function noBack() {
+          window.history.forward();
+      }
+  </SCRIPT>
+
   <%= csrf_meta_tags %>
   <%= render 'layouts/shim' %>
 </head>
-<body>
+<body onload="noBack();" onpageshow="if (event.persisted) noBack();" onunload="">
     <%= render 'layouts/header' %>
 
     <br/><br/><br/><br/><br/><br/>

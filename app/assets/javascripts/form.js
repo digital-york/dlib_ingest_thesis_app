@@ -6,6 +6,8 @@ $(document).ready(function() {
     var add_department_btn     = $('#add_department');
     var add_subjectkeyword_btn = $('#add_subjectkeyword');
 
+    var txt_thesis_title       = $('#thesis_title');
+
     var wrapper      = multiple_photos_form.find('.progress-wrapper');
     var bitrate      = wrapper.find('.bitrate');
     var progress_bar = wrapper.find('.progress-bar');
@@ -56,18 +58,6 @@ $(document).ready(function() {
     //});
     multiple_photos_form.on('fileuploadsubmit', function (e, data) {
         data.formData = {
-            //'thesis[name]':           $('#thesis_name').val(),
-            //'thesis[title]':          $('#thesis_title').val(),
-            //'thesis[date]':           $('#thesis_date').val(),
-            //'thesis[abstract]':       $('#thesis_abstract').val(),
-            //'thesis[degreetype]':     $('#thesis_degreetype').val(),
-            //'thesis[supervisorfiledo]':     $('#thesis_supervisor').val(),
-            //'thesis[department]':     $('#thesis_department').val(),
-            //'thesis[subjectkeyword]': $('#thesis_subjectkeyword').val(),
-            //'thesis[rightsholder]':   $('#thesis_rightsholder').val(),
-            //'thesis[licence]':        $('#thesis_licence').val(),
-            //
-            //'thesis[uploaded_files]': $('#thesis_uploaded_files').val()
             'submission_type':   'upload',
             'uploaded_files':   $('#thesis_uploaded_files').val()
         };
@@ -93,21 +83,11 @@ $(document).ready(function() {
     });
 
     submit_btn.on('click', function (e, data) {
-        //alert('Submitting...');
-        //data.formData = {
-        //    'thesis[name]':             $('#thesis_name').val(),
-        //    'thesis[title]':            $('#thesis_title').val(),
-        //    'thesis[date]':             $('#thesis_date').val(),
-        //    'thesis[abstract]':         $('#thesis_abstract').val(),
-        //    'thesis[degreetype]':       $('#thesis_degreetype').val(),
-        //    'thesis[supervisor]': $('#thesis_supervisor').val(),
-        //    'thesis[department]':       $('#thesis_department').val(),
-        //    'thesis[subjectkeyword]':   $('#thesis_subjectkeyword').val(),
-        //    'thesis[rightsholder]':     $('#thesis_rightsholder').val(),
-        //    'thesis[licence]':          $('#thesis_licence').val(),
-        //
-        //    'submission_type':        'submit'
-        //};
+        if(txt_thesis_title.val()=="") {
+            alert('Please enter dissertation title before submit!');
+            return;
+        }
+
         licence = "";
         var radioBtn1 = $('#licence_self:checked');
         var radioBtn2 = $('#licence_other:checked');
@@ -138,6 +118,9 @@ $(document).ready(function() {
         $("select[name='more_departments']").each(function() {
             more_departments.push($(this).val());
         });
+
+        $("div#spinner").fadeIn("fast");
+        spinnerVisible = true;
 
         $.ajax({
                 url: "/theses",
@@ -175,16 +158,16 @@ $(document).ready(function() {
         var newDiv1  = $(container).parent().append("<div class=\"control-label col-xs-2 form-fields\"></div>");
         var $newDiv2  = $("<div class=\"col-xs-10 form-fields\"></div>");
         $(container).parent().append($newDiv2);
-        var $inputElt = $("<input size=\"80\" placeholder=\"Degree supervisor\" type=\"text\" name=\"more_supervisors\">");
+        var $inputElt = $("<input size=\"80\" placeholder=\"Surname, Forename\" type=\"text\" name=\"more_supervisors\">");
         $inputElt.appendTo($newDiv2).after(" ");
 
-        $delImgElt = $("<img alt=\"Delete supervisor\" title=\"Delete supervisor\" name=\"delete_supervisor\" src=\""+delImgSrc+"\" width=\"16\" height=\"16\">");
+        $delImgElt = $("<img alt=\"Delete supervisor\" title=\"Delete supervisor\" name=\"delete_supervisor\" src=\""+delImgSrc+"\" width=\"16\" height=\"16\" class=\"add_image\">");
         $delImgElt.appendTo($newDiv2);
 
         $delImgElt.on('click', function (e, data) {
             var $parent = $(this).parent();
-            $parent.prev().remove();
-            $parent.remove();
+            $parent.prev().fadeOut();
+            $parent.fadeOut();
         });
     });
 
@@ -202,13 +185,13 @@ $(document).ready(function() {
 
         $deptElt.appendTo($newDiv2).after(" ");
 
-        $delImgElt = $(" <img alt=\"Delete department\" title=\"Delete department\" name=\"delete_department\" src=\""+delImgSrc+"\" width=\"16\" height=\"16\">");
+        $delImgElt = $(" <img alt=\"Delete department\" title=\"Delete department\" name=\"delete_department\" src=\""+delImgSrc+"\" width=\"16\" height=\"16\" class=\"add_image\">");
         $delImgElt.appendTo($newDiv2);
 
         $delImgElt.on('click', function (e, data) {
             var $parent = $(this).parent();
-            $parent.prev().remove();
-            $parent.remove();
+            $parent.prev().fadeOut();
+            $parent.fadeOut();
         });
     });
 
@@ -222,14 +205,34 @@ $(document).ready(function() {
         var $inputElt = $("<input size=\"80\" placeholder=\"Subject keyword\" type=\"text\" name=\"more_subject_keywords\">");
         $inputElt.appendTo($newDiv2).after(" ");
 
-        $delImgElt = $(" <img alt=\"Delete subject keyword\" title=\"Delete subject keyword\" name=\"delete_subject_keyword\" src=\""+delImgSrc+"\" width=\"16\" height=\"16\">");
+        $delImgElt = $(" <img alt=\"Delete subject keyword\" title=\"Delete subject keyword\" name=\"delete_subject_keyword\" src=\""+delImgSrc+"\" width=\"16\" height=\"16\" class=\"add_image\">");
         $delImgElt.appendTo($newDiv2);
 
         $delImgElt.on('click', function (e, data) {
             var $parent = $(this).parent();
-            $parent.prev().remove();
-            $parent.remove();
+            //$parent.prev().remove();
+            //$parent.remove();
+            $parent.prev().fadeOut();
+            $parent.fadeOut();
         });
     });
 
+    txt_thesis_title.on('keydown', function (e, data) {
+        if($(this).val()!="") {
+            $(this).css({'backgroundColor' : '#FFFFFF'});
+        }else{
+            $(this).css({'backgroundColor' : '#FFFF00'});
+        }
+    });
+    txt_thesis_title.on('blur', function (e, data) {
+        if((typeof $(this).val()) === 'undefined') {
+            $(this).css({'backgroundColor' : '#FFFF00'});
+        }else{
+            if($(this).val()!="") {
+                $(this).css("backgroundColor", "white");
+            }else{
+                $(this).css("backgroundColor", "yellow");
+            }
+        }
+    });
 });
