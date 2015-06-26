@@ -71,6 +71,7 @@ development:
     # 
     # in a model:
     #   publish :hello_world, 'Hello world!', :routing_key => 'hello.world'
+      #domain : "york.ac.uk" , Do not need this
 
    
     # Note: in the event that you don't specify a routing_key on publish, the queue_name of the specified
@@ -124,12 +125,22 @@ development:
 
     
 test:
-    adapter: test
-    reliable: false
+    adapter: stomp
+    login: ""
+    passcode: ""
+    host: localhost
+    port: 61613
+    reliable: true
+    reconnectDelay: 50
 
 production:
     adapter: stomp
+    login: ""
+    passcode: ""
+    host: localhost
+    port: 61613
     reliable: true
+    reconnectDelay: 50
     # properties below are all defaults for this adapter
     # login: ""
     # passcode: ""

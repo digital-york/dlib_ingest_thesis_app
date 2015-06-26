@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150402122204) do
+ActiveRecord::Schema.define(version: 20150522092944) do
 
   create_table "ingests", force: :cascade do |t|
     t.string   "folder"
@@ -40,6 +40,20 @@ ActiveRecord::Schema.define(version: 20150402122204) do
     t.string   "licence"
     t.datetime "created_at",     null: false
     t.datetime "updated_at",     null: false
+  end
+
+  create_table "uploaded_files", force: :cascade do |t|
+    t.string   "uf_uid"
+    t.string   "uf_name"
+    t.string   "title"
+    t.string   "original_name"
+    t.string   "tmp_name"
+    t.string   "content_type"
+    t.string   "thumbnail"
+    t.string   "owner"
+    t.string   "main"
+    t.datetime "created_at",    null: false
+    t.datetime "updated_at",    null: false
   end
 
   create_table "users", force: :cascade do |t|

@@ -47,6 +47,14 @@ gem 'devise_ldap_authenticatable'
 gem "activemessaging", :git => "https://github.com/digital-york/activemessaging.git"
 gem 'stomp'
 
+gem 'dragonfly'
+gem 'remotipart', '~> 1.2'
+gem 'jquery-fileupload-rails', github: 'Springest/jquery-fileupload-rails'
+
+gem 'compass-rails'
+gem 'compass'
+
+gem 'mysql2'
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
@@ -57,6 +65,10 @@ group :development, :test do
 
   # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
   gem 'spring'
+end
+
+group :production do
+  gem 'rack-cache', :require => 'rack/cache'
 end
 
 

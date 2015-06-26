@@ -1,0 +1,27 @@
+<li class="col-xs-3">
+  <div class="fileview">
+    <div class="imagewrapper">
+      <%= link_to image_tag(@uploaded_file.thumbnail, alt: @uploaded_file.title, class: 'img-thumbnail', size: '100x100'),
+                  @uploaded_file.thumbnail, target: '_blank'%>
+    </div>
+    <div class="imagetitle">
+      <% if @uploaded_file.title.present? %>
+          <%=@uploaded_file.title %>
+      <% end %>
+    </div>
+
+    <div class="defaultfile">
+      <% if @uploaded_file.original_name.downcase.end_with? "pdf" %>
+          <% if @uploaded_file.main.present? and @uploaded_file.main=='true'%>
+              main&nbsp;<input type="radio" name="defaultFile" id="file<%=@uploaded_file.id.to_s%>" value="<%=@uploaded_file.id.to_s%>" checked="checked">
+          <% else %>
+              main&nbsp;<input type="radio" name="defaultFile" id="file<%=@uploaded_file.id.to_s%>" value="<%=@uploaded_file.id.to_s%>">
+          <% end %>
+      <% end %>
+    </div>
+
+    <div class="imagedel">
+      <%= link_to 'Delete', @uploaded_file, method: :delete, data: {confirm: 'Are you sure?'}, :remote => true, :class => 'delete_file', :id => 'delete'+@uploaded_file.id.to_s %>
+    </div>
+  </div>
+</li>

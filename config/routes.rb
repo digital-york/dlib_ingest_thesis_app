@@ -1,4 +1,10 @@
 Rails.application.routes.draw do
+  get 'errors/file_not_found'
+
+  get 'errors/unprocessable'
+
+  get 'errors/internal_server_error'
+
   devise_for :users
   get 'static_pages/about'
 
@@ -8,15 +14,26 @@ Rails.application.routes.draw do
 
   get 'static_pages/contact'
 
+  get 'static_pages/submit_success'
+
   #get 'static_pages/cookies'
 
-  resources :theses
+  resources :theses, only: [:new, :create]
+  #resources :theses
   
-  get '/help',    to: 'static_pages#help'
-  get '/about',   to: 'static_pages#about'
-  get '/contact', to: 'static_pages#contact'
+  get '/help',           to: 'static_pages#help'
+  get '/about',          to: 'static_pages#about'
+  get '/contact',        to: 'static_pages#contact'
+  get '/submit_success', to: 'static_pages#submit_success'
+
+
+  match '/404',          to: 'errors#file_not_found',        via: :all
+  match '/422',          to: 'errors#unprocessable',         via: :all
+  match '/500',          to: 'errors#internal_server_error', via: :all
 
   resources :ingests
+
+  resources :uploaded_file
 
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".

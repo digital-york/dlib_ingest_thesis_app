@@ -1,114 +1,215 @@
-<%= form_for(@thesis) do |f| %>
-<div class="form-group">
-  <% if @thesis.errors.any? %>
-    <div id="error_explanation">
-      <h2><%= pluralize(@thesis.errors.count, "error") %> prohibited this thesis from being saved:</h2>
+<% if !@uploaded_files.nil? && @uploaded_files.length >0 %>
+  <div class="panel panel-default" id="panel_uploaded_files">
+    <div class="panel-heading">Uploaded Files</div>
 
-      <ul>
-      <% @thesis.errors.full_messages.each do |message| %>
-        <li><%= message %></li>
-      <% end %>
-      </ul>
+    <div class="panel-body">
+        <ul class="row" style="list-style-type: none;" id="files-list">
+            <% if !@uploaded_files.nil? && @uploaded_files.length >0 %>
+              <% @uploaded_files.each do |file| %>
+                  <li class="col-xs-3">
+                    <div class="fileview">
+                        <div class="imagewrapper">
+                          <%= link_to image_tag(file.thumbnail, alt: file.title, class: 'img-thumbnail', size: '100x100'),
+                                    file.thumbnail, target: '_blank'%>
+                        </div>
+                        <div class="imagetitle">
+                          <% if file.title.present? %>
+                              <%=file.title %>
+                          <% end %>
+                        </div>
+
+                        <div class="defaultfile">
+                          <% if file.original_name.downcase.end_with? "pdf" %>
+                              <% if file.main.present? and file.main=='true' %>
+                                  main&nbsp;<input type="radio" name="defaultFile" id="file<%=file.id.to_s%>" value="<%=file.id.to_s%>" checked="checked">
+                              <% else %>
+                                  main&nbsp;<input type="radio" name="defaultFile" id="file<%=file.id.to_s%>" value="<%=file.id.to_s%>">
+                              <% end %>
+                          <% end %>
+                        </div>
+
+                        <div class="imagedel">
+
+                          <%= link_to 'Delete', file, method: :delete, data: {confirm: 'Are you sure?'}, :remote => true, :class => 'delete_file', :id => 'delete'+file.id.to_s %>
+
+                        </div>
+                    </div>
+                  </li>
+              <% end %>
+            <% end %>
+        </ul>
+      </div>
+  </div>
+<% else %>
+  <div class="panel panel-default" style="display: none;" id="panel_uploaded_files">
+    <div class="panel-heading">Uploaded Files</div>
+
+    <div class="panel-body">
+        <ul class="row" style="list-style-type: none;" id="files-list"></ul>
     </div>
-  <% end %>
-
-<div class="form-group">
-  <div class="control-label col-xs-2 form-fields">
-   <%= f.label "Author's name" %>
   </div>
-  <div class="col-xs-10 form-fields">
-    <%= f.text_field :name, :size=>"80", placeholder: "Author's name" %>
-  </div>
-
-  <div class="control-label col-xs-2 form-fields">
-    <%= f.label "Dissertation title" %>
-  </div>
-  <div class="col-xs-10 form-fields">
-    <%= f.text_field :title, :size=>"80", placeholder: "Dissertation title"  %>
-  </div>
-
-  <div class="control-label col-xs-2 form-fields">
-    <%= f.label :date %>
-  </div>
-  <div class="col-xs-10 form-fields">
-    <%= f.collection_select :date, @years, :to_s, :to_s, include_blank: false %>
-  </div>
-  <br/>
-
-  <div class="control-label col-xs-2 big-form-fields">
-    <%= f.label :abstract %>
-  </div>
-  <div class="col-xs-10 big-form-fields">
-    <%= f.text_area :abstract, :size => "80x5", placeholder: "Abstract" %>
-  </div>
-  <br/>
-
-  <div class="control-label col-xs-2 form-fields">
-    <%= f.label "Degree type"  %>
-  </div>
-  <div class="col-xs-10 form-fields">
-    <%= f.collection_select :degreetype, @degree_types, :to_s, :to_s, include_blank: false %>
-  </div>
-  <br/>
-
-  <div class="control-label col-xs-2 form-fields">
-    <%= f.label "Degree supervisor" %>
-  </div>
-  <div class="col-xs-10 form-fields">
-    <%= f.text_field :supervisor, :size=>"80", placeholder: "Degree supervisor" %>
-  </div>
-  <br/>
-
-  <div class="control-label col-xs-2 form-fields">
-    <%= f.label :department %>
-  </div>
-  <div class="col-xs-10 form-fields">
-    <%= f.collection_select :department, @departments, :to_s, :to_s, include_blank: false %>
-  </div>
-  <br/>
-
-  <div class="control-label col-xs-2 form-fields">
-    <%= f.label "Subject keyword" %>
-  </div>
-  <div class="col-xs-10 form-fields">
-    <%= f.text_field :subjectkeyword, :size=>"80", placeholder: "Subject keyword" %>
-  </div>
-  <br/>
-
-  <div class="control-label col-xs-2 form-fields">
-    <%= f.label "Rights holder" %>
-  </div>
-  <div class="col-xs-10 form-fields">
-    <%= f.text_field :rightsholder, :size=>"80", placeholder: "Rights holder" %>
-  </div>
-  <br/>
-
-  <div class="control-label col-xs-2 form-fields">
-    <%= f.label :licence %>
-  </div>
-  <div class="col-xs-10 medium-form-fields">
-    <% first_time = true %>
-    <% @licences.each do |licence| %>
-        <% if first_time == true %>
-          <%= radio_button_tag 'licence', licence[0], true %>
-          <% first_time = false %>
-        <% else %>
-          <%= radio_button_tag 'licence', licence[0], false %>
-        <% end %>
-      <%= licence[1] %><br/>
-    <% end %>
-  </div>
-  <br/>
-  <br/>
-  <br/>
-  <br/>
-  <div class="form-fields">
-  </div>
-
-  <div class="col-xs-offset-2 col-xs-10 form-fields">
-    <%= f.submit "Submit Thesis", :class => 'btn btn-primary' %>
-  </div>
-  <br/>
-</div>
-
 <% end %>
+
+<div class="panel panel-default">
+ <div class="panel-heading">Dissertation details</div>
+
+ <div class="panel-body">
+  <%= form_for(@thesis) do |f| %>
+    <div class="form-group">
+      <% if @thesis.errors.any? %>
+          <div id="error_explanation">
+            <h2><%= pluralize(@thesis.errors.count, "error") %> prohibited this thesis from being saved:</h2>
+
+            <ul>
+              <% @thesis.errors.full_messages.each do |message| %>
+                  <li><%= message %></li>
+              <% end %>
+            </ul>
+          </div>
+      <% end %>
+    </div>
+    <div class="form-group">
+      <!--<div class="control-label col-xs-2 form-fields">-->
+      <!--List of uploaded files-->
+      <!--</div>-->
+      <%= image_tag("remove.gif", alt: "Delete",   title: "Delete",   size: "16x16", id: "delete_img_template", :class => "delete_img_template") %>
+
+      <div id="dropzone" class="fade">Drop files here</div><br/>
+
+      <div class="control-label col-xs-2 form-fields">
+        <%= f.label "File upload" %>
+      </div>
+      <div class="col-xs-10 form-fields">
+        <%= f.file_field :uploaded_files, required: true, multiple: true, name: 'uploaded_files', class: "btn file_upload_button" %>
+      </div>
+
+      <div class="progress-wrapper">
+        <p>Bitrate: <span class="bitrate"></span></p>
+        <div class="progress">
+          <div class="progress-bar" role="progressbar">
+            0%
+          </div>
+        </div>
+      </div>
+
+      <div class="control-label col-xs-2 form-fields">
+        <%= f.label "Author's name" %>
+      </div>
+      <div class="col-xs-10 form-fields">
+        <%= f.text_field :name, :size=>"80", placeholder: "Surname, Forename" %>
+      </div>
+
+      <div class="control-label col-xs-2 form-fields">
+        <%= f.label "Dissertation title" %><span style="color:red;font-size:14px;">*</span>
+      </div>
+      <div class="col-xs-10 form-fields">
+        <%= f.text_field :title, :size=>"80", placeholder: "Dissertation title", class: "theses_title"  %>
+      </div>
+
+      <div class="control-label col-xs-2 form-fields">
+        <%= f.label :date %>
+      </div>
+      <div class="col-xs-10 form-fields">
+        <%= f.collection_select :date, @years, :to_s, :to_s, include_blank: false %>
+      </div>
+      <br/>
+
+      <div class="control-label col-xs-2 big-form-fields">
+        <%= f.label :abstract %>
+      </div>
+      <div class="col-xs-10 big-form-fields">
+        <%= f.text_area :abstract, :size => "80x5", placeholder: "Abstract" %>
+      </div>
+      <br/>
+
+      <div class="control-label col-xs-2 form-fields">
+        <%= f.label "Degree type"  %>
+      </div>
+      <div class="col-xs-10 form-fields">
+        <%= f.collection_select :degreetype, @degree_types, :to_s, :to_s, include_blank: false %>
+      </div>
+
+      <div>
+          <div class="control-label col-xs-2 form-fields">
+            <%= f.label "Degree supervisor" %>
+          </div>
+
+          <div class="col-xs-10 form-fields" id="divSupervisor">
+            <%= f.text_field :supervisor, :size=>"80", placeholder: "Surname, Forename" %>
+            <%= image_tag("add.gif",    alt: "Add another supervisor", title: "Add another supervisor", size: "16x16", id: "add_supervisor",    :class => "add_image") %>
+          </div>
+      </div>
+      <br/>
+
+      <div>
+          <div class="control-label col-xs-2 form-fields">
+            <%= f.label :department %>
+          </div>
+          <div class="col-xs-10 form-fields" id="divDepartment">
+            <%= f.collection_select :department, @departments, :to_s, :to_s, include_blank: false %>
+            <%= image_tag("add.gif", alt: "Add another department", title: "Add another department", size: "16x16", id: "add_department", class: "add_image") %>
+          </div>
+      </div>
+      <br/>
+
+      <div>
+          <div class="control-label col-xs-2 form-fields">
+            <%= f.label "Subject keyword" %>
+          </div>
+          <div class="col-xs-10 form-fields" id="divSubjectKeyword">
+            <%= f.text_field :subjectkeyword, :size=>"80", placeholder: "Subject keyword" %>
+            <%= image_tag("add.gif", alt: "Add another subject keyword", title: "Add another subject keyword", size: "16x16", id: "add_subjectkeyword", class: "add_image") %>
+          </div>
+          <br/>
+      </div>
+
+      <div class="control-label col-xs-2 form-fields">
+        <%= f.label "Rights holder" %>
+      </div>
+      <div class="col-xs-10 form-fields">
+        <%= f.text_field :rightsholder, :size=>"80", placeholder: "Rights holder" %>
+      </div>
+      <br/>
+
+      <div class="control-label col-xs-2 form-fields">
+        <%= f.label :licence %>
+      </div>
+      <div class="col-xs-10 medium-form-fields">
+        <% first_time = true %>
+        <% @licences.each do |licence| %>
+            <% if first_time == true %>
+                <%= radio_button_tag 'licence', licence[0], true %>
+                <% first_time = false %>
+            <% else %>
+                <%= radio_button_tag 'licence', licence[0], false %>
+            <% end %>
+            <%= licence[1] %><br/>
+        <% end %>
+      </div>
+      <div class="form-fields">
+      </div>
+      <div class="col-xs-offset-2 col-xs-10 form-fields">
+        <span style="font-weight: bold;">* Mandatory field</span>
+      </div>
+      <br/>
+      <br/>
+      <br/>
+      <br/>
+      <div class="form-fields">
+      </div>
+
+      <div class="col-xs-offset-2 col-xs-10 form-fields">
+        <%= f.label "Upload Dissertation", :id => 'btnSubmit', :class => 'btn btn-primary' %>
+      </div>
+
+
+      <br/>
+    </div>
+
+    <div id="spinner">
+
+    </div>
+
+  <% end %>
+ </div>
+</div>

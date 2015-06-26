@@ -1,6 +1,6 @@
 <p id="notice"><%= notice %></p>
 
-<h1>Listing Theses</h1>
+<h1>Listing Dissertation</h1>
 
 <table>
   <thead>
@@ -33,8 +33,6 @@
         <td><%= thesis.rightsholder %></td>
         <td><%= thesis.licence %></td>
         <td><%= link_to 'Show', thesis %></td>
-        <td><%= link_to 'Edit', edit_thesis_path(thesis) %></td>
-        <td><%= link_to 'Destroy', thesis, method: :delete, data: { confirm: 'Are you sure?' } %></td>
       </tr>
     <% end %>
   </tbody>
@@ -42,4 +40,4 @@
 
 <br>
 
-<%= link_to 'New Thesis', new_thesis_path %>
+<%= link_to 'New Dissertation', new_thesis_path %>

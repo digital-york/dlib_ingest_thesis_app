@@ -18,7 +18,7 @@ Rails.application.configure do
   # Add `rack-cache` to your Gemfile before enabling this.
   # For large-scale production use, consider using a caching reverse proxy like
   # NGINX, varnish or squid.
-  # config.action_dispatch.rack_cache = true
+  config.action_dispatch.rack_cache = true
 
   # Disable serving static files from the `/public` folder by default since
   # Apache or NGINX already handles this.
@@ -76,4 +76,17 @@ Rails.application.configure do
 
   # Do not dump schema after migrations.
   config.active_record.dump_schema_after_migration = false
+
+  # Config theses application in the subfolder /theses
+  config.action_controller.relative_url_root = "/theses"
+
+  config.action_mailer.delivery_method = :smtp
+  config.action_mailer.smtp_settings = {
+      address:   ENV['email.server'],
+      port:      ENV['email.port'].to_i,
+      authentication: ENV['email.authentication'],
+      user_name: ENV['email.username'],
+      password:  ENV['email.password'],
+      enable_starttls_auto: ENV['email.enable_starttls_auto']=='true'
+  }
 end

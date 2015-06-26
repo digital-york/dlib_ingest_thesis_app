@@ -90,6 +90,15 @@ thesis:
       text1: 'http://purl.org/dc/dcmitype/Text'
       text2: 'http://dlib.york.ac.uk/type/ExamPaper'
       text3: 'Exam paper'
+  thumbnails:
+    default_icons:
+      pdf:  pdf.jpg
+      doc:  doc.png
+      docx: docx.png
+      zip:  zip.jpg
+      nothum: nothumbnail.png
+    fileextension: x100.jpg
+
 rights:
   admin_only:
       text: 'This item is copyrighted. All rights reserved by the copyright holder. Please refer to the University of York Digital Library Rights Policy for further information.'
