@@ -18,8 +18,8 @@ Rails.application.routes.draw do
 
   #get 'static_pages/cookies'
 
-  #resources :theses, only: [:new, :create]
-  resources :theses
+  resources :theses, only: [:new, :create]
+  #resources :theses
   
   get '/help',           to: 'static_pages#help'
   get '/about',          to: 'static_pages#about'
