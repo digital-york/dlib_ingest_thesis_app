@@ -186,16 +186,16 @@ class ThesesController < ApplicationController
       puts "Received post request: submit"
 
       more_supervisors = params[:more_supervisors]
-      puts "---------more supervisors--------"
-      puts more_supervisors
+      # puts "---------more supervisors--------"
+      # puts more_supervisors
 
       more_departments = params[:more_departments]
-      puts "---------more_departments--------"
-      puts more_departments
+      # puts "---------more_departments--------"
+      # puts more_departments
 
       more_subject_keywords = params[:more_subject_keywords]
-      puts "---------more_subject_keywords--------"
-      puts more_subject_keywords
+      # puts "---------more_subject_keywords--------"
+      # puts more_subject_keywords
 
       #puts "-------------------------"
       #puts get_thesis_xml.to_xml
@@ -223,6 +223,8 @@ class ThesesController < ApplicationController
 
       @thesis = Thesis.new(thesis_params)
 
+      # remove file record and thumbnail if being generated
+      remove_uploaded_files_from_db()
 
       if self.current_user!=nil and self.current_user.email!=nil
         ThesisMailer.submitted(self.current_user.email).deliver
@@ -440,6 +442,36 @@ class ThesesController < ApplicationController
           }
         }
       end
+    end
+
+    def remove_uploaded_files_from_db()
+      owner = 'public'
+      if self.current_user!=nil and self.current_user.department!=nil
+        owner = current_user.login
+      end
+
+      files = UploadedFile.where("owner=?", owner)
+
+      if !files.nil?
+         files.each do |f|
+            tmp_file_name = f.tmp_name
+            thumbnail     = f.thumbnail
+
+            puts "Leave " + tmp_file_name + " for workflow."
+            # File.delete(tmp_file_name) if File.exist?(tmp_file_name)
+            # puts "Done."
+
+            if(thumbnail.start_with?('/uploadedfiles/'))
+              fullpath = Rails.root.join('public', thumbnail).to_s
+              puts "Deleting " + fullpath
+              File.delete(fullpath) if File.exist?(fullpath)
+              puts "Done."
+            end
+
+            f.destroy
+         end
+      end
+
     end
 
   private

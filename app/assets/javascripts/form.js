@@ -217,22 +217,11 @@ $(document).ready(function() {
         });
     });
 
-    txt_thesis_title.on('keydown', function (e, data) {
+    txt_thesis_title.on('change keyup blur paste mouseup', function (e, data) {
         if($(this).val()!="") {
             $(this).css({'backgroundColor' : '#FFFFFF'});
         }else{
             $(this).css({'backgroundColor' : '#FFFF00'});
-        }
-    });
-    txt_thesis_title.on('blur', function (e, data) {
-        if((typeof $(this).val()) === 'undefined') {
-            $(this).css({'backgroundColor' : '#FFFF00'});
-        }else{
-            if($(this).val()!="") {
-                $(this).css("backgroundColor", "white");
-            }else{
-                $(this).css("backgroundColor", "yellow");
-            }
         }
     });
 });
