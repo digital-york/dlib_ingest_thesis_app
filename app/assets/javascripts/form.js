@@ -1,5 +1,5 @@
 // javascript code for submission form
-$(document).ready(function() {
+var ready = function() {
     var multiple_photos_form   = $('#new_thesis');
     var submit_btn             = $('#btnSubmit');
     var add_supervisor_btn     = $('#add_supervisor');
@@ -224,4 +224,7 @@ $(document).ready(function() {
             $(this).css({'backgroundColor' : '#FFFF00'});
         }
     });
-});
+}
+
+$(document).ready(ready);
+$(document).on('page:load', ready);
