@@ -51,7 +51,9 @@ gem 'dragonfly'
 gem 'remotipart', '~> 1.2'
 gem 'jquery-fileupload-rails', github: 'Springest/jquery-fileupload-rails'
 
-gem 'compass-rails'
+# JA added because of 500 error on startup, see https://github.com/tsechingho/chosen-rails/issues/70#issuecomment-92308413
+gem "compass-rails", github: "Compass/compass-rails", branch: "master"
+#gem 'compass-rails'
 gem 'compass'
 
 gem 'mysql2'
