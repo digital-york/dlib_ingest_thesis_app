@@ -10,7 +10,9 @@ thesis:
 image:
   scenarioid: 'York-Fedora-StillImage-Object'
 filestore:
-  yodlprodingest: 'tmpdata/'
-  archbishop: 'tmpdata/'
-tmppath: 'tmpdata_output/'
+  #yodlprodingest: '/usr/digilib-ingest'
+  yodlprodingest: '/vagrant/tmp/'
+  archbishop: '/vagrant/tmp'
+tmppath: '/vagrant/tmp/'
+#tmppath: '/var/tmp/'
 

@@ -11,7 +11,11 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
+<<<<<<< HEAD
 ActiveRecord::Schema.define(version: 20150522092944) do
+=======
+ActiveRecord::Schema.define(version: 20150512121630) do
+>>>>>>> 756acd0a0dd0d671d58ab8dced8906850eb8833c
 
   create_table "ingests", force: :cascade do |t|
     t.string   "folder"
@@ -25,6 +29,7 @@ ActiveRecord::Schema.define(version: 20150522092944) do
     t.string   "repository"
     t.string   "parent"
     t.string   "photographer"
+    t.boolean  "dryrun"
   end
 
   create_table "theses", force: :cascade do |t|

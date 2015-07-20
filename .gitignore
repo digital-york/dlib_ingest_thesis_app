@@ -30,3 +30,4 @@ config/environments/*.local.yml
 
 /public
 
+Gemfile.lock
