@@ -23,7 +23,6 @@ class User < ActiveRecord::Base
       #isMemberOf: cn=tg,ou=pgrad,ou=main,ou=ymgtsch,ou=students,ou=inst,ou=groups,dc=york,dc=ac,dc=uk
       memberinfo = Devise::LDAP::Adapter.get_ldap_param(self.login, "isMemberOf").first
       #memberinfo = Devise::LDAP::Adapter.get_ldap_param('ww721', "isMemberOf").first
-
       self.department = getDepartment(memberinfo)
     end
 
@@ -34,7 +33,10 @@ class User < ActiveRecord::Base
        department = ''
        # The format of isMemberOfStr is: 'cn=tg,ou=pgrad,ou=main,ou=ymgtsch,ou=students,ou=inst,ou=groups,dc=york,dc=ac,dc=uk'
        departmentcode = isMemberOfStr.partition('ou=main,ou=').first.partition(',').first
-       department = Settings.thesis.ldap.department.educat
+       #department = Settings.thesis.ldap.department.educat
+       if !Settings.thesis.ldap.department[departmentcode].nil?
+         department = Settings.thesis.ldap.department[departmentcode]
+       end
 
        # if isMemberOfStr == 'cn=tg,ou=pgrad,ou=main,ou=ymgtsch,ou=students,ou=inst,ou=groups,dc=york,dc=ac,dc=uk'
        #   department = 'University of York. York Management School'
