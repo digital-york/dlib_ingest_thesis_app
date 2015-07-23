@@ -23,18 +23,26 @@ class User < ActiveRecord::Base
       #isMemberOf: cn=tg,ou=pgrad,ou=main,ou=ymgtsch,ou=students,ou=inst,ou=groups,dc=york,dc=ac,dc=uk
       memberinfo = Devise::LDAP::Adapter.get_ldap_param(self.login, "isMemberOf").first
       #memberinfo = Devise::LDAP::Adapter.get_ldap_param('ww721', "isMemberOf").first
-
       self.department = getDepartment(memberinfo)
     end
-
-
 
   private
     def getDepartment(isMemberOfStr)
        department = ''
        # The format of isMemberOfStr is: 'cn=tg,ou=pgrad,ou=main,ou=ymgtsch,ou=students,ou=inst,ou=groups,dc=york,dc=ac,dc=uk'
-       departmentcode = isMemberOfStr.partition('ou=main,ou=').first.partition(',').first
-       department = Settings.thesis.ldap.department.educat
+       # ["cn=support,ou=main,ou=libarch,ou=staff,ou=inst,ou=groups,dc=york,dc=ac,dc=uk"]
+
+       #departmentcode = isMemberOfStr.partition('ou=main,ou=').first.partition(',').first
+       #JA: this seems to get the right attribute for libarchstaff, not sure that will work across the board
+       departmentcode = isMemberOfStr.partition('ou=main,ou=').third.partition(',').first
+       # I don't know how to just add the deptcode onto the end of Settings which would be cleaner
+       case departmentcode
+         when 'libarch'
+           department = Settings.thesis.ldap.department.libarch
+         else
+           department = Settings.thesis.ldap.department.educat
+       end
+
 
        # if isMemberOfStr == 'cn=tg,ou=pgrad,ou=main,ou=ymgtsch,ou=students,ou=inst,ou=groups,dc=york,dc=ac,dc=uk'
        #   department = 'University of York. York Management School'

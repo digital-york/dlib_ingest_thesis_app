@@ -1,0 +1,19 @@
+<br/><br/>
+<h3>New Batch Ingest</h3>
+<br/>
+
+<% if self.current_user.nil? %>
+
+    <p>Please login!</p>
+
+<% elsif self.current_user.get_department == 'University of York. Library and Archives' %>
+
+    <%= render 'form' %>
+
+    <%= link_to 'Back', ingests_path %>
+
+<% else %>
+
+    <p>Go away!</p>
+
+<% end %>

@@ -23,13 +23,14 @@ class IngestsController < ApplicationController
   def create
     @ingest = Ingest.new(ingest_params)
 
+
     if @ingest[:content] != '' and @ingest[:file] != '' and @ingest[:rights] != ''
       if @ingest[:dryrun]
         notice = 'Dry run'
       else
-        if @ingest[:content].start_with? 'image'
-          count,failed_lines = IngestImages.new.open_file(@ingest[:folder], params[:ingest][:file].tempfile, @ingest[:content], @ingest[:rights], @ingest[:photographer], @ingest[:worktype], @ingest[:repository], @ingest[:filestore], @ingest[:parent])
-          notice = count
+        if @ingest[:content].start_with? 'Image'
+          message,failed_lines = IngestImages.new.open_file(@ingest[:folder], params[:ingest][:file].tempfile, @ingest[:content], @ingest[:rights], @ingest[:photographer], @ingest[:worktype], @ingest[:repository], @ingest[:filestore], @ingest[:parent])
+          session[:message] = message
           session[:failures] = failed_lines
         else
           count,failed_lines = IngestItems.new.open_file(@ingest[:folder], params[:ingest][:file].tempfile, @ingest[:content], @ingest[:rights], @ingest[:filestore], @ingest[:parent])

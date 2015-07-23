@@ -8,24 +8,96 @@ include ActiveMessaging::MessageSender
 class IngestImages
 
   def open_file(folder, file, content, rights, photographer, worktype, repository, filestore, parent)
+    #@dryrun = dryrun
+    @dryrun = true
     file_path = ''
     if filestore == 'yodlprodingest'
       file_path = Settings.filestore.yodlprodingest + folder + '/'
     elsif filestore == 'archbishop'
       file_path = Settings.filestore.archbishop + folder + '/'
     end
-    file_path.gsub! '//','/'
+    file_path.gsub! '//', '/'
+
+    puts file
 
     begin
       f = open(file)
       csv = CSV.read(f, :headers => true)
       f.close
-      count,failed_lines = process_file(file_path, csv, content, rights, photographer, worktype, repository, parent)
-      message = count.to_s + ' line(s) processed.'
+      if @dryrun
+        # first check headers and report
+        message = "Checking columns, those with a cross will be ignored:</ br>"
+        headers = CSV.open(f, 'r') { |csv| csv.first }
+        headers.each do |i|
+          case
+            when i == 'image'
+              message += i.to_s + " (tick)</ br>"
+            when i == 'folio'
+              message += i.to_s + " (tick)</ br>"
+            when i == 'recto/verso'
+              message += i.to_s + " (tick)</ br>"
+            when i == 'description'
+              message += i.to_s + " (tick</ br>)"
+            when i == 'notes'
+              message += i.to_s + " (tick)</ br>"
+            when i == 'worktype'
+              message += i.to_s + " (tick)</ br>"
+            when i == 'parent'
+              message += i.to_s + " (tick)</ br>"
+            else
+              message += i.to_s + " (cross)</ br>"
+          end
+        end
+
+        if headers.include?('image')
+          message += "</ br>No column for 'image', so no files found</ br>"
+        else
+
+          #now check that the files exist
+          message += "</ br>Checking files, cannot find those listed below:</ br>"
+
+          csv.group_by { |row| row[''] }.values.each do |group|
+            group.each do |i|
+              i.each_with_index do |pair,index|
+                if pair[0].downcase == 'image'
+                  if pair[1].to_s == ''
+                    message += "blank entry at row (#{index})</ br>"
+                  else
+                    if content == 'Images (TIFFs only)'
+                      f = file_path + pair[1].to_s + '.tif'
+                      if File.file?(f)
+                      else
+                        message += "#{f} at row (#{index})</ br>"
+                      end
+                    elsif content == 'Images (TIFFs and JP2s)'
+                      f = file_path + 'Archive_TIFFs/' + pair[1].to_s + '.tif'
+                      if File.file?(f)
+                      else
+                        message += "#{f} at row (#{index})</ br>"
+                      end
+                      f = file_path + 'Dissemination_JPEG2/' + pair[1].to_s + '.jp2'
+                      if File.file?(f)
+                      else
+                        message += "#{f} at row (#{index})</ br>"
+                      end
+                    end
+                  end
+                end
+              end
+            end
+          end
+        end
+
+      else
+        #count,failed_lines = process_file(file_path, csv, content, rights, photographer, worktype, repository, parent)
+        #message = count.to_s + ' line(s) processed.'
+      end
+
     rescue
-      message = 'There was a problem processing your file. Is it a valid CSV file?'
+      #log this $!
+      message = 'There was a problem processing your file.'
     end
-    return message,failed_lines
+    return message #,failed_lines
   end
 
   def process_file(file_path, csv, content, rights, photographer, worktype, repository, parent)
@@ -53,26 +125,29 @@ class IngestImages
               when 'description'
                 title += pair[1].to_s
               when 'notes'
-                file_output.work.descriptionset.description = pair[1]
+                file_output.work.descriptionset.description = pair[1].to_s
               when 'parent'
                 par = pair[1].to_s
               when 'worktype'
-                file_output.work.locationset.location.refid = pair[1]
+                file_output.work.locationset.location.refid = pair[1].to_s
             end
             title.gsub! '  ', ' '
             file_output.image.titleset.title = title
             file_output.work.titleset.title = title
             file_output.work.titleset.title.lang = 'en'
+
             if repository == 'borthwick' #skip the none
               file_output.work.locationset.location.name = [Settings.repository.borthwick.name]
               file_output.work.locationset.location.gname = [Settings.repository.borthwick.place]
             end
+
             file_output.work.locationset.location.refid = refid
           end
 
           file_output.image.agentset.agent.name = photographer
           file_output.image.agentset.agent.role = 'photographer'
           file_output.image.worktypeset.worktype = 'digital photograph or image'
+
           #we prefer what's in the file to the boilerplate
           if worktype != ''
             file_output.work.worktypeset.worktype = worktype
@@ -138,7 +213,7 @@ class IngestImages
 
           wf_client_file_path = Settings.tmppath + SecureRandom.uuid + '.wf.client'
           File.open(wf_client_file_path, "w+") do |f|
-            f.write(get_workflow_client_thesis_xml(metadata_file_path, par,archival_master_file_path,display_file_path).to_xml)
+            f.write(get_workflow_client_thesis_xml(metadata_file_path, par, archival_master_file_path, display_file_path).to_xml)
           end
 
           #publish()
@@ -149,14 +224,11 @@ class IngestImages
             failed_lines[image] = 'error'
           end
           #delete any files created during a failed process
-          cleanup(metadata_file_path,wf_client_file_path,archival_master_file_path,display_file_path)
+          cleanup(metadata_file_path, wf_client_file_path, archival_master_file_path, display_file_path)
         end
-        #FileUtils.rm file_path + 'Archive_TIFFs/' + image + '.tif'
-        #FileUtils.rm file_path + 'Dissemination_JPEG2/' + image + '.jp2'
-        #FileUtils.rm file_path + image + '.tiff'
       end
     end
-    return count,failed_lines
+    return count, failed_lines
   end
 
   # Use default collection specified in settings unless otherwise specified
@@ -180,7 +252,7 @@ class IngestImages
     end
   end
 
-  def cleanup(metadata_file_path,wf_client_file_path,archival_master_file_path,display_file_path)
+  def cleanup(metadata_file_path, wf_client_file_path, archival_master_file_path, display_file_path)
     if !metadata_file_path.nil?
       if File.exist?(metadata_file_path)
         FileUtils.rm metadata_file_path

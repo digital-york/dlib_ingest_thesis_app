@@ -63,6 +63,7 @@ thesis:
       sociology: 'University of York. Dept. of Sociology'
       theflmtv:  'University of York. Dept. of Theatre, Film and Television'
       hyms:      'Hull York Medical School'
+      libarch:  'University of York. Library and Archives'
   #biolder plate is used to add default dc fields
   boiler_plate:
     dc_type:

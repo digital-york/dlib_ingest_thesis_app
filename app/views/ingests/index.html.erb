@@ -1,0 +1,28 @@
+<br/><br/>
+<h1>Batch Ingest</h1>
+<p id="notice"><%= notice %></p>
+<% if self.current_user.nil? %>
+
+    <p>Please login!</p>
+
+
+<% elsif self.current_user.get_department == 'University of York. Library and Archives' %>
+    <p><%= session[:message] %></p>
+    <div class="pretty_button">
+        <%= link_to 'New Ingest', new_ingest_path %>
+    </div>
+
+   <% if session[:failures] %>
+
+        <%= render 'failures' %>
+
+    <% end %>
+
+
+<% else %>
+
+<p>Go away!</p>
+
+    <br /><br />
+
+<% end %>

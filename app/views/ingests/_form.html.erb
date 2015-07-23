@@ -12,22 +12,23 @@
     <% end %>
 
     <div class="field">
-        <%= f.label "Content Type" %><br>
+        <%= f.label "Type of Content to Ingest" %><br>
         <%= f.select(:content) do %>
             <%= options_for_select([
                                            ['please select', ''],
-                                           ['collection'],
-                                           ['thesis'],
-                                           ['exam paper'],
-                                           ['scholarly text'],
-                                           ['image (single TIFF)'],
-                                           ['image (TIFF master and JP2 display)']
+                                           ['Collections'],
+                                           ['Theses'],
+                                           ['Exam papers'],
+                                           ['Scholarly texts'],
+                                           ['Images (TIFFs only)'],
+                                           ['Images (TIFFs and JP2s)']
                                    ]) %>
         <% end %>
     </div>
 
+    <br />
     <div class="field">
-        <%= f.label "Select the filestore (yodlprodingest is the default)" %><br />
+        <%= f.label "Select the filestore" %><br />
         <%= f.select(:filestore) do %>
             <%= options_for_select([
                                            ['yodlprodingest'],
@@ -35,27 +36,39 @@
                                    ]) %>
         <% end %>
     </div>
+    <br />
     <div class="field">
-        <%= f.label "Folder path to files" %><br />
+        <%= f.label "Path to files" %><br />
         <p> For example '<i>archbishop/Folder1/Folder2/</i>' enter '<i>Folder1/Folder2</i>'. Leave blank for root directory.<br />
-            If you are selecting thesis, exam paper, scholarly text or '<i>image (single TIFF)</i>' the files should be in the folder specified.<br />
+            If you are selecting thesis, exam paper, scholarly text or '<i>image (TIFF only)</i>' the files should be in the folder specified.<br />
             If you are selecting '<i>image (TIFF master and JP2 display)</i>' we will look for sub-directories called '<i>Dissemination_JPEG2</i>' and '<i>Archive_TIFFs</i>'
         </p>
-        <%= f.text_field :folder %>
+       [selected filestore here/] <%= f.text_field :folder, :size => 50 %>
+        <h3>Check folders exist</h3>
     </div>
+    <br />
     <div class="field">
         <%= f.label "Select a CSV file to upload" %><br />
         <%= f.file_field :file %>
     </div>
-
+    <br />
     <div class="field">
         <%= f.label :rights %><br />
         <%= f.select :rights, options_for_select(Settings.rights.to_hash { |l | [l['label']] }) %>
     </div>
+    <br />
     <div class="field">
         <%= f.label :repository %><br />
         <%= f.select :repository, options_for_select(Settings.repository.to_hash { |l | [l['label']] }) %>
     </div>
+    <br />
+    <div class="field">
+        <%= f.label "Choose Parent Collection" %><br />
+        <%= f.text_field :parent %>
+        <h3>provide a 'selector' using the YODL REST API for collections: https://dlib.york.ac.uk/yodl/api/resource/collections</h3>
+    </div>
+
+    <h3>Images only - make this only appear if images selected</h3>
 
     <div class="field">
         <%= f.label "Imager (images only)." %><br />
@@ -65,20 +78,14 @@
             <%= f.text_field :photographer, :value => self.current_user.surname + ', ' + self.current_user.givenname %>
         <% end %>
     </div>
-
+    <br />
     <div class="field">
         <%= f.label "Worktype (provide for images only), leave blank if this info is in the csv file" %><br />
         <%= f.text_field :worktype , :value => 'manuscript' %>
     </div>
+    <br />
+    <h3>set dryrun to true</h3>
 
-    <div class="field">
-        <%= f.label "Parent Collection (in the form york:1234, leave blank if this info is in the csv file)" %><br />
-        <%= f.text_field :parent %>
-    </div>
-    <div class="field">
-        <%= f.label "Dry run" %><br />
-        <%= f.check_box :dryrun %>
-    </div>
 
     <br />
     <div class="actions">
