@@ -38,25 +38,27 @@
 }
 
 #dropzone {
-  background: palegreen;
-  width: 150px;
+  //background: palegreen;
+  background: #BDFCC9;
+  //width: 150px;
   text-align: center;
   font-weight: bold;
-  height: 50px;
-  line-height: 50px;
+  //height: 50px;
+  //line-height: 50px;
   border: 1px solid darken(palegreen, 10%);
   @include border-radius(10px);
 }
 
 #dropzone.in {
-  width: 600px;
-  height: 200px;
-  line-height: 200px;
+  //width: 600px;
+  //height: 200px;
+  //line-height: 200px;
   font-size: larger;
 }
 
 #dropzone.hover {
-  background: lawngreen;
+  //background: lawngreen;
+  background: palegreen;
   border: 1px solid darken(lawngreen, 10%);
 }
 
@@ -131,4 +133,5 @@ div#spinner
 .file_upload_button{
   position: relative;
   left: -13px;
+  top: -22px;
 }
