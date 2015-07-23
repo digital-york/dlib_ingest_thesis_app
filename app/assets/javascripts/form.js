@@ -73,12 +73,14 @@ var ready = function() {
         dataType: 'script',
         dropZone: $('#dropzone'),
         add: function (e, data) {
-            types = /(\.|\/)(pdf|doc|docx|jpe?g|png|zip)$/i;
-            file = data.files[0];
-            if (types.test(file.type) || types.test(file.name)) {
+            // Allow all file types
+
+            //types = /(\.|\/)(pdf|doc|docx|jpe?g|png|zip)$/i;
+            //file = data.files[0];
+            //if (types.test(file.type) || types.test(file.name)) {
                 data.submit();
-            }
-            else { alert(file.name + ": only PDF, DOC, DOCX, JPEG, PNG, OR ZIP file allowed."); }
+            //}
+            //else { alert(file.name + ": only PDF, DOC, DOCX, JPEG, PNG, OR ZIP file allowed."); }
         }
     });
 

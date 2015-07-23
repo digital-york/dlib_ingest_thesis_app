@@ -21,18 +21,18 @@ class User < ActiveRecord::Base
   before_save :get_department
     def get_department
       #isMemberOf: cn=tg,ou=pgrad,ou=main,ou=ymgtsch,ou=students,ou=inst,ou=groups,dc=york,dc=ac,dc=uk
-      memberinfo = Devise::LDAP::Adapter.get_ldap_param(self.login, "isMemberOf").first
-      #memberinfo = Devise::LDAP::Adapter.get_ldap_param('ww721', "isMemberOf").first
+      #memberinfo = Devise::LDAP::Adapter.get_ldap_param(self.login, "isMemberOf").first
+      memberinfo = Devise::LDAP::Adapter.get_ldap_param('brg506', "isMemberOf").first
       self.department = getDepartment(memberinfo)
     end
-
-
 
   private
     def getDepartment(isMemberOfStr)
        department = ''
        # The format of isMemberOfStr is: 'cn=tg,ou=pgrad,ou=main,ou=ymgtsch,ou=students,ou=inst,ou=groups,dc=york,dc=ac,dc=uk'
-       departmentcode = isMemberOfStr.partition('ou=main,ou=').first.partition(',').first
+       index = isMemberOfStr.index('ou=main,ou=') + 'ou=main,ou='.length
+
+       departmentcode = isMemberOfStr[index..-1].partition(',').first
        #department = Settings.thesis.ldap.department.educat
        if !Settings.thesis.ldap.department[departmentcode].nil?
          department = Settings.thesis.ldap.department[departmentcode]
