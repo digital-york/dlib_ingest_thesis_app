@@ -26,5 +26,7 @@ config/environments/*.local.yml
 /.idea
 /.idea/*
 
+/*.iml
+
 /public
 
