@@ -35,6 +35,7 @@ class ThesesController < ApplicationController
     @thesis = Thesis.new
     if self.current_user!=nil and self.current_user.surname!=nil and self.current_user.givenname!=nil
         @thesis.name = self.current_user.surname + ', ' + self.current_user.givenname
+        @thesis.rightsholder = @thesis.name
     end
 
     @years        = Time.now.year.step(1960, -1)
