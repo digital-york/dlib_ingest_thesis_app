@@ -207,10 +207,11 @@ class ThesesController < ApplicationController
       end
 
       wf_client_file_path = '/var/tmp/' + SecureRandom.uuid + '.wf.client'
+      wf_client_content  = get_workflow_client_thesis_xml_multi_files_from_db(metadata_file_path, mainfileid).to_xml
       File.open(wf_client_file_path, "w+") do |f|
-        f.write(get_workflow_client_thesis_xml_multi_files_from_db(metadata_file_path, mainfileid).to_xml)
+        f.write(wf_client_content)
       end
-
+      publish :'workflow_queue', wf_client_content, {'suppress_content_length' => true}
       #publish :'workflow_queue', get_workflow_client_thesis_xml(metadata_file_path).to_xml, {'suppress_content_length' => true}
       #publish :'workflow_queue', get_workflow_client_thesis_xml_single_file(metadata_file_path, File.absolute_path(uf.tempfile), "true", "ture", uf.content_type).to_xml, {'suppress_content_length' => true}
 
