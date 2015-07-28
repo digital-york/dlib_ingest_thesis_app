@@ -1,5 +1,7 @@
 // javascript code for submission form
 var ready = function() {
+    var app_root               = "/theses";   // it has to be /theses for Passenger, "/" for rails default WEBrick
+
     var multiple_photos_form   = $('#new_thesis');
     var submit_btn             = $('#btnSubmit');
     var add_supervisor_btn     = $('#add_supervisor');
@@ -125,7 +127,7 @@ var ready = function() {
         spinnerVisible = true;
 
         $.ajax({
-                url: "/theses",
+                url: app_root+"/theses",
                 type: "POST",
                 data: {thesis: {
                                  name:            $('#thesis_name').val(),
@@ -146,7 +148,7 @@ var ready = function() {
                         mainfile: mfile,
                       },
                 success: function(resp){
-                    window.location.href = "/submit_success";
+                    window.location.href = app_root+"/submit_success";
                 }
         });
 
