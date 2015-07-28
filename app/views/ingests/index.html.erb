@@ -6,7 +6,7 @@
     <p>Please login!</p>
 
 
-<% elsif self.current_user.get_department == 'University of York. Library and Archives' %>
+<% elsif self.current_user.get_department_code == 'libarch' %>
     <p><%= session[:message] %></p>
     <div class="pretty_button">
         <%= link_to 'New Ingest', new_ingest_path %>
