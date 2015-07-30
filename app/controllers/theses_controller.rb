@@ -196,7 +196,7 @@ class ThesesController < ApplicationController
       remove_uploaded_files_from_db()
 
       if self.current_user!=nil and self.current_user.email!=nil
-        ThesisMailer.submitted(self.current_user.email).deliver
+        ThesisMailer.submitted(self.current_user.email).deliver_now
       end
 
       respond_to do |format|
