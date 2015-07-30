@@ -29,7 +29,7 @@ class ThesesController < ApplicationController
 
   # GET /theses/new
   def new
-    owner = 'admin'
+    owner = 'public'
     #@uploaded_file = UploadedFile.new
 
     @thesis = Thesis.new
@@ -50,7 +50,7 @@ class ThesesController < ApplicationController
       @thesis.department = self.current_user.department
     end
 
-    if self.current_user!=nil and self.current_user.department!=nil
+    if self.current_user!=nil #and self.current_user.department!=nil
       owner = current_user.login
     end
 
@@ -86,18 +86,17 @@ class ThesesController < ApplicationController
 
     if 'upload' == submission_type
       uf = params[:uploaded_files]
-      # puts '=============@thesis uploaded files (ONLY)============='
       s = uf.inspect
       start_index = s.index('UploadedFile:')+'UploadedFile:'.length
       end_index   = start_index + 16
 
       uf_uid = s[start_index..end_index].strip
-      puts "uf_uid: "
-      puts uf_uid
+      #logger.debug "uf_uid: "
+      #logger.debug uf_uid
 
       respond_to do |format|
-        owner = 'admin'
-        if self.current_user!=nil and self.current_user.department!=nil
+        owner = 'public'
+        if self.current_user!=nil
           owner = current_user.login
         end
 
@@ -108,9 +107,9 @@ class ThesesController < ApplicationController
         end
         fulltmpfilename = File.absolute_path(uf.tempfile).to_s
         tmpfilename     = fulltmpfilename[(fulltmpfilename.rindex('/')+1)..-1].downcase
-        puts "Moving file: "
-        puts fulltmpfilename
-        puts filepath + tmpfilename
+        #puts "Moving file: "
+        #puts fulltmpfilename
+        #puts filepath + tmpfilename
         FileUtils.copy(fulltmpfilename, filepath + tmpfilename)
 
         thumbnail = 'nothumbnail.png'
@@ -124,11 +123,10 @@ class ThesesController < ApplicationController
         elsif tmpfilename.end_with? 'zip'
           thumbnail = default_thumbnails['zip'.to_sym]
         elsif (tmpfilename.end_with? 'jpg') || (tmpfilename.end_with? 'jpeg') || (tmpfilename.end_with? 'png')
-          puts 'Generating thumbnail'
+          logger.debug 'Generating thumbnail'
           thumbnail = tmpfilename + Settings.thesis.thumbnails.fileextension.to_s
           cmd = 'convert -resize x100 ' + filepath + tmpfilename + ' ' + filepath + thumbnail
           thumbnail = tmpfileurl + thumbnail
-          #puts cmd
           system(cmd)
         else
           thumbnail = default_thumbnails['nothum'.to_sym]
@@ -150,13 +148,6 @@ class ThesesController < ApplicationController
                                    created_at: t,
                                    updated_at: t)
         @uploaded_file.save
-        #Rails.logger.info(newfile.errors.inspect)
-        # @uploaded_files = UploadedFile.where("owner='"+owner+"'")
-        # puts "@uploaded_files"
-        # puts "----------------------"
-        # puts @uploaded_files.inspect
-        # puts "----------------------"
-        # puts "END of @uploaded_files"
 
         @thesis = Thesis.new
         if self.current_user!=nil and self.current_user.surname!=nil and self.current_user.givenname!=nil
@@ -175,34 +166,18 @@ class ThesesController < ApplicationController
           @thesis.department = self.current_user.department
         end
 
-        #format.html { render :new }
-        # format.json { render json: @thesis.errors, status: :unprocessable_entity }
         format.html {redirect_to new_theses_path}
         format.js
       end
     elsif 'submit' == submission_type # processing metadata submission
       mainfileid = params[:mainfile]
-
-
-      puts "Received post request: submit"
-
+      logger.debug "Received post request: submit"
       more_supervisors = params[:more_supervisors]
-      # puts "---------more supervisors--------"
-      # puts more_supervisors
-
       more_departments = params[:more_departments]
-      # puts "---------more_departments--------"
-      # puts more_departments
-
       more_subject_keywords = params[:more_subject_keywords]
-      # puts "---------more_subject_keywords--------"
-      # puts more_subject_keywords
 
-      #puts "-------------------------"
-      #puts get_thesis_xml.to_xml
       metadata_file_path = '/var/tmp/' + SecureRandom.uuid + '.dc'
       File.open(metadata_file_path, "w+") do |f|
-        # f.write(add_bioler_plate_fields(get_thesis_xml.to_xml))
         f.write(add_bioler_plate_fields(get_thesis_xml(more_supervisors, more_departments, more_subject_keywords).to_xml))
       end
 
@@ -215,14 +190,6 @@ class ThesesController < ApplicationController
       #publish :'workflow_queue', get_workflow_client_thesis_xml(metadata_file_path).to_xml, {'suppress_content_length' => true}
       #publish :'workflow_queue', get_workflow_client_thesis_xml_single_file(metadata_file_path, File.absolute_path(uf.tempfile), "true", "ture", uf.content_type).to_xml, {'suppress_content_length' => true}
 
-      #puts '=============workflow client xml============='
-      #puts get_workflow_client_thesis_xml_single_file(metadata_file_path, File.absolute_path(uf.tempfile), "true", "ture", uf.content_type).to_xml
-      #puts '=============end of wf client xml============='
-
-      #puts '=============@thesis_params============='
-      #puts thesis_params.inspect
-      #puts '=============@thesis_params============='
-
       @thesis = Thesis.new(thesis_params)
 
       # remove file record and thumbnail if being generated
@@ -234,7 +201,7 @@ class ThesesController < ApplicationController
 
       respond_to do |format|
         if @thesis.save
-          puts "Thesis saved successfully, redirecting..."
+          logger.debug "Thesis saved successfully, redirecting..."
           format.html {
             redirect_to @thesis, notice: 'Thesis was successfully created.'
             return
@@ -357,10 +324,7 @@ class ThesesController < ApplicationController
       root = doc.root
       root.add_namespace 'oai_dc', 'http://www.openarchives.org/OAI/2.0/oai_dc/'
       root.add_namespace 'dc',      'http://purl.org/dc/elements/1.1/'
-      # publisher = ''
-      # root.xpath('dc:publisher').each do |pub|
-      #   publisher = pub.content
-      # end
+
       publisher  = thesis_params[:publisher]
       degreetype = thesis_params[:degree_type]
 
@@ -448,7 +412,7 @@ class ThesesController < ApplicationController
 
     def remove_uploaded_files_from_db()
       owner = 'public'
-      if self.current_user!=nil and self.current_user.department!=nil
+      if self.current_user!=nil
         owner = current_user.login
       end
 
@@ -459,15 +423,13 @@ class ThesesController < ApplicationController
             tmp_file_name = f.tmp_name
             thumbnail     = f.thumbnail
 
-            puts "Leave " + tmp_file_name + " for workflow."
-            # File.delete(tmp_file_name) if File.exist?(tmp_file_name)
-            # puts "Done."
+            logger.debug "Leave " + tmp_file_name + " for workflow."
 
             if(thumbnail.start_with?('/uploadedfiles/'))
               fullpath = Rails.root.join('public', thumbnail).to_s
-              puts "Deleting " + fullpath
+              logger.debug "Deleting " + fullpath
               File.delete(fullpath) if File.exist?(fullpath)
-              puts "Done."
+              logger.debug "Done."
             end
 
             f.destroy
@@ -511,9 +473,9 @@ class ThesesController < ApplicationController
 
             if(thumbnail.start_with?('/uploadedfiles/'))
               fullpath = Rails.root.join('public', thumbnail).to_s
-              puts "Deleting " + fullpath
+              logger.debug "Deleting " + fullpath
               File.delete(fullpath) if File.exist?(fullpath)
-              puts "Done."
+              logger.debug "Done."
             end
 
             f.destroy
