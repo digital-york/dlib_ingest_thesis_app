@@ -286,34 +286,59 @@ class ThesesController < ApplicationController
 
       builder = Nokogiri::XML::Builder.new do |xml|
         xml['oai_dc'].dc('xmlns:oai_dc' => 'http://www.openarchives.org/OAI/2.0/oai_dc/', 'xmlns:dc' => 'http://purl.org/dc/elements/1.1/') {
-          xml['dc'].creator creator
-          xml['dc'].title title
-          xml['dc'].date date
-          xml['dc'].description desc
-          xml['dc'].type degreetype
-
-          xml['dc'].contributor contributor
+          if !creator.nil? and creator!=''
+            xml['dc'].creator creator
+          end
+          if !title.nil? and title!=''
+            xml['dc'].title title
+          end
+          if !date.nil? and date!=''
+            xml['dc'].date date
+          end
+          if !desc.nil? and desc!=''
+            xml['dc'].description desc
+          end
+          if !degreetype.nil? and degreetype!=''
+            xml['dc'].type degreetype
+          end
+          if !contributor.nil? and contributor!=''
+            xml['dc'].contributor contributor
+          end
           if !more_supervisors.nil?
             more_supervisors.each do |sup|
-              xml['dc'].contributor sup
+              if !sup.nil? and sup!=''
+                xml['dc'].contributor sup
+              end
             end
           end
 
-          xml['dc'].publisher publisher
+          if !publisher.nil? and publisher!=''
+            xml['dc'].publisher publisher
+          end
           if !more_departments.nil?
             more_departments.each do |dep|
-              xml['dc'].publisher dep
+              if !dep.nil? and dep!=''
+                xml['dc'].publisher dep
+              end
             end
           end
 
-          xml['dc'].subject subject
+          # Add first subject
+          if !subject.nil? and subject!=''
+            xml['dc'].subject subject
+          end
+          # Add other optional subjects
           if !more_subject_keywords.nil?
             more_subject_keywords.each do |sub|
-              xml['dc'].subject sub
+              if !sub.nil? and sub!=''
+                xml['dc'].subject sub
+              end
             end
           end
 
-          xml['dc'].rights rights
+          if !rights.nil? and rights!=''
+            xml['dc'].rights rights
+          end
           # xml['dc'].licence licence
         }
       end
@@ -339,13 +364,21 @@ class ThesesController < ApplicationController
       #process boiler plate fields
       Settings.thesis.boiler_plate.to_hash.keys.each do |key|
         key_str = key.to_s
+        orig_key_str = key_str.clone
         key_str.sub! '_', ':'
+        orig_key_str.sub! '_', ':'
         if key_str!='dc:rights'
           if key_str.start_with? "dc:type"
             key_str = "dc:type"
           end
-          Settings.thesis.boiler_plate[key].to_hash.values.each do |value|
-            root.add_child('<'+key_str+'>'+value.to_s+'</'+key_str+'>')
+
+          # dc_type in settings.yml is kind of reserved by Thesis
+          # other content models added later, e.g. dc_type_coll, dc_type_schol, and dc_type_exam need to do
+          # additional checks before adding dc types
+          if orig_key_str=="dc:type"
+            Settings.thesis.boiler_plate[key].to_hash.values.each do |value|
+              root.add_child('<'+key_str+'>'+value.to_s+'</'+key_str+'>')
+            end
           end
         else
           public_dept_list = Settings.thesis.boiler_plate.dc_rights.public_department_list.to_hash.values
@@ -384,8 +417,8 @@ class ThesesController < ApplicationController
       end
     end
     def get_workflow_client_thesis_xml_multi_files_from_db(metadata_file, mainfileid)
-      owner = 'admin'
-      if self.current_user!=nil and self.current_user.department!=nil
+      owner = 'public'
+      if self.current_user!=nil
         owner = current_user.login
       end
 
