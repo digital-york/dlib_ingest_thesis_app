@@ -1,27 +1,36 @@
 <br/><br/>
 <h1>Batch Ingest</h1>
 <p id="notice"><%= notice %></p>
-<% if self.current_user.nil? %>
+<% if self.current_user.get_department_code == 'libarch' %>
 
-    <p>Please login!</p>
-
-
-<% elsif self.current_user.get_department_code == 'libarch' %>
-    <p><%= session[:message] %></p>
     <div class="pretty_button">
         <%= link_to 'New Ingest', new_ingest_path %>
     </div>
 
-   <% if session[:failures] %>
+    <h3>York Digital Library Batch Ingest Tool</h3>
+    <p>This tool is for uploading batches of images, dissertations, scholarly texts or exam papers, and their associated files. It can also be used to add batches of collections.</p>
+
+    <p>The tool has two steps. First complete the form and upload your file.
+        The tool then checks the data for errors (files not in the specified locations, incorrect column headings and non-existent collections).
+        If the data has no significant errors the ingest can then proceed.</p>
+
+    <p>Please, please check and double check your data and the on screen report. It's much easier to correct errors now, than later.</p>
+
+    <h3>Current limitations</h3>
+
+    <p>It can only upload one type of content at a time.</p>
+    <p>It can only upload pdf files for Dissertations, Scholarly Texts and Exam Papers (both main and additional files).</p>
+    <p>It does not support uploading jpeg images.</p>
+    <p>It will not upload files with Collections.</p>
+
+    <% if session[:failures] %>
 
         <%= render 'failures' %>
-
     <% end %>
-
 
 <% else %>
 
-<p>Go away!</p>
+    <p>You are not authorized to view this page? Redirect?</p>
 
     <br /><br />
 

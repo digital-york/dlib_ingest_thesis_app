@@ -1,17 +1,7 @@
 class CollectionsController < ApplicationController
+  before_action :authenticate_user!
 
   def index
-
-    #@collections_list = CollectionsHelper.new().get_tree
-
+    @collections_list = login
   end
-
-  def new
-
-  end
-
-  def show
-
-  end
-
 end

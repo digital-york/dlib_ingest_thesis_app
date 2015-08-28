@@ -26,12 +26,18 @@ Rails.application.routes.draw do
   get '/contact',        to: 'static_pages#contact'
   get '/submit_success', to: 'static_pages#submit_success'
 
-
   match '/404',          to: 'errors#file_not_found',        via: :all
   match '/422',          to: 'errors#unprocessable',         via: :all
   match '/500',          to: 'errors#internal_server_error', via: :all
 
+  # the order matters here!
+  get 'ingests/collection' => 'ingests#collection'
+  get 'ingests/dryrun_results', to: 'ingests#dryrun_results'
+  get 'ingests/ingest_repost', to: 'ingests#ingest_repost'
+
   resources :ingests
+
+  resources :collections
 
   resources :uploaded_file
 
@@ -42,8 +48,7 @@ Rails.application.routes.draw do
   # root 'welcome#index'
   root 'static_pages#home'
 
-  
-  # Example of regular route:
+    # Example of regular route:
   #   get 'products/:id' => 'catalog#view'
 
   # Example of named route that can be invoked with purchase_url(id: product.id)

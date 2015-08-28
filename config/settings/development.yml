@@ -12,7 +12,7 @@ image:
 filestore:
   #yodlprodingest: '/usr/digilib-ingest'
   yodlprodingest: '/vagrant/tmp/'
-  archbishop: '/vagrant/tmp'
+  archbishop: '/vagrant/tmp/'
 tmppath: '/vagrant/tmp/'
 #tmppath: '/var/tmp/'
 

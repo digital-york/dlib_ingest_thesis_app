@@ -12,7 +12,7 @@
     <% end %>
 
     <div class="field">
-        <%= f.label "Select the filestore" %><br/>
+        <%= f.label "Select the filestore"%><br />
         <%= f.select(:filestore) do %>
             <%= options_for_select([
                                            ['please select', ''],
@@ -22,24 +22,24 @@
             <%= :id %>
         <% end %>
     </div>
-    <br/>
-    <div class="field ingest 1">
-        <%= f.label "Path to files" %><br/>
+    <br />
+    <div class="field">
+        <%= f.label "Path to files"%><br />
         <%= f.text_field :folder, :size => 70 %>
-        <p>E.G. '<i>archbishop/Folder1/Folder2/</i>' enter '<i>Folder1/Folder2</i>'.<br/>
-            Leave blank for root directory.<br/>
+        <p>E.G. '<i>archbishop/Folder1/Folder2/</i>' enter '<i>Folder1/Folder2</i>'.<br />
+            Leave blank for root directory.<br />
             If you are selecting '<i>image (TIFF master and JP2 display)</i>' make sure sub-directories for
             '<i>Dissemination_JPEG2</i>' and '<i>Archive_TIFFs</i>' exist but do not include them here.
         </p>
     </div>
-    <br/>
-    <div class="field ingest 1">
-        <%= f.label "Select a CSV file to upload" %><br/>
+    <br />
+    <div class="field">
+        <%= f.label "Select a CSV file to upload"%><br />
         <%= f.file_field :file %>
     </div>
-    <br/>
+    <br />
 
-    <div class="field ingest 2">
+    <div class="field">
         <%= f.label "Type of Content to Ingest" %><br>
         <%= f.select(:content) do %>
             <%= options_for_select([
@@ -57,51 +57,45 @@
         <% end %>
 
     </div>
-    <div class="field field-toggle-off">
-        <%= f.label "Imager", :class => 'field-toggle-off' %><br/>
+    <div class="field">
+        <%= f.label "Imager"%><br />
         <% if self.current_user.nil? %>
             <%= f.text_field :photographer %>
         <% else %>
             <%= f.text_field :photographer, :value => self.current_user.surname + ', ' + self.current_user.givenname %>
         <% end %>
     </div>
-    <br/>
-    <div class="field field-toggle-off">
-        <%= f.label "Worktype (leave blank if this is in the csv)" %><br/>
+    <br />
+    <div class="field">
+        <%= f.label "Worktype (leave blank if this is in the csv)"%><br />
         <%= f.text_field :worktype %>
     </div>
 
-    <div class="field ingest 3">
-        <%= f.label :rights %><br/>
-        <% @hash = Hash.new()
-           @hash = {'please select' => ''}
-           @hash.reverse_merge!(Settings.rights.to_hash { |l| [l['label']] }) %>
-        <%= f.select :rights, options_for_select(@hash) %>
-
-    </div>
-    <br/>
-    <div class="field ingest 4">
-        <%= f.label :repository %><br/>
-        <%= f.select :repository, options_for_select(Settings.repository.to_hash { |l| [l['label']] }), :class => 'field-toggle-off' %>
-    </div>
-    <%= f.hidden_field :dryrun, :value => 'true' %>
-    <br/>
-    <div class="field ingest 4">
-        <%= f.label "Parent Collection (leave blank if this is in the csv)" %><br/>
+    <br />
+    <div class="field">
+        <%= f.label "Parent Collection (leave blank if this is in the csv)" %><br />
         <%= f.label "Select Collection", :id => 'btnColl', :class => 'btn btn-primary' %>
-        <br/>
-
-        <div id="divColl" style="display: none;">
-
-        </div>
-        <br/>
-        <br class="remove"/>
-        <%= f.label "Collection pid:", :class => 'remove' %>
-        <br class="remove"/>
+        <br />
+        <%= f.label "Collection pid:"%>
         <%= f.text_field :parent %>
     </div>
-    <div class="actions ingest 4">
-        <%= f.submit "Test Ingest", class: "pretty_button" %>
+
+    <div class="field">
+        <%= f.label :rights %><br />
+        <%= f.select :rights, options_for_select(Settings.rights.to_hash { |l | [l['label']] }) %>
+
     </div>
-    <br/>
+    <br />
+    <div class="field">
+        <%= f.label :repository%><br />
+        <%= f.select :repository, options_for_select(Settings.repository.to_hash { |l | [l['label']] })%>
+    </div>
+    <%= f.hidden_field :dryrun, :value => 'true' %>
+    <%= f.hidden_field :email, :value => self.current_user.get_ldap_email %>
+
+        <br />
+    <div class="actions">
+        <%= f.submit "Test Ingest"%>
+    </div>
+    <br />
 <% end %>

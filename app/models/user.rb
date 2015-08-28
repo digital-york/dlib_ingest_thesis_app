@@ -19,14 +19,13 @@ class User < ActiveRecord::Base
   end
 
   before_save :get_department
-    def get_department
-      #isMemberOf: cn=tg,ou=pgrad,ou=main,ou=ymgtsch,ou=students,ou=inst,ou=groups,dc=york,dc=ac,dc=uk
-      memberinfo = Devise::LDAP::Adapter.get_ldap_param(self.login, "isMemberOf").first
-      #memberinfo = Devise::LDAP::Adapter.get_ldap_param('ww721', "isMemberOf").first
-      self.department = getDepartment(memberinfo)
-    end
+  def get_department
+    #isMemberOf: cn=tg,ou=pgrad,ou=main,ou=ymgtsch,ou=students,ou=inst,ou=groups,dc=york,dc=ac,dc=uk
+    #memberinfo = Devise::LDAP::Adapter.get_ldap_param(self.login, "isMemberOf").first
+    memberinfo = Devise::LDAP::Adapter.get_ldap_param('brg506', "isMemberOf").first
+    self.department = getDepartment(memberinfo)
+  end
 
-  before_save :get_department_code
   def get_department_code
     memberinfo = Devise::LDAP::Adapter.get_ldap_param(self.login, "isMemberOf").first
     #memberinfo = Devise::LDAP::Adapter.get_ldap_param('ww721', "isMemberOf").first
@@ -34,30 +33,30 @@ class User < ActiveRecord::Base
   end
 
   private
-    def getDepartment(isMemberOfStr)
-       department = ''
-       # The format of isMemberOfStr is: 'cn=tg,ou=pgrad,ou=main,ou=ymgtsch,ou=students,ou=inst,ou=groups,dc=york,dc=ac,dc=uk'
-       # ["cn=support,ou=main,ou=libarch,ou=staff,ou=inst,ou=groups,dc=york,dc=ac,dc=uk"]
+  def getDepartment(isMemberOfStr)
+    department = ''
+    # The format of isMemberOfStr is: 'cn=tg,ou=pgrad,ou=main,ou=ymgtsch,ou=students,ou=inst,ou=groups,dc=york,dc=ac,dc=uk'
+    index = isMemberOfStr.index('ou=main,ou=') + 'ou=main,ou='.length
 
-       #departmentcode = isMemberOfStr.partition('ou=main,ou=').first.partition(',').first
-       #JA: this seems to get the right attribute for libarchstaff, not sure that will work across the board
-       departmentcode = isMemberOfStr.partition('ou=main,ou=').third.partition(',').first
-       # I don't know how to just add the deptcode onto the end of Settings which would be cleaner
-       case departmentcode
-         when 'libarch'
-           department = Settings.thesis.ldap.department.libarch
-         else
-           department = Settings.thesis.ldap.department.educat
-       end
-
-       def getDepartmentCode(isMemberOfStr)
-         department = ''
-         # The format of isMemberOfStr is: 'cn=tg,ou=pgrad,ou=main,ou=ymgtsch,ou=students,ou=inst,ou=groups,dc=york,dc=ac,dc=uk'
-         # ["cn=support,ou=main,ou=libarch,ou=staff,ou=inst,ou=groups,dc=york,dc=ac,dc=uk"]
-         #departmentcode = isMemberOfStr.partition('ou=main,ou=').first.partition(',').first
-         #JA: this seems to get the right attribute for libarchstaff, not sure that will work across the board
-         departmentcode = isMemberOfStr.partition('ou=main,ou=').third.partition(',').first
-         end
+    departmentcode = isMemberOfStr[index..-1].partition(',').first
+    #department = Settings.thesis.ldap.department.educat
+    if !Settings.thesis.ldap.department[departmentcode].nil?
+      department = Settings.thesis.ldap.department[departmentcode]
     end
 
+    # if isMemberOfStr == 'cn=tg,ou=pgrad,ou=main,ou=ymgtsch,ou=students,ou=inst,ou=groups,dc=york,dc=ac,dc=uk'
+    #   department = 'University of York. York Management School'
+    # end
+  end
+
+  private
+  def getDepartmentCode(isMemberOfStr)
+    department = ''
+    # The format of isMemberOfStr is: 'cn=tg,ou=pgrad,ou=main,ou=ymgtsch,ou=students,ou=inst,ou=groups,dc=york,dc=ac,dc=uk'
+    # ["cn=support,ou=main,ou=libarch,ou=staff,ou=inst,ou=groups,dc=york,dc=ac,dc=uk"]
+    #departmentcode = isMemberOfStr.partition('ou=main,ou=').first.partition(',').first
+    #JA: this seems to get the right attribute for libarchstaff, not sure that will work across the board
+    isMemberOfStr.partition('ou=main,ou=').third.partition(',').first
+
+  end
 end

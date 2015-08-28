@@ -17,3 +17,4 @@
 //= require jquery.remotipart
 //= require jquery-fileupload/basic
 //= require_tree .
+//= require jstree
