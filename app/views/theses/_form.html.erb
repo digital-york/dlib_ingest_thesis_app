@@ -1,6 +1,6 @@
 
   <div class="panel panel-default" id="panel_uploaded_files">
-    <div class="panel-heading">Uploaded Files (Drag &amp; Drop files into the box below OR click 'Choose Files' button)</div>
+    <div class="panel-heading">Uploaded Files (Drag &amp; Drop files into the box below OR click 'Choose Files' button). We would strongly prefer PDF as the format for your main dissertation text and the uploader requires you to upload a PDF as the main text. See <%= link_to "Help",   help_path %> for more information.</div>
 
     <div class="panel-body fade" id="dropzone">
         <ul class="row" style="list-style-type: none;" id="files-list">
@@ -21,16 +21,16 @@
                         <div class="defaultfile">
                           <% if file.original_name.downcase.end_with? "pdf" %>
                               <% if file.main.present? and file.main=='true' %>
-                                  main&nbsp;<input type="radio" name="defaultFile" id="file<%=file.id.to_s%>" value="<%=file.id.to_s%>" checked="checked">
+                                  <span title="Click the radio button to choose this file as main text.">main</span>&nbsp;<input type="radio" name="defaultFile" id="file<%=file.id.to_s%>" value="<%=file.id.to_s%>" checked="checked">
                               <% else %>
-                                  main&nbsp;<input type="radio" name="defaultFile" id="file<%=file.id.to_s%>" value="<%=file.id.to_s%>">
+                                  <span title="Click the radio button to choose this file as main text.">main</span>&nbsp;<input type="radio" name="defaultFile" id="file<%=file.id.to_s%>" value="<%=file.id.to_s%>">
                               <% end %>
                           <% end %>
                         </div>
 
                         <div class="imagedel">
 
-                          <%= link_to 'Delete', file, method: :delete, data: {confirm: 'Are you sure?'}, :remote => true, :class => 'delete_file', :id => 'delete'+file.id.to_s %>
+                          <span title="Click to delete this file"><%= link_to 'Delete', file, method: :delete, data: {confirm: 'Are you sure?'}, :remote => true, :class => 'delete_file', :id => 'delete'+file.id.to_s %></span>
 
                         </div>
                     </div>
