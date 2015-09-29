@@ -21,9 +21,9 @@
                         <div class="defaultfile">
                           <% if file.original_name.downcase.end_with? "pdf" %>
                               <% if file.main.present? and file.main=='true' %>
-                                  <span title="Click the radio button to choose this file as main text.">main</span>&nbsp;<input type="radio" name="defaultFile" id="file<%=file.id.to_s%>" value="<%=file.id.to_s%>" checked="checked">
+                                  <span title="Click the radio button to choose this file as the main text.">main</span>&nbsp;<input type="radio" name="defaultFile" id="file<%=file.id.to_s%>" value="<%=file.id.to_s%>" checked="checked">
                               <% else %>
-                                  <span title="Click the radio button to choose this file as main text.">main</span>&nbsp;<input type="radio" name="defaultFile" id="file<%=file.id.to_s%>" value="<%=file.id.to_s%>">
+                                  <span title="Click the radio button to choose this file as the main text.">main</span>&nbsp;<input type="radio" name="defaultFile" id="file<%=file.id.to_s%>" value="<%=file.id.to_s%>">
                               <% end %>
                           <% end %>
                         </div>
