@@ -3,6 +3,11 @@ class User < ActiveRecord::Base
   # :confirmable, :lockable, :timeoutable and :omniauthable
   devise :ldap_authenticatable, :rememberable, :trackable
 
+  attr_accessor :remember_token
+  def create_remember_token
+    self.remember_token = SecureRandom.urlsafe_base64
+  end
+  
   before_save :get_ldap_email
   def get_ldap_email
     self.email = Devise::LDAP::Adapter.get_ldap_param(self.login, "mail").first
