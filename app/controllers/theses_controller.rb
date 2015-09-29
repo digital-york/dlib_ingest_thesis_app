@@ -192,13 +192,12 @@ class ThesesController < ApplicationController
 
       @thesis = Thesis.new(thesis_params)
 
+      if self.current_user!=nil and self.current_user.email!=nil
+        ThesisMailer.submitted(self.current_user.email, get_thesis_summary(more_supervisors, more_departments, more_subject_keywords)).deliver_now
+      end
       # remove file record and thumbnail if being generated
       remove_uploaded_files_from_db()
-
-      if self.current_user!=nil and self.current_user.email!=nil
-        ThesisMailer.submitted(self.current_user.email).deliver_now
-      end
-
+	  
       respond_to do |format|
         if @thesis.save
           logger.debug "Thesis saved successfully, redirecting..."
@@ -344,6 +343,77 @@ class ThesesController < ApplicationController
       end
     end
 
+    def get_thesis_summary(more_supervisors, more_departments, more_subject_keywords)
+	  creator     = thesis_params[:name]
+      title       = thesis_params[:title]
+      date        = thesis_params[:date]
+      desc        = thesis_params[:abstract]
+      degreetype  = thesis_params[:degreetype]
+      contributor = thesis_params[:supervisor]
+      publisher   = thesis_params[:department]
+      subject     = thesis_params[:subjectkeyword]
+      rights      = thesis_params[:rightsholder]
+      licence     = thesis_params[:licence]
+	  
+	  crlf = '<br/>'
+	  summarytext = "<h3>Your thesis has been submitted successfully.</h3>"
+	  summarytext = summarytext + "<h4>Submission summary</h4>" 
+	  summarytext = summarytext + "<b>Author</b>: "               + creator + crlf
+	  summarytext = summarytext + "<b>Dissertation title</b>: "   + title  + crlf
+	  summarytext = summarytext + "<b>Date</b>: "                 + date.to_s + crlf
+	  summarytext = summarytext + "<b>Abstract</b>: "             + desc + crlf
+	  summarytext = summarytext + "<b>Degree type</b>: "          + degreetype + crlf
+	  summarytext = summarytext + "<b>Degree supervisor(s)</b>: " + contributor
+	  if !more_supervisors.nil?
+            more_supervisors.each do |sup|
+              if !sup.nil? and sup!=''
+                summarytext = summarytext + " " + sup 
+              end
+            end
+      end
+	  summarytext = summarytext + crlf
+	  
+	  summarytext = summarytext + "<b>Department</b>: "           + publisher 
+	  if !more_departments.nil?
+            more_departments.each do |dep|
+              if !dep.nil? and dep!=''
+                summarytext = summarytext + " " + dep
+              end
+            end
+      end
+      summarytext = summarytext + crlf
+	  
+	  summarytext = summarytext + "<b>Subject keywords</b>: "     + subject
+          if !more_subject_keywords.nil?
+            more_subject_keywords.each do |sub|
+              if !sub.nil? and sub!=''
+                summarytext = summarytext + " " + sub
+              end
+            end
+      end
+	  summarytext = summarytext + crlf
+	  summarytext = summarytext + "<b>Rights holder</b>: "        + rights + crlf
+	  summarytext = summarytext + "<b>Licence</b>: "              + licence + crlf
+      
+	  summarytext = summarytext + crlf
+	  summarytext = summarytext + "<h4>Uploaded files</h4>" 
+	  
+	  owner = 'public'
+      if self.current_user!=nil
+        owner = current_user.login
+      end
+      files = UploadedFile.where("owner=?", owner)
+
+      if !files.nil?
+        files.each do |f|
+		  summarytext = summarytext + f.original_name + crlf
+       end
+      end
+	  
+	  summarytext 
+	  
+    end	
+	
     def add_bioler_plate_fields(xml_string)
       doc = Nokogiri::XML(xml_string)
       root = doc.root
