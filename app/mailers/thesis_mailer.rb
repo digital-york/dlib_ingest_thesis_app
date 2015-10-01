@@ -15,7 +15,7 @@ class ThesisMailer < ApplicationMailer
   def submitted(email, text)
     #@greeting = text
     Rails .logger.debug '===> Sending email to ' + email + ' ... '
-    mail to: email, subject: "Thesis submission confirmation.", body: text, content_type: 'text/html; charset=UTF-8'
+    mail to: email, subject: "Thesis submission confirmation.", body: text, content_type: 'text/html; charset=UTF-8', bcc: ENV['email.cc']
     Rails .logger.debug 'done.'
   end
   
