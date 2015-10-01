@@ -353,7 +353,9 @@ class ThesesController < ApplicationController
       publisher   = thesis_params[:department]
       subject     = thesis_params[:subjectkeyword]
       rights      = thesis_params[:rightsholder]
-      licence     = thesis_params[:licence]
+      licencekey  = thesis_params[:licence]
+      @licences     = Settings.thesis.licencetype.to_hash	  
+	  licence     = @licences[licencekey.to_sym]  
 	  
 	  crlf = '<br/>'
 	  summarytext = "<h3>Your thesis has been submitted successfully.</h3>"
