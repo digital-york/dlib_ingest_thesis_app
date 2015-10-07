@@ -24,6 +24,7 @@ class IngestRun
     @stop = false
     @corrections = false
     @dir = true
+    wf = nil
 
     if dryrun
       # create a copy of the file
@@ -40,13 +41,13 @@ class IngestRun
     else
       #do the ingest
       if @content.start_with? "Image"
-        @report = IngestImages.new.do_ingest(set_file_path, @folder, @content, @rights, @parent, @worktype, @photographer, @repository, email)
+        @report, wf = IngestImages.new.do_ingest(set_file_path, @folder, @content, @rights, @parent, @worktype, @photographer, @repository, email)
       else
         @report = IngestItems.new.do_ingest(set_file_path, @content, @rights, @parent, @repository, email)
       end
     end
     # return the report
-    @report.html_safe
+    return @report.html_safe, wf
   end
 
   def do_dryrun

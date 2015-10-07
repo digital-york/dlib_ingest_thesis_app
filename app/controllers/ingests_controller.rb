@@ -34,7 +34,11 @@ class IngestsController < ApplicationController
   def ingest_repost
     @ingest = Ingest.new(session[:ingest])
 
-    @dryrun_report = IngestRun.new.ingest(@ingest[:folder], nil, @ingest[:content], @ingest[:rights], @ingest[:filestore], @ingest[:parent], @ingest[:worktype],@ingest[:photographer], @ingest[:repository],false, self.current_user.get_ldap_email)
+    @dryrun_report, xml = IngestRun.new.ingest(@ingest[:folder], nil, @ingest[:content], @ingest[:rights], @ingest[:filestore], @ingest[:parent], @ingest[:worktype],@ingest[:photographer], @ingest[:repository],false, self.current_user.get_ldap_email)
+    #publish to the workflow queue
+    unless xml.nil?
+      publish :'workflow_queue', xml, {'suppress_content_length' => true}
+    end
 
     respond_to do |format|
       format.html { render :dryrun_results }
@@ -52,11 +56,7 @@ class IngestsController < ApplicationController
   def create
 
     @ingest = Ingest.new(ingest_params)
-    @dryrun_report, xml = IngestRun.new.ingest(@ingest[:folder], params[:ingest][:file].tempfile, @ingest[:content], @ingest[:rights], @ingest[:filestore], @ingest[:parent], @ingest[:worktype],@ingest[:photographer], @ingest[:repository],@ingest[:dryrun], self.current_user.get_ldap_email)
-    #publish to the workflow queue
-    unless xml.nil?
-      publish :'workflow_queue', xml, {'suppress_content_length' => true}
-    end
+    @dryrun_report = IngestRun.new.ingest(@ingest[:folder], params[:ingest][:file].tempfile, @ingest[:content], @ingest[:rights], @ingest[:filestore], @ingest[:parent], @ingest[:worktype],@ingest[:photographer], @ingest[:repository],@ingest[:dryrun], self.current_user.get_ldap_email)
 
     unless session[:ingest].class == NilClass
       session[:ingest].clear
