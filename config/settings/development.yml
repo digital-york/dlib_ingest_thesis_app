@@ -1,3 +1,4 @@
+server: 'https://yodldev1.york.ac.uk'
 thesis:
   scenarioid: 'York-Fedora-Thesis-Object'
   parentcollection: 'york:3'
@@ -9,10 +10,9 @@ thesis:
   tmpfileurl:  /uploadedfiles/
 image:
   scenarioid: 'York-Fedora-StillImage-Object'
+  scenarioid_jp2: 'Scenario-York-Fedora-StillImage_JP2-Object'
 filestore:
-  #yodlprodingest: '/usr/digilib-ingest'
-  yodlprodingest: '/vagrant/tmp/'
-  archbishop: '/vagrant/tmp/'
-tmppath: '/vagrant/tmp/'
-#tmppath: '/var/tmp/'
+  yodlprodingest: '/usr/digilib-ingest'
+  archbishop: '/var/tmp/' #fix this
+tmppath: '/var/tmp/'
 

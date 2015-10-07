@@ -7,7 +7,7 @@ module CollectionsHelper
 
     begin
 
-      conn = Faraday.new(:url => 'https://yodlapp3.york.ac.uk') do |c|
+      conn = Faraday.new(:url => Settings.server) do |c|
         c.use Faraday::Request::UrlEncoded # encode request params as "www-form-urlencoded"
         c.use Faraday::Response::Logger # log request & response to STDOUT
         c.use Faraday::Adapter::NetHttp # perform requests with Net::HTTP

@@ -8,7 +8,7 @@ include ActionView::Context
 class IngestRun
 
   ALLOWED_HEADERS = ['dc:title', 'dc:identifier', 'dc:contributor', 'dc:creator', 'dc:publisher', 'dc:type', 'dc:format', 'dc:rights', 'dc:coverage', 'dc:language', 'dc:source', 'dc:description', 'dc:subject', 'dc:relation', 'dc:date', 'parent', 'main', 'additional']
-  IMAGE_HEADERS = ['image', 'folio', 'recto/verso', 'description', 'notes', 'worktype', 'parent']
+  IMAGE_HEADERS = ['image', 'folio', 'recto/verso', 'notes', 'worktype', 'parent', 'part', 'uv'] #no longer using description
 
   def ingest(folder, file, content, rights, filestore, parent, worktype, photographer, repository, dryrun, email)
     @folder = folder
@@ -28,7 +28,9 @@ class IngestRun
     if dryrun
       # create a copy of the file
       begin
-        FileUtils.rm(Settings.tmppath + email + '.csv')
+        #delete if we have an artefact file
+        #FileUtils.rm(Settings.tmppath + email + '.csv')
+        #causes an error
       rescue
         @report << paragraph("ERROR:#{$!}")
       end
@@ -38,7 +40,7 @@ class IngestRun
     else
       #do the ingest
       if @content.start_with? "Image"
-        @report = IngestImages.new.do_ingest(set_file_path, @content, @rights, @parent, @worktype, @photographer, @repository, email)
+        @report = IngestImages.new.do_ingest(set_file_path, @folder, @content, @rights, @parent, @worktype, @photographer, @repository, email)
       else
         @report = IngestItems.new.do_ingest(set_file_path, @content, @rights, @parent, @repository, email)
       end
@@ -176,6 +178,7 @@ class IngestRun
       @report << paragraph("ERROR: #{$!}")
       @stop = true
     end
+
   end
 
   def allowed(value)
@@ -192,7 +195,7 @@ class IngestRun
 
   def check_files
     if @dir
-      @report << header("Check files (only reports if they are not found)")
+      @report << header("Check files")
 
       begin
         data = CSV.table(@file)
@@ -201,26 +204,16 @@ class IngestRun
         @corrections = true
         @stop = true
       end
-      if @content == 'Images (TIFFs only)'
+      if @content == 'Images'
         begin
           col = data[:image]
           col.each do |c|
             # we don't report on nil values
             unless c.to_s == '' || c.nil?
-              file_exist(c, '', '.tiff')
-            end
-          end
-        rescue
-          @report << paragraph("ERROR: #{$!}")
-        end
-      elsif @content == 'Images (TIFFs and JP2s)'
-        begin
-          col = data[:image]
-          col.each do |c|
-            # we don't report on nil values
-            unless c.to_s == '' || c.nil?
-              file_exist(c, 'Dissemination_JPEG2000s/', '.jp2')
-              file_exist(c, 'Archive_TIFFs/', '.tif')
+              if Dir.exist? @file_path
+                file_exist(c, @folder.gsub('/','') + '_JPEG2000s/', '.jp2')
+              end
+              file_exist(c, @folder.gsub('/','') + '_TIFFs/', '.tif')
             end
           end
         rescue
@@ -251,7 +244,10 @@ class IngestRun
         @report << paragraph("ERROR: #{$!}")
         @corrections = true
       end
-    end
+      end
+      unless @report.include? 'CROSS Cannot find'
+        @report << paragraph("All files found")
+      end
   end
 end
 
@@ -282,6 +278,10 @@ def header(value)
 end
 
 def table(hash)
+  unless hash.include? 'image' or hash.include? 'Image'
+    @report << paragraph("There must be a column called 'image'.")
+    @corrections = true
+  end
   @num_additional = 0
   content_tag(:table) {
     output = ''

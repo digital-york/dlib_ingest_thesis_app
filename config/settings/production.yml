@@ -1,3 +1,4 @@
+server: 'https://yodlapp1.york.ac.uk'
 thesis:
   scenarioid: 'York-Fedora-Thesis-Object'
   parentcollection: 'york:847875'
@@ -10,6 +11,6 @@ thesis:
 image:
   scenarioid: 'York-Fedora-StillImage-Object'
 filestore:
-  yodlprodingest: '/usr/digilib-ingest/'
+  yodlprodingest: '/usr/digilib-ingest'
   archbishop: '/usr/digilib-archbishop/'
 tmppath: '/tmp/'
