@@ -38,6 +38,8 @@ class IngestRun
       FileUtils.cp(@file, Settings.tmppath + email + '.csv')
       # do the dry run
       do_dryrun
+      # return the report
+      return @report.html_safe
     else
       #do the ingest
       if @content.start_with? "Image"
@@ -45,9 +47,10 @@ class IngestRun
       else
         @report = IngestItems.new.do_ingest(set_file_path, @content, @rights, @parent, @repository, email)
       end
+      # return the report
+      return @report.html_safe, wf
     end
-    # return the report
-    return @report.html_safe, wf
+
   end
 
   def do_dryrun
