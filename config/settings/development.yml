@@ -12,7 +12,7 @@ image:
   scenarioid: 'York-Fedora-StillImage-Object'
   scenarioid_jp2: 'Scenario-York-Fedora-StillImage_JP2-Object'
 filestore:
-  yodlprodingest: '/usr/digilib-ingest'
+  yodlprodingest: '/usr/digilib-ingest/'
   archbishop: '/var/tmp/' #fix this
 tmppath: '/var/tmp/'
 
