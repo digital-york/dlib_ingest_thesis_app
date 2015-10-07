@@ -42,7 +42,7 @@ gem 'jstree-rails-4'
 
 gem 'bootstrap-sass', '3.2.0.0'
 
-gem 'rails_config'
+gem 'config'
 gem 'nokogiri-pretty'
 gem 'dotenv-rails'
 
