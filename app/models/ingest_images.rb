@@ -20,6 +20,7 @@ class IngestImages
     @repository = repository
     @photographer = photographer
     @worktype = worktype
+    @wf = nil
     # open the stored file
     begin
       @file = File.open(Settings.tmppath + email + '.csv')
@@ -31,7 +32,7 @@ class IngestImages
     end
     open_file
     process_file
-    @report
+    return @report, @wf
   end
 
   def open_file
@@ -206,8 +207,9 @@ class IngestImages
 
   def write_workflow_files
     wf_client_file_path = Settings.tmppath + SecureRandom.uuid + '.wf.client'
+    @wf = get_workflow_client_thesis_xml.to_xml
     File.open(wf_client_file_path, "w+") do |f|
-      f.write(get_workflow_client_thesis_xml.to_xml)
+      f.write(@wf)
     end
     #cleanup(metadata_file_path, wf_client_file_path, archival_master_file_path, display_file_path)
   end
