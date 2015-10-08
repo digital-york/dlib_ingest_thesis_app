@@ -19,7 +19,7 @@ class IngestRun
     @parent = parent
     @worktype = worktype
     @photo = photographer
-    @repo = repository
+    @repository = repository
     @report = ''
     @stop = false
     @corrections = false

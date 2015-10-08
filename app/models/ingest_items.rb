@@ -19,7 +19,6 @@ class IngestItems
     else
       @parent = 'york:'+ parent
     end
-
     @repository = repository
     @wf = nil # workflow xml
     @scenario = ''
@@ -58,6 +57,7 @@ class IngestItems
           end
           build_content_type
           build_rights
+          @report << paragraph(@repository)
           if @repository == 'borthwick' #skip the none
             @file_output.publisher += [Settings.repository.borthwick.name]
           end
