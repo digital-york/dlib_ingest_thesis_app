@@ -125,7 +125,7 @@ class IngestRun
       begin
         col = data[:parent]
         unless col.length == 1
-          col = col.uniq!
+          col = col.uniq
         end
         col.each do |c|
           # we don't report on nil values, it's possible that there is no parent for some
@@ -140,6 +140,7 @@ class IngestRun
       rescue
         @report << paragraph("ERROR: #{$!}")
         @corrections = true
+        @stop = true
       end
     end
   end
