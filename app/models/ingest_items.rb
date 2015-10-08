@@ -59,7 +59,7 @@ class IngestItems
           build_content_type
           build_rights
           if @repository == 'borthwick' #skip the none
-            @file_output.publisher = [Settings.repository.borthwick.name]
+            @file_output.publisher += [Settings.repository.borthwick.name]
           end
           write_metadata_file
           write_data_files
@@ -113,7 +113,11 @@ class IngestItems
         @file_output.date += [pair[1]]
       when 'parent'
         if pair[1] != ''
-          @parent = pair[1]
+          if pair[1].to_s.start_with?('york:')
+            @parent = pair[1].to_s
+          else
+            @parent = 'york:' + pair[1].to_s
+          end
         end
       # skip empty values
       when 'main'

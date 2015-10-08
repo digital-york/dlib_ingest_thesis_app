@@ -142,7 +142,11 @@ class IngestImages
         when 'parent'
           # prefer file to selection
           unless pair[1].nil?
-            @parent = pair[1].to_s
+            if pair[1].to_s.start_with?('york:')
+              @parent = pair[1].to_s
+            else
+              @parent = 'york:' + pair[1].to_s
+            end
           end
         when 'worktype'
           unless pair[1].nil?
