@@ -234,6 +234,11 @@ class IngestRun
             # we don't report on nil values, it's possible that there is no main for some
             unless c.to_s == '' || c.nil?
               file_exist(c)
+              if
+                c.include? ' '
+                @report << paragraph("The filename #{c} contains spaces. Please remove/replace them (in files and csv).")
+                @corrections = true
+              end
             end
           end
         rescue
