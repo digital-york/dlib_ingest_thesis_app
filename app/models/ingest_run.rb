@@ -58,8 +58,10 @@ class IngestRun
     @report << paragraph("Content: #{@content}")
     @report << paragraph("Parent: #{@parent}")
     @report << paragraph("Rights: #{@rights}")
-    @report << paragraph("Photographer: #{@photo}")
-    @report << paragraph("Worktype: #{@worktype}")
+    if @content.start_with? "Image"
+      @report << paragraph("Photographer: #{@photo}")
+      @report << paragraph("Worktype: #{@worktype}")
+    end
     @report << paragraph("Repository: #{@repo}")
     if @content == 'Collections'
       @report << paragraph("You selected #{@content}, no files will be processed in the ingest.")
@@ -215,9 +217,9 @@ class IngestRun
             # we don't report on nil values
             unless c.to_s == '' || c.nil?
               if Dir.exist? @file_path
-                file_exist(c, @folder.gsub('/','') + '_JPEG2000s/', '.jp2')
+                file_exist(c, @folder.gsub('/', '') + '_JPEG2000s/', '.jp2')
               end
-              file_exist(c, @folder.gsub('/','') + '_TIFFs/', '.tif')
+              file_exist(c, @folder.gsub('/', '') + '_TIFFs/', '.tif')
             end
           end
         rescue
@@ -245,62 +247,63 @@ class IngestRun
             end
           end
         rescue
-        @report << paragraph("ERROR: #{$!}")
-        @corrections = true
-      end
+          @report << paragraph("ERROR: #{$!}")
+          @corrections = true
+        end
       end
       unless @report.include? 'CROSS Cannot find'
         @report << paragraph("All files found")
       end
-  end
-end
-
-def file_exist(file, added_path='', file_end='')
-  # does file exist?
-  unless File.exist? "#{@file_path}#{added_path}#{file}#{file_end}"
-    @report << paragraph("CROSS Cannot find #{@file_path}#{added_path}#{file}#{file_end}")
-    @corrections = true
-  end
-end
-
-def stop_go
-  @report << header("Summary")
-  if @corrections
-    @report << paragraph("There are problems with the ingest, please review and correct these and then try again.")
-  else
-    @report << paragraph("Please review the report. If you are satisfied click the button below to proceed with the ingest.")
-    @report << content_tag(:div, :class => "pretty_button") { content_tag(:a, "INGEST!", href: "/ingests/ingest_repost") }.html_safe
-  end
-end
-
-def paragraph(value)
-  content_tag(:p, value).html_safe
-end
-
-def header(value)
-  content_tag(:h2, value).html_safe
-end
-
-def table(hash)
-  unless hash.include? 'image' or hash.include? 'Image'
-    @report << paragraph("There must be a column called 'image'.")
-    @corrections = true
-  end
-  @num_additional = 0
-  content_tag(:table) {
-    output = ''
-    hash.each do |child|
-      if child == 'additional'
-        @num_additional += 1
-      end
-      row = ''
-      row << content_tag(:td, child)
-      row << content_tag(:td, allowed(child))
-      output << content_tag(:tr) << row
     end
-    output.html_safe
-  }.html_safe
-end
+  end
 
+  def file_exist(file, added_path='', file_end='')
+    # does file exist?
+    unless File.exist? "#{@file_path}#{added_path}#{file}#{file_end}"
+      @report << paragraph("CROSS Cannot find #{@file_path}#{added_path}#{file}#{file_end}")
+      @corrections = true
+    end
+  end
+
+  def stop_go
+    @report << header("Summary")
+    if @corrections
+      @report << paragraph("There are problems with the ingest, please review and correct these and then try again.")
+    else
+      @report << paragraph("Please review the report. If you are satisfied click the button below to proceed with the ingest.")
+      @report << content_tag(:div, :class => "pretty_button") { content_tag(:a, "INGEST!", href: "/ingests/ingest_repost") }.html_safe
+    end
+  end
+
+  def paragraph(value)
+    content_tag(:p, value).html_safe
+  end
+
+  def header(value)
+    content_tag(:h2, value).html_safe
+  end
+
+  def table(hash)
+    if @content.start_with? "Image"
+      unless hash.include? 'image' or hash.include? 'Image'
+        @report << paragraph("There must be a column called 'image'.")
+        @corrections = true
+      end
+    end
+    @num_additional = 0
+    content_tag(:table) {
+      output = ''
+      hash.each do |child|
+        if child == 'additional'
+          @num_additional += 1
+        end
+        row = ''
+        row << content_tag(:td, child)
+        row << content_tag(:td, allowed(child))
+        output << content_tag(:tr) << row
+      end
+      output.html_safe
+    }.html_safe
+  end
 
 end
