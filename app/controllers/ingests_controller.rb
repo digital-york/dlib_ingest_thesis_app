@@ -34,11 +34,7 @@ class IngestsController < ApplicationController
   def ingest_repost
     @ingest = Ingest.new(session[:ingest])
 
-    @dryrun_report, xml = IngestRun.new.ingest(@ingest[:folder], nil, @ingest[:content], @ingest[:rights], @ingest[:filestore], @ingest[:parent], @ingest[:worktype],@ingest[:photographer], @ingest[:repository],false, self.current_user.get_ldap_email)
-    #publish to the workflow queue
-    unless xml.nil?
-      publish :'workflow_queue', xml, {'suppress_content_length' => true}
-    end
+    @dryrun_report = IngestRun.new.ingest(@ingest[:folder], nil, @ingest[:content], @ingest[:rights], @ingest[:filestore], @ingest[:parent], @ingest[:worktype],@ingest[:photographer], @ingest[:repository],false, self.current_user.get_ldap_email)
 
     respond_to do |format|
       format.html { render :dryrun_results }

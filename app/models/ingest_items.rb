@@ -4,6 +4,8 @@ require 'nokogiri-pretty'
 require 'dotenv'
 include ActionView::Helpers::TagHelper
 include ActionView::Context
+require 'activemessaging'
+include ActiveMessaging::MessageSender
 
 class IngestItems
 
@@ -12,7 +14,12 @@ class IngestItems
     @file_path = filepath
     @content = content
     @rights = rights
-    @parent = parent
+    if parent.start_with?('york:')
+      @parent = parent
+    else
+      @parent = 'york:'+ parent
+    end
+
     @repository = repository
     @wf = nil # workflow xml
     @scenario = ''
@@ -24,7 +31,7 @@ class IngestItems
     end
     open_file
     process_file
-    return @report, @wf
+    return @report
   end
 
   def open_file
@@ -51,9 +58,15 @@ class IngestItems
           end
           build_content_type
           build_rights
+          if @repository == 'borthwick' #skip the none
+            @file_output.publisher = [Settings.repository.borthwick.name]
+          end
           write_metadata_file
           write_data_files
           write_workflow_files
+          # publish to the workflow queue
+          publish :'workflow_queue', @wf, {'suppress_content_length' => true}
+
           count += 1
           #cleanup
         rescue
@@ -116,7 +129,7 @@ class IngestItems
 
   def build_content_type # inject extra DC per content type
     case @content
-      when 'Collection'
+      when 'Collections'
         @file_output.type += Settings.thesis.boiler_plate.dc_type_coll.to_hash.values
         @scenario = Settings.collection.scenarioid
       when 'Exam Paper'
@@ -127,6 +140,7 @@ class IngestItems
         @scenario = Settings.schol.scenarioid
       when 'Thesis'
         @file_output.type += Settings.thesis.boiler_plate.dc_type.to_hash.values
+        @scenario = Settings.thesis.scenarioid
     end
   end
 

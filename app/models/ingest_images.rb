@@ -4,6 +4,8 @@ require 'nokogiri-pretty'
 require 'dotenv'
 include ActionView::Helpers::TagHelper
 include ActionView::Context
+require 'activemessaging'
+include ActiveMessaging::MessageSender
 
 class IngestImages
 
@@ -57,6 +59,8 @@ class IngestImages
           write_metadata_file
           write_data_files
           write_workflow_files
+          # publish to the workflow queue
+          publish :'workflow_queue', @wf, {'suppress_content_length' => true}
           count += 1
           #cleanup
         rescue

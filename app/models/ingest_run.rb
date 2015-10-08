@@ -24,7 +24,6 @@ class IngestRun
     @stop = false
     @corrections = false
     @dir = true
-    wf = nil
 
     if dryrun
       # create a copy of the file
@@ -43,12 +42,14 @@ class IngestRun
     else
       #do the ingest
       if @content.start_with? "Image"
-        @report, wf = IngestImages.new.do_ingest(set_file_path, @folder, @content, @rights, @parent, @worktype, @photographer, @repository, email)
+        @report = IngestImages.new.do_ingest(set_file_path, @folder, @content, @rights, @parent, @worktype, @photographer, @repository, email)
       else
-        @report, wf = IngestItems.new.do_ingest(set_file_path, @content, @rights, @parent, @repository, email)
+        @report = IngestItems.new.do_ingest(set_file_path, @content, @rights, @parent, @repository, email)
       end
       # return the report
-      return @report.html_safe, wf
+      @report << paragraph("Depending on the quantity and type of items you just ingested, it may take some time to process. Please check the parent collection on YODL and notify us if you spot any issues")
+      @report << paragraph("The files you uploaded will be removed from their current location and moved to the server. If you have any 'leftover' that suggests a problem with that line in the spreadsheet.")
+      @report.html_safe
     end
 
   end
