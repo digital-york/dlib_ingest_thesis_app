@@ -62,7 +62,7 @@ class IngestItems
       end
       @report << paragraph("Processed #{count} line(s)")
     end
-    return @report, get_workflow_client_thesis_xml.to_xml
+    return @report, @wf
   end
 
   def build_metadata_from_file(pair)
