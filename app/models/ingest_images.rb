@@ -59,6 +59,7 @@ class IngestImages
           write_metadata_file
           write_data_files
           write_workflow_files
+          @report << paragraph("Adding #{@title} to collection #{@parent}")
           # publish to the workflow queue
           publish :'workflow_queue', @wf, {'suppress_content_length' => true}
           count += 1

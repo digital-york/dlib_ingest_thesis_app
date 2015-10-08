@@ -65,6 +65,7 @@ class IngestItems
           write_data_files
           write_workflow_files
           # publish to the workflow queue
+          @report << paragraph("Adding #{@title} to collection #{@parent}")
           publish :'workflow_queue', @wf, {'suppress_content_length' => true}
 
           count += 1
