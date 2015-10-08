@@ -185,8 +185,9 @@ class IngestItems
       unless @main_file.nil? || @main_file == ''
         @main_file_path = @file_path + @main_file
         if @main_file.include? ' '
-          FileUtils.mv @main_file_path,@main_file_path.gsub!(' ','_')
-          @main_file_path = @main_file_path.gsub!(' ','_')
+          main = @main_file_path.clone
+          FileUtils.mv @main_file_path, main.gsub!(' ','_')
+          @main_file_path = main
         end
 
       end
@@ -194,8 +195,9 @@ class IngestItems
         @additional_files_paths = []
         @additional_files.each do |i|
           if i.include? ' '
-            FileUtils.mv @file_path + i,@file_path + i.gsub!(' ','_')
-            i = i.gsub!(' ','_')
+            ii = i.clone
+            FileUtils.mv @file_path + i,@file_path + ii.gsub!(' ','_')
+            i = ii
           end
           @additional_files_paths += [@file_path + i]
         end
