@@ -14,6 +14,8 @@ class IngestItems
     @rights = rights
     @parent = parent
     @repository = repository
+    @wf = nil # workflow xml
+    @scenario = ''
     # open the stored file
     begin
       @file = File.open(Settings.tmppath + email + '.csv')
@@ -22,7 +24,7 @@ class IngestItems
     end
     open_file
     process_file
-    @report
+    return @report, @wf
   end
 
   def open_file
@@ -116,10 +118,13 @@ class IngestItems
     case @content
       when 'Collection'
         @file_output.type += Settings.thesis.boiler_plate.dc_type_coll.to_hash.values
+        @scenario = Settings.collection.scenarioid
       when 'Exam Paper'
         @file_output.type += Settings.thesis.boiler_plate.dc_type_exam.to_hash.values
+        @scenario = Settings.exampaper.scenarioid
       when 'Scholarly Text'
         @file_output.type += Settings.thesis.boiler_plate.dc_type_schol.to_hash.values
+        @scenario = Settings.schol.scenarioid
       when 'Thesis'
         @file_output.type += Settings.thesis.boiler_plate.dc_type.to_hash.values
     end
@@ -176,7 +181,8 @@ class IngestItems
 
   def write_workflow_files
     File.open(Settings.tmppath + SecureRandom.uuid + '.wf.client', "w+") do |f|
-      f.write(get_workflow_client_thesis_xml(@metadata_file_path, @main_file_path, @additional_files_paths).to_xml)
+      @wf = get_workflow_client_thesis_xml(@metadata_file_path, @main_file_path, @additional_files_paths).to_xml
+      f.write(@wf)
     end
   end
 
@@ -187,7 +193,7 @@ class IngestItems
     end
     Nokogiri::XML::Builder.new do |xml|
       xml['wf'].workflow('xmlns:wf' => 'http://dlib.york.ac.uk/workflow') {
-        xml['wf'].client(:scenarioid => Settings.thesis.scenarioid, :parent => @parent, :submittedBy => Settings.thesis.submittedBy, :client => Settings.thesis.client, :stopOnError => Settings.thesis.stopOnError, :accesskey => Settings.thesis.accesskey) {
+        xml['wf'].client(:scenarioid => @scenario, :parent => @parent, :submittedBy => Settings.thesis.submittedBy, :client => Settings.thesis.client, :stopOnError => Settings.thesis.stopOnError, :accesskey => Settings.thesis.accesskey) {
           xml['wf'].file(:mime => 'text/xml', :id => 'DC', :file => metadata_file)
           unless main_file.nil?
             xml['wf'].file(:mime => 'application/pdf', :main => 'true', :storelocally => 'true', :file => main_file)

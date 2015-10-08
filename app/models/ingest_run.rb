@@ -45,7 +45,7 @@ class IngestRun
       if @content.start_with? "Image"
         @report, wf = IngestImages.new.do_ingest(set_file_path, @folder, @content, @rights, @parent, @worktype, @photographer, @repository, email)
       else
-        @report = IngestItems.new.do_ingest(set_file_path, @content, @rights, @parent, @repository, email)
+        @report, wf = IngestItems.new.do_ingest(set_file_path, @content, @rights, @parent, @repository, email)
       end
       # return the report
       return @report.html_safe, wf

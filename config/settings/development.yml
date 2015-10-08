@@ -11,8 +11,14 @@ thesis:
 image:
   scenarioid: 'York-Fedora-StillImage-Object'
   scenarioid_jp2: 'Scenario-York-Fedora-StillImage_JP2-Object'
+exampaper:
+  scenarioid: 'York-Fedora-ExamPaper-Object'
+collection:
+  scenarioid: 'York-Fedora-Collection-Object'
+schol:
+  scenarioid: 'York-Fedora-ScholarlyText-Object'
 filestore:
   yodlprodingest: '/usr/digilib-ingest/'
-  archbishop: '/var/tmp/' #fix this
+  archbishop: '/var/tmp/'
 tmppath: '/var/tmp/'
 
