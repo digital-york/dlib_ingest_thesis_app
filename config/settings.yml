@@ -142,7 +142,7 @@ repository:
     name: 'Borthwick Institute for Archives'
 image:
   scenarioid: 'York-Fedora-StillImage-Object'
-  scenarioid_jp2: 'Scenario-York-Fedora-StillImage_JP2-Object'
+  scenarioid_jp2: 'York-Fedora-StillImage_JP2-Object'
 exampaper:
   scenarioid: 'York-Fedora-ExamPaper-Object'
 collection:

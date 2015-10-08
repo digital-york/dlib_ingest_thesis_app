@@ -209,6 +209,17 @@ class IngestImages
         @scenario = Settings.image.scenarioid_jp2
       end
       @archival_master_file_path = @file_path + @folder.gsub('/','') + '_TIFFs/' + @image + '.tif'
+      # replace spaces in files
+      if @archival_master_file_path.include? ' '
+        main = @archival_master_file_path.clone
+        FileUtils.mv @archival_master_file_path, main.gsub!(' ','_')
+        @archival_master_file_path = main
+      end
+      if @display_file_path.include? ' '
+        main = @display_file_path.clone
+        FileUtils.mv @display_file_path, main.gsub!(' ','_')
+        @display_file_path = main
+      end
     rescue
       @report << paragraph("ERROR in write_data_files #{$!}")
     end
@@ -220,7 +231,6 @@ class IngestImages
     File.open(wf_client_file_path, "w+") do |f|
       f.write(@wf)
     end
-    #cleanup(metadata_file_path, wf_client_file_path, archival_master_file_path, display_file_path)
   end
 
   # Use default collection specified in settings unless otherwise specified
@@ -242,31 +252,6 @@ class IngestImages
         }
       }
     end
-  end
-
-  def cleanup
-    # does the workflow deal with this?
-    if !@metadata_file_path.nil?
-      if File.exist?(@metadata_file_path)
-        FileUtils.rm @metadata_file_path
-      end
-    end
-    if !@wf_client_file_path.nil?
-      if File.exist?(@wf_client_file_path)
-        FileUtils.rm @wf_client_file_path
-      end
-    end
-    # I think the workflow deals with this
-    # if !@archival_master_file_path.nil?
-    #   if File.exist?(@archival_master_file_path)
-    #     FileUtils.rm @archival_master_file_path
-    #   end
-    # end
-    # if !@display_file_path.nil?
-    #   if File.exist?(@display_file_path)
-    #     FileUtils.rm @display_file_path
-    #   end
-    # end
   end
 
   def paragraph(value)

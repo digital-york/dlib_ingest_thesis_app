@@ -67,7 +67,6 @@ class IngestItems
           @report << paragraph("Adding #{@title} to collection #{@parent}")
           publish :'workflow_queue', @wf, {'suppress_content_length' => true}
           count += 1
-          #cleanup
         rescue
           @report << paragraph("ERROR line #{count + 1}:#{$!}")
         end
@@ -184,6 +183,7 @@ class IngestItems
     begin
       unless @main_file.nil? || @main_file == ''
         @main_file_path = @file_path + @main_file
+        # replace spaces in files
         if @main_file.include? ' '
           main = @main_file_path.clone
           FileUtils.mv @main_file_path, main.gsub!(' ','_')
@@ -194,6 +194,7 @@ class IngestItems
       if @additional_files != [] || !@additional_files.nil?
         @additional_files_paths = []
         @additional_files.each do |i|
+          # replace spaces in files
           if i.include? ' '
             ii = i.clone
             FileUtils.mv @file_path + i,@file_path + ii.gsub!(' ','_')
@@ -233,31 +234,6 @@ class IngestItems
           end
         }
       }
-    end
-  end
-
-  def cleanup
-    if !@metadata_file_path.nil?
-      if File.exist?(@metadata_file_path)
-        FileUtils.rm @metadata_file_path
-      end
-    end
-    if !@wf_client_file_path.nil?
-      if File.exist?(@wf_client_file_path)
-        FileUtils.rm @wf_client_file_path
-      end
-    end
-    if !@additional_files_paths.nil?
-      @additional_files_paths.each do |i|
-        if File.exist?(i)
-          FileUtils.rm i
-        end
-      end
-    end
-    if !@main_file_path.nil?
-      if File.exist?(@main_file_path)
-        FileUtils.rm @main_file_path
-      end
     end
   end
 
