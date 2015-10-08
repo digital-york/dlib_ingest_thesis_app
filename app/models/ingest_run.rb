@@ -83,9 +83,9 @@ class IngestRun
     # does file path exist?
     @report << header("Does the directory exist?")
     if Dir.exist? set_file_path
-      @report << paragraph("TICK #{@file_path} exists.")
+      @report << paragraph(" #{@file_path} exists.", 'tick')
     else
-      @report << paragraph("CROSS #{@file_path} does not exist.")
+      @report << paragraph(" #{@file_path} does not exist.", 'tick')
       @corrections = true
       @dir = false
     end
@@ -115,10 +115,10 @@ class IngestRun
     else
       #grab the parents list in the csv file and go through unique values
       begin
-        @report << paragraph("TICK File is valid CSV")
+        @report << paragraph(" File is valid CSV", 'tick')
         data = CSV.table(@file)
       rescue
-        @report << paragraph("CROSS File is not valid CSV. ERROR: #{$!}")
+        @report << paragraph(" File is not valid CSV. ERROR: #{$!}", 'cross')
         @corrections = true
         @stop = true
       end
@@ -158,9 +158,9 @@ class IngestRun
       # do get
       response = conn.get '/fedora/objects/' + value
       if response.status == 200 # OK although this does not guarantee it's a collection
-        @report << paragraph("TICK Parent (#{value}) collection exists")
+        @report << paragraph("Parent (#{value}) collection exists", 'tick')
       else # Fedora: 403 NOTAPPLICABLE
-        @report << paragraph("CROSS Parent (#{value}) collection not found. STATUS: #{response.status}")
+        @report << paragraph(" Parent (#{value}) collection not found. STATUS: #{response.status}", 'cross')
         @corrections = true
       end
     rescue
@@ -190,15 +190,23 @@ class IngestRun
   end
 
   def allowed(value)
-    if (value == 'main' || value == 'additional') and @content == 'Collections'
-      'CROSS this column will not be processed'
-    elsif @content.start_with? 'Image' and IMAGE_HEADERS.include? value.downcase
-      'TICK this column will be processed'
-    elsif ALLOWED_HEADERS.include? value.downcase
-      'TICK this column will be processed'
-    else
-      'CROSS this column will not be processed'
-    end
+    content_tag(:span) {
+      i = ''
+      if (value == 'main' || value == 'additional') and @content == 'Collections'
+        i << tag("img", src: 'assets/cross.png', alt: 'cross')
+        i << ' this column will not be processed'
+      elsif @content.start_with? 'Image' and IMAGE_HEADERS.include? value.downcase
+        i << tag("img", src: 'assets/tick.png', alt: 'cross')
+        i << ' This column will be processed'
+      elsif ALLOWED_HEADERS.include? value.downcase
+        i << tag("img", src: 'assets/tick.png', alt: 'cross')
+        i << ' This column will be processed'
+      else
+        i << tag("img", src: 'assets/cross.png', alt: 'cross')
+        i << ' This column will not be processed'
+      end
+      i.html_safe
+    }.html_safe
   end
 
   def check_files
@@ -253,7 +261,7 @@ class IngestRun
           @corrections = true
         end
       end
-      unless @report.include? 'CROSS Cannot find'
+      unless @report.include? ' Cannot find'
         @report << paragraph("All files found")
       end
     end
@@ -262,7 +270,7 @@ class IngestRun
   def file_exist(file, added_path='', file_end='')
     # does file exist?
     unless File.exist? "#{@file_path}#{added_path}#{file}#{file_end}"
-      @report << paragraph("CROSS Cannot find #{@file_path}#{added_path}#{file}#{file_end}")
+      @report << paragraph(" Cannot find #{@file_path}#{added_path}#{file}#{file_end}", 'cross')
       @corrections = true
     end
   end
@@ -270,15 +278,22 @@ class IngestRun
   def stop_go
     @report << header("Summary")
     if @corrections
-      @report << paragraph("There are problems with the ingest, please review and correct these and then try again.")
+      @report << paragraph(" There are problems with the ingest, please review and correct these and then try again.", 'error')
     else
       @report << paragraph("Please review the report. If you are satisfied click the button below to proceed with the ingest.")
       @report << content_tag(:div, :class => "pretty_button") { content_tag(:a, "INGEST!", href: "/ingests/ingest_repost") }.html_safe
     end
   end
 
-  def paragraph(value)
-    content_tag(:p, value).html_safe
+  def paragraph(value, icon=nil)
+    content_tag(:p) {
+      i = ''
+      unless icon.nil?
+        i << tag("img", src: 'assets/' + icon + '.png', alt: icon)
+      end
+      i << value
+      i.html_safe
+    }.html_safe
   end
 
   def header(value)
@@ -288,7 +303,7 @@ class IngestRun
   def table(hash)
     if @content.start_with? "Image"
       unless hash.include? 'image' or hash.include? 'Image'
-        @report << paragraph("There must be a column called 'image'.")
+        @report << paragraph("There must be a column called 'image'.", 'cross')
         @corrections = true
       end
     end
