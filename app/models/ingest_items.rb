@@ -185,18 +185,17 @@ class IngestItems
       unless @main_file.nil? || @main_file == ''
         @main_file_path = @file_path + @main_file
         if @main_file.include? ' '
+          FileUtils.mv @main_file_path,@main_file_path.gsub!(' ','_')
           @main_file_path = @main_file_path.gsub!(' ','_')
-          FileUtils.mv @main_file_path,@main_file_path
         end
-
 
       end
       if @additional_files != [] || !@additional_files.nil?
         @additional_files_paths = []
         @additional_files.each do |i|
           if i.include? ' '
+            FileUtils.mv @file_path + i,@file_path + i.gsub!(' ','_')
             i = i.gsub!(' ','_')
-            FileUtils.mv @file_path + i,@file_path + i
           end
           @additional_files_paths += [@file_path + i]
         end
