@@ -100,8 +100,8 @@ class IngestImages
       @file_output.work.locationset.location.name = [Settings.repository.borthwick.name]
       @file_output.work.locationset.location.gname = [Settings.repository.borthwick.place]
     end
-    @file_output.image.agentset.agent.name = @photographer
     @file_output.image.agentset.agent.role = 'photographer'
+    @file_output.image.agentset.agent.name = @photographer
     @file_output.image.worktypeset.worktype = 'digital photograph or image'
   end
 
