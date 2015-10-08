@@ -162,7 +162,8 @@ class IngestImages
     # inject rights
     case @rights
       when 'creative_commons_by'
-        @file_output.rights += Settings.rights.creative_commons_by.to_hash.values
+        @file_output.image.rightsset.rights.text = Settings.rights.creative_commons_by.text
+        @file_output.image.rightsset.rights.rightshref = Settings.rights.creative_commons_by.license
       when 'york_restricted'
         @file_output.image.rightsset.rights.text = Settings.rights.york_restricted.text
         @file_output.image.rightsset.rights.rightshref = Settings.rights.york_restricted.license
