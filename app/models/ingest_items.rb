@@ -135,13 +135,13 @@ class IngestItems
       when 'Collections'
         @file_output.type += Settings.thesis.boiler_plate.dc_type_coll.to_hash.values
         @scenario = Settings.collection.scenarioid
-      when 'Exam Paper'
+      when 'Exam papers'
         @file_output.type += Settings.thesis.boiler_plate.dc_type_exam.to_hash.values
         @scenario = Settings.exampaper.scenarioid
-      when 'Scholarly Text'
+      when 'Scholarly texts'
         @file_output.type += Settings.thesis.boiler_plate.dc_type_schol.to_hash.values
         @scenario = Settings.schol.scenarioid
-      when 'Thesis'
+      when 'Theses'
         @file_output.type += Settings.thesis.boiler_plate.dc_type.to_hash.values
         @scenario = Settings.thesis.scenarioid
     end
