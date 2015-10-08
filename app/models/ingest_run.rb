@@ -18,7 +18,7 @@ class IngestRun
     @filestore = filestore
     @parent = parent
     @worktype = worktype
-    @photo = photographer
+    @photographer = photographer
     @repository = repository
     @report = ''
     @stop = false
