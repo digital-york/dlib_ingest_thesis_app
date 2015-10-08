@@ -34,7 +34,7 @@ class IngestImages
     end
     open_file
     process_file
-    return @report, @wf
+    @report
   end
 
   def open_file
@@ -63,7 +63,6 @@ class IngestImages
           # publish to the workflow queue
           publish :'workflow_queue', @wf, {'suppress_content_length' => true}
           count += 1
-          #cleanup
         rescue
           @report << paragraph("ERROR line #{index + 1}:#{$!}")
         end
@@ -162,6 +161,8 @@ class IngestImages
   def build_rights
     # inject rights
     case @rights
+      when 'creative_commons_by'
+        @file_output.rights += Settings.rights.creative_commons_by.to_hash.values
       when 'york_restricted'
         @file_output.image.rightsset.rights.text = Settings.rights.york_restricted.text
         @file_output.image.rightsset.rights.rightshref = Settings.rights.york_restricted.license

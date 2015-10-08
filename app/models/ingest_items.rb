@@ -30,7 +30,7 @@ class IngestItems
     end
     open_file
     process_file
-    return @report
+    @report
   end
 
   def open_file
@@ -149,6 +149,8 @@ class IngestItems
   def build_rights
     # inject rights
     case @rights
+      when 'creative_commons_by'
+        @file_output.rights += Settings.rights.creative_commons_by.to_hash.values
       when 'york_restricted'
         @file_output.rights += Settings.rights.york_restricted.to_hash.values
       when 'undetermined'

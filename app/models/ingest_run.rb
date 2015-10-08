@@ -63,7 +63,7 @@ class IngestRun
       @report << paragraph("Photographer: #{@photo}")
       @report << paragraph("Worktype: #{@worktype}")
     end
-    @report << paragraph("Repository: #{@repo}")
+    @report << paragraph("Repository: #{@repository}")
     if @content == 'Collections'
       @report << paragraph("You selected #{@content}, no files will be processed in the ingest.")
     else
