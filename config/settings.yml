@@ -84,9 +84,11 @@ thesis:
       #dc types for other content types
     dc_type_coll:
       text1: 'http://purl.org/dc/dcmitype/Collection'
+      text1: 'Collection'
     dc_type_schol:
       text1: 'http://purl.org/dc/dcmitype/Text'
       text2: 'http://purl.org/eprint/type/ScholarlyText'
+      text1: 'Scholarly Text'
     dc_type_exam:
       text1: 'http://purl.org/dc/dcmitype/Text'
       text2: 'http://dlib.york.ac.uk/type/ExamPaper'
@@ -101,12 +103,12 @@ thesis:
     fileextension: x100.jpg
 
 rights:
+  creative_commons_by:
+    text: 'Made available by the University of York under the terms of a Creative Commons Attribution 4.0 International (CC BY 4.0) Licence. Users must adhere to the terms of the licence. Please refer to the University of York Digital Library Rights Policy for further information.'
+    license: 'http://creativecommons.org/licenses/by/4.0/'
   admin_only:
       text: 'This item is copyrighted. All rights reserved by the copyright holder. Please refer to the University of York Digital Library Rights Policy for further information.'
       license: 'http://dlib.york.ac.uk/licences#allrightsreservedrestricted'
-  undetermined:
-    text: 'The copyright holder of this resource is undetermined. Any person who believes they are the rights holder of this resource, or can help identify the rights holder is encouraged to contact the Digital Library. This resource is made available by the University of York for Educational Non-Commercial re-use. This means that a user may copy, distribute and display the resource providing that they give credit, do not use for commercial purposes, and do not alter, transform, or build upon the resource. Please refer to the University of York Digital Library Rights Policy for further information.'
-    license: 'http://dlib.york.ac.uk/licences#undetermined'
   creative_commons_by_nc_sa:
     text: 'Made available by the University of York under the terms of a Creative Commons Attribution-Non-Commercial-Share Alike Licence. This means that a user may copy, distribute and display the resource providing that they give credit, do not use for commercial purposes, and if the work is altered, transformed, or built upon, the resulting work must be distributed under a licence identical to this one. Users must adhere to the terms of the licence. Please refer to the University of York Digital Library Rights Policy for further information.'
     license: 'http://creativecommons.org/licenses/by-nc-sa/2.0/uk/'
@@ -125,6 +127,9 @@ rights:
   online_only:
     text: 'Made available online by the University of York, by permission of the rights holder. Please contact the rights holder for any further permissions. Please refer to the University of York Digital Library Rights Policy for further information.'
     license: 'http://dlib.york.ac.uk/licences#onlineonly'
+  undetermined:
+      text: 'The copyright holder of this resource is undetermined. Any person who believes they are the rights holder of this resource, or can help identify the rights holder is encouraged to contact the Digital Library. This resource is made available by the University of York for Educational Non-Commercial re-use. This means that a user may copy, distribute and display the resource providing that they give credit, do not use for commercial purposes, and do not alter, transform, or build upon the resource. Please refer to the University of York Digital Library Rights Policy for further information.'
+      license: 'http://dlib.york.ac.uk/licences#undetermined'
   uk_copyright_permitted_acts:
         text: 'This resource is Copyrighted. It has been scanned under the terms of one of the permitted acts outlined in sections 28-36 of the Copyright, Designs and Patents Act 1988. Please refer to the University of York Digital Library Rights Policy for further information.'
         license: 'http://dlib.york.ac.uk/licences#permitted-acts'
@@ -135,3 +140,12 @@ repository:
   none:
   borthwick:
     name: 'Borthwick Institute for Archives'
+image:
+  scenarioid: 'York-Fedora-StillImage-Object'
+  scenarioid_jp2: 'Scenario-York-Fedora-StillImage_JP2-Object'
+exampaper:
+  scenarioid: 'York-Fedora-ExamPaper-Object'
+collection:
+  scenarioid: 'York-Fedora-Collection-Object'
+schol:
+  scenarioid: 'York-Fedora-ScholarlyText-Object'

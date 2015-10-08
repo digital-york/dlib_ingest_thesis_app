@@ -7,7 +7,7 @@ include ActionView::Context
 
 class IngestRun
 
-  ALLOWED_HEADERS = ['dc:title', 'dc:identifier', 'dc:contributor', 'dc:creator', 'dc:publisher', 'dc:type', 'dc:format', 'dc:rights', 'dc:coverage', 'dc:language', 'dc:source', 'dc:description', 'dc:subject', 'dc:relation', 'dc:date', 'parent', 'main', 'additional']
+  ALLOWED_HEADERS = ['dc:title', 'dc:identifier', 'dc:contributor', 'dc:creator', 'dc:publisher', 'dc:type', 'dc:format', 'dc:rights', 'dc:coverage', 'dc:language', 'dc:source', 'dc:description', 'dc:subject', 'dc:relation', 'dc:date', 'dc:contributor','parent', 'main', 'additional']
   IMAGE_HEADERS = ['image', 'folio', 'recto/verso', 'notes', 'worktype', 'parent', 'part', 'uv'] #no longer using description
 
   def ingest(folder, file, content, rights, filestore, parent, worktype, photographer, repository, dryrun, email)

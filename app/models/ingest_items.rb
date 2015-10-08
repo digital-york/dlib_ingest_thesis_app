@@ -57,7 +57,6 @@ class IngestItems
           end
           build_content_type
           build_rights
-          @report << paragraph(@repository)
           if @repository == 'borthwick' #skip the none
             @file_output.publisher += [Settings.repository.borthwick.name]
           end
@@ -67,7 +66,6 @@ class IngestItems
           # publish to the workflow queue
           @report << paragraph("Adding #{@title} to collection #{@parent}")
           publish :'workflow_queue', @wf, {'suppress_content_length' => true}
-
           count += 1
           #cleanup
         rescue
