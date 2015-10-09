@@ -7,7 +7,7 @@ include ActionView::Context
 
 class IngestRun
 
-  ALLOWED_HEADERS = ['dc:title', 'dc:identifier', 'dc:contributor', 'dc:creator', 'dc:publisher', 'dc:type', 'dc:format', 'dc:rights', 'dc:coverage', 'dc:language', 'dc:source', 'dc:description', 'dc:subject', 'dc:relation', 'dc:date', 'dc:contributor','parent', 'main', 'additional']
+  ALLOWED_HEADERS = ['dc:title', 'dc:identifier', 'dc:contributor', 'dc:creator', 'dc:publisher', 'dc:type', 'dc:format', 'dc:rights', 'dc:coverage', 'dc:language', 'dc:source', 'dc:description', 'dc:subject', 'dc:relation', 'dc:date', 'dc:contributor', 'parent', 'main', 'additional', 'pid']
   IMAGE_HEADERS = ['image', 'folio', 'recto/verso', 'notes', 'worktype', 'parent', 'part', 'uv'] #no longer using description
 
   def ingest(folder, file, content, rights, filestore, parent, worktype, photographer, repository, dryrun, email)
@@ -70,6 +70,7 @@ class IngestRun
       dir_exist
     end
     check_parents
+    check_pids
     unless @stop
       check_headers
       unless @content == 'Collections'
@@ -145,6 +146,35 @@ class IngestRun
     end
   end
 
+  def check_pids
+    @report << header("Check pids")
+    begin
+      @report << paragraph(" File is valid CSV", 'tick')
+      data = CSV.table(@file)
+    rescue
+      @report << paragraph(" File is not valid CSV. ERROR: #{$!}", 'cross')
+      @corrections = true
+      @stop = true
+    end
+    begin
+      col = data[:pid]
+      col.each do |c|
+        # we don't report on nil values, it's possible that there is no parent for some
+        unless c.to_s == '' || c.nil?
+          if c.to_s.start_with?('york:')
+            test_pid(c.to_s)
+          else
+            test_pid('york:'+c.to_s)
+          end
+        end
+      end
+    rescue
+      @report << paragraph("ERROR: #{$!}")
+      @corrections = true
+      @stop = true
+    end
+  end
+
   def test_pid(value)
     require 'faraday'
     begin
@@ -160,7 +190,7 @@ class IngestRun
       if response.status == 200 # OK although this does not guarantee it's a collection
         @report << paragraph("Parent (#{value}) collection exists", 'tick')
       else # Fedora: 403 NOTAPPLICABLE
-        @report << paragraph(" Parent (#{value}) collection not found. STATUS: #{response.status}", 'cross')
+        @report << paragraph(" (#{value}) not found. STATUS: #{response.status}", 'cross')
         @corrections = true
       end
     rescue

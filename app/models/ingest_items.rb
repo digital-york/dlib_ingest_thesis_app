@@ -14,6 +14,7 @@ class IngestItems
     @file_path = filepath
     @content = content
     @rights = rights
+    @pid = ''
     if parent.start_with?('york:')
       @parent = parent
     else
@@ -126,6 +127,10 @@ class IngestItems
         if pair[1] != nil
           @additional_files += [pair[1]]
         end
+      when 'pid'
+        if pair[1] != nil
+          @pid = pair[1]
+        end
     end
   end
 
@@ -149,8 +154,9 @@ class IngestItems
   def build_rights
     # inject rights
     case @rights
-      when 'creative_commons_by'
-        @file_output.rights += Settings.rights.creative_commons_by.to_hash.values
+      when 'york_restricted'
+        @file
+
       when 'york_restricted'
         @file_output.rights += Settings.rights.york_restricted.to_hash.values
       when 'undetermined'
@@ -224,7 +230,7 @@ class IngestItems
     end
     Nokogiri::XML::Builder.new do |xml|
       xml['wf'].workflow('xmlns:wf' => 'http://dlib.york.ac.uk/workflow') {
-        xml['wf'].client(:scenarioid => @scenario, :parent => @parent, :submittedBy => Settings.thesis.submittedBy, :client => Settings.thesis.client, :stopOnError => Settings.thesis.stopOnError, :accesskey => Settings.thesis.accesskey) {
+        xml['wf'].client(:scenarioid => @scenario, :pid => @pid, :parent => @parent, :submittedBy => Settings.thesis.submittedBy, :client => Settings.thesis.client, :stopOnError => Settings.thesis.stopOnError, :accesskey => Settings.thesis.accesskey) {
           xml['wf'].file(:mime => 'text/xml', :id => 'DC', :file => metadata_file)
           unless main_file.nil?
             xml['wf'].file(:mime => 'application/pdf', :main => 'true', :storelocally => 'true', :file => main_file)
