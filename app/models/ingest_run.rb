@@ -147,7 +147,7 @@ class IngestRun
   end
 
   def check_pids
-    @report << header("Check pids")
+    @report << header("Check pids (these will overwrite DC on existing objects)")
     begin
       @report << paragraph(" File is valid CSV", 'tick')
       data = CSV.table(@file)
@@ -188,7 +188,7 @@ class IngestRun
       # do get
       response = conn.get '/fedora/objects/' + value
       if response.status == 200 # OK although this does not guarantee it's a collection
-        @report << paragraph("Parent (#{value}) collection exists", 'tick')
+        @report << paragraph("(#{value}) exists", 'tick')
       else # Fedora: 403 NOTAPPLICABLE
         @report << paragraph(" (#{value}) not found. STATUS: #{response.status}", 'cross')
         @corrections = true
@@ -327,7 +327,7 @@ class IngestRun
   end
 
   def header(value)
-    content_tag(:h2, value).html_safe
+    content_tag(:h3, value).html_safe
   end
 
   def table(hash)

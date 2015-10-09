@@ -12,7 +12,7 @@
     <% end %>
 
     <div class="field">
-        <%= f.label "Select the filestore" %><br/>
+        <%= f.label "Select the filestore" %>&nbsp;
         <%= f.select(:filestore) do %>
             <%= options_for_select([
                                            ['please select', ''],
@@ -24,8 +24,8 @@
     </div>
     <br/>
     <div class="field ingest 1">
-        <%= f.label "Path to files" %><br/>
-        <%= f.text_field :folder, :size => 70 %>
+        <%= f.label "Path to files" %>&nbsp;
+        <%= f.text_field :folder, :size => 50 %>
         <p>E.G. '<i>archbishop/Folder1/Folder2/</i>' enter '<i>Folder1/Folder2</i>'.<br/>
             Leave blank for root directory.<br/>
             If you are selecting '<i>image (TIFF master and JP2 display)</i>' make sure sub-directories for
@@ -34,13 +34,13 @@
     </div>
     <br/>
     <div class="field ingest 1">
-        <%= f.label "Select a CSV file to upload" %><br/>
+        <%= f.label "Select a CSV file to upload" %>&nbsp;
         <%= f.file_field :file %>
     </div>
     <br/>
 
     <div class="field ingest 2">
-        <%= f.label "Type of Content to Ingest" %><br>
+        <%= f.label "Type of Content to Ingest" %>&nbsp;
         <%= f.select(:content) do %>
             <%= options_for_select([
                                            ['please select', ''],
@@ -57,26 +57,26 @@
 
     </div>
     <div class="field field-toggle-off">
-        <%= f.label "Imager", :class => 'field-toggle-off' %><br/>
+        <%= f.label "Imager", :class => 'field-toggle-off' %>&nbsp;
         <% if self.current_user.nil? %>
-            <%= f.text_field :photographer %>
+            <%= f.text_field :photographer, :size => 50 %>
         <% else %>
-            <%= f.text_field :photographer, :value => self.current_user.surname + ', ' + self.current_user.givenname %>
+            <%= f.text_field :photographer, :value => self.current_user.surname + ', ' + self.current_user.givenname, :size => 50 %>
         <% end %>
     </div>
     <br/>
     <div class="field field-toggle-off">
-        <%= f.label "Worktype (leave blank if this is in the csv)" %><br/>
-        <%= f.text_field :worktype %>
+        <%= f.label "Worktype" %>&nbsp;
+        <%= f.text_field :worktype, :size => 50 %>
+        <p>Leave blank if this is in the csv</p>
     </div>
-
+    <br/>
     <div class="field ingest 3">
-        <%= f.label :rights %><br/>
+        <%= f.label :rights %>&nbsp;
         <% @hash = Hash.new()
            @hash = {'please select' => ''}
            @hash.reverse_merge!(Settings.rights.to_hash { |l| [l['label']] }) %>
         <%= f.select :rights, options_for_select(@hash) %>
-
     </div>
     <br/>
     <div class="field ingest 4">
@@ -86,9 +86,9 @@
     <%= f.hidden_field :dryrun, :value => 'true' %>
     <br/>
     <div class="field ingest 4">
-        <%= f.label "Parent Collection (leave blank if this is in the csv)" %><br/>
+        <%= f.label "Parent Collection" %><br/>
         <%= f.label "Select Collection", :id => 'btnColl', :class => 'btn btn-primary' %>
-        <br/>
+        <p>Leave blank if this is in the csv</p>
 
         <div id="divColl" style="display: none;">
 
