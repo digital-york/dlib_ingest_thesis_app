@@ -239,7 +239,7 @@ class IngestRun
         i << image_tag("tick.png", alt: "tick")
         i << ' This column will be processed'
       elsif ALLOWED_HEADERS.include? value.downcase
-        i << tag("img", src: 'assets/tick.png', alt: 'cross')
+        i << tag("img", src: 'assets/tick.png', alt: 'tick')
         i << ' This column will be processed'
       else
         i << image_tag("cross.png", alt: "cross")
