@@ -234,8 +234,8 @@ class IngestItems
         @main_file_path = @file_path + @main_file
 
         # replace spaces in files, if we're ingesting a directory structure convert that into filename to ensure uniqueness
-        if @main_file.include? ' ' or @main_file.include? '/' or
-            main = @file_path.clone
+        if @main_file.include? ' ' or @main_file.include? '/'
+          main = @file_path.clone
           mf = @main_file.clone
           FileUtils.mv @main_file_path, main.gsub(' ','_') + mf.gsub(' ','_').gsub('/','_')
           #
@@ -247,7 +247,7 @@ class IngestItems
         @additional_files_paths = []
         @additional_files.each do |i|
           # replace spaces in files
-          if i.include? ' ' or i.include? '/' or
+          if i.include? ' ' or i.include? '/'
             ii = i.clone
             FileUtils.mv @file_path + i, @file_path + ii.gsub(' ','_').gsub('/','_')
             i = ii
