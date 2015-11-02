@@ -233,11 +233,9 @@ class IngestItems
       unless @main_file.nil? || @main_file == ''
         @main_file_path = @file_path + @main_file
 
-
-
-        # replace spaces in files
-        if @main_file.include? ' '
-          main = @file_path.clone
+        # replace spaces in files, if we're ingesting a directory structure convert that into filename to ensure uniqueness
+        if @main_file.include? ' ' or @main_file.include? '/' or
+            main = @file_path.clone
           mf = @main_file.clone
           FileUtils.mv @main_file_path, main.gsub!(' ','_') + mf.gsub!(' ','_').gsub!('/','_')
           #
