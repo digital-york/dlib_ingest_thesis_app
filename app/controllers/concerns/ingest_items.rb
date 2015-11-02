@@ -237,7 +237,7 @@ class IngestItems
         if @main_file.include? ' ' or @main_file.include? '/' or
             main = @file_path.clone
           mf = @main_file.clone
-          FileUtils.mv @main_file_path, main.gsub!(' ','_') + mf.gsub!(' ','_').gsub!('/','_')
+          FileUtils.mv @main_file_path, main.gsub(' ','_') + mf.gsub(' ','_').gsub('/','_')
           #
           @main_file_path = main + mf
         end
@@ -247,9 +247,9 @@ class IngestItems
         @additional_files_paths = []
         @additional_files.each do |i|
           # replace spaces in files
-          if i.include? ' '
+          if i.include? ' ' or i.include? '/' or
             ii = i.clone
-            FileUtils.mv @file_path + i, @file_path + ii.gsub!(' ','_').gsub!('/','_')
+            FileUtils.mv @file_path + i, @file_path + ii.gsub(' ','_').gsub('/','_')
             i = ii
           end
           @additional_files_paths += [@file_path + i]
