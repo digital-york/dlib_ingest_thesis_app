@@ -91,7 +91,7 @@ class IngestItems
       when 'dc:format'
         @file_output.fmt += [pair[1]]
       when 'dc:rights'
-        @file_output.rights += [pair[1]]
+        @rightsholder = pair[1]
       when 'dc:coverage'
         @file_output.coverage += [pair[1]]
       when 'dc:language'
@@ -147,29 +147,77 @@ class IngestItems
     # inject rights
     case @rights
       when 'creative_commons_by_sa'
-        @file_output.rights += Settings.rights.creative_commons_by_sa.to_hash.values
+        @file_output.rights += Settings.rights.creative_commons_by_sa.license
+        unless @rightsholder.nil?
+          @file_output.rights += @rightsholder
+        end
+        @file_output.rights += Settings.rights.creative_commons_by_sa.text
       when 'creative_commons_by'
-        @file_output.rights += Settings.rights.creative_commons_by.to_hash.values
+        @file_output.rights += Settings.rights.creative_commons_by.license
+        unless @rightsholder.nil?
+          @file_output.rights += @rightsholder
+        end
+        @file_output.rights += Settings.rights.creative_commons_by.text
       when 'york_restricted'
-        @file_output.rights += Settings.rights.york_restricted.to_hash.values
+        @file_output.rights += Settings.rights.york_restricted.license
+        unless @rightsholder.nil?
+          @file_output.rights += @rightsholder
+        end
+        @file_output.rights += Settings.rights.york_restricted.text
       when 'undetermined'
-        @file_output.rights += Settings.rights.undetermined.to_hash.values
+        @file_output.rights += Settings.rights.undetermined.license
+        unless @rightsholder.nil?
+          @file_output.rights += @rightsholder
+        end
+        @file_output.rights += Settings.rights.undetermined.text
       when 'uk_copyright_permitted_acts'
-        @file_output.rights += Settings.rights.uk_copyright_permitted_acts.to_hash.values
+        @file_output.rights += Settings.rights.uk_copyright_permitted_acts.license
+        unless @rightsholder.nil?
+          @file_output.rights += @rightsholder
+        end
+        @file_output.rights += Settings.rights.uk_copyright_permitted_acts.text
       when 'creative_commons_by_nc_sa'
-        @file_output.rights += Settings.rights.creative_commons_by_nc_sa.to_hash.values
+        @file_output.rights += Settings.rights.creative_commons_by_nc_sa.license
+        unless @rightsholder.nil?
+          @file_output.rights += @rightsholder
+        end
+        @file_output.rights += Settings.rights.creative_commons_by_nc_sa.text
       when 'creative_commons_by_nc_sa_preview'
-        @file_output.rights += Settings.rights.creative_commons_by_nc_sa_preview.to_hash.values
+        @file_output.rights += Settings.rights.creative_commons_by_nc_sa_preview.license
+        unless @rightsholder.nil?
+          @file_output.rights += @rightsholder
+        end
+        @file_output.rights += Settings.rights.creative_commons_by_nc_sa_preview.text
       when 'creative_commons_by_nc_nd'
-        @file_output.rights += Settings.rights.creative_commons_by_nc_nd.to_hash.values
+        @file_output.rights += Settings.rights.creative_commons_by_nc_nd.license
+        unless @rightsholder.nil?
+          @file_output.rights += @rightsholder
+        end
+        @file_output.rights += Settings.rights.creative_commons_by_nc_nd.text
       when 'creative_commons_by_nc_nd_preview'
-        @file_output.rights += Settings.rights.creative_commons_by_nc_nd_preview.to_hash.values
+        @file_output.rights += Settings.rights.creative_commons_by_nc_nd_preview.license
+        unless @rightsholder.nil?
+          @file_output.rights += @rightsholder
+        end
+        @file_output.rights += Settings.rights.creative_commons_by_nc_nd_preview.text
       when 'admin_only'
-        @file_output.rights += Settings.rights.admin_only.to_hash.values
+        @file_output.rights += Settings.rights.admin_only.license
+        unless @rightsholder.nil?
+          @file_output.rights += @rightsholder
+        end
+        @file_output.rights += Settings.rights.admin_only.text
       when 'online_only'
-        @file_output.rights += Settings.rights.online_only.to_hash.values
+        @file_output.rights += Settings.rights.online_only.license
+        unless @rightsholder.nil?
+          @file_output.rights += @rightsholder
+        end
+        @file_output.rights += Settings.rights.online_only.text
       when 'public_domain'
-        @file_output.rights += Settings.rights.public_domain.to_hash.values
+        @file_output.rights += Settings.rights.public_domain.license
+        unless @rightsholder.nil?
+          @file_output.rights += @rightsholder
+        end
+        @file_output.rights += Settings.rights.public_domain.text
     end
   end
 
