@@ -238,8 +238,7 @@ class IngestItems
           main = @file_path.clone
           mf = @main_file.clone
           FileUtils.mv @main_file_path, main.gsub(' ','_') + mf.gsub(' ','_').gsub('/','_')
-          #
-          @main_file_path = main + mf
+          @main_file_path = main.gsub(' ','_') + mf.gsub(' ','_').gsub('/','_')
         end
 
       end
@@ -250,7 +249,7 @@ class IngestItems
           if i.include? ' ' or i.include? '/'
             ii = i.clone
             FileUtils.mv @file_path + i, @file_path + ii.gsub(' ','_').gsub('/','_')
-            i = ii
+            i = ii.gsub(' ','_').gsub('/','_')
           end
           @additional_files_paths += [@file_path + i]
         end
