@@ -167,11 +167,11 @@ class IngestImages
     # inject rights
     case @rights
       when 'creative_commons_by_sa'
-        @file_output.image.rightsset.rights.text = @file_output.rights += Settings.rights.creative_commons_by_sa.text
-        @file_output.image.rightsset.rights.rightshref = @file_output.rights += Settings.rights.creative_commons_by_sa.license
+        @file_output.image.rightsset.rights.text = Settings.rights.creative_commons_by_sa.text
+        @file_output.image.rightsset.rights.rightshref = Settings.rights.creative_commons_by_sa.license
       when 'creative_commons_by'
-        @file_output.image.rightsset.rights.text = @file_output.rights += Settings.rights.creative_commons_by.text
-        @file_output.image.rightsset.rights.rightshref = @file_output.rights += Settings.rights.creative_commons_by.license
+        @file_output.image.rightsset.rights.text = Settings.rights.creative_commons_by.text
+        @file_output.image.rightsset.rights.rightshref = Settings.rights.creative_commons_by.license
       when 'undetermined'
         @file_output.image.rightsset.rights.text = Settings.rights.undetermined.text
         @file_output.image.rightsset.rights.rightshref = Settings.rights.undetermined.license

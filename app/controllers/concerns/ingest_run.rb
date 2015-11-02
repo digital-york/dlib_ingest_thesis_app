@@ -309,8 +309,9 @@ class IngestRun
 
   def file_exist(file, added_path='', file_end='')
     # does file exist?
-    unless File.exist? "#{@file_path}#{added_path}#{file}#{file_end}"
-      @report << paragraph(" Cannot find #{@file_path}#{added_path}#{file}#{file_end}", 'cross')
+    looking_for = "#{@file_path}#{added_path}#{file}#{file_end}"
+    unless File.exist? looking_for
+      @report << paragraph(" Cannot find #{looking_for}", 'cross')
       @corrections = true
     end
   end
