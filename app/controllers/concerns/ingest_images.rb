@@ -143,11 +143,8 @@ class IngestImages
         when 'parent'
           # prefer file to selection
           unless pair[1].nil?
-            if pair[1].to_s.start_with?('york:')
-              @parent = pair[1].to_s
-            else
-              @parent = 'york:' + pair[1].to_s
-            end
+            @parent = pair[1].to_s
+
           end
         when 'worktype'
           unless pair[1].nil?
@@ -242,7 +239,10 @@ class IngestImages
 
   # Use default collection specified in settings unless otherwise specified
   def get_workflow_client_thesis_xml
-    if @parent ==  'york:'
+    unless @parent.start_with?('york:')
+      @parent = 'york:' + @parent
+    end
+    if @parent == 'york:'
       @parent = nil
     end
     if @parent.nil? || @parent == ''

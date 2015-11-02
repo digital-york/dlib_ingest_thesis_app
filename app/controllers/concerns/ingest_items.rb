@@ -15,11 +15,7 @@ class IngestItems
     @content = content
     @rights = rights
     @pid = ''
-    if parent.start_with?('york:')
-      @parent = parent
-    else
-      @parent = 'york:'+ parent
-    end
+    @parent = parent
     @repository = repository
     @wf = nil # workflow xml
     @scenario = ''
@@ -112,11 +108,7 @@ class IngestItems
         @file_output.date += [pair[1]]
       when 'parent'
         unless pair[1].nil?
-          if pair[1].to_s.start_with?('york:')
-            @parent = pair[1].to_s
-          else
-            @parent = 'york:' + pair[1].to_s
-          end
+          @parent = pair[1].to_s
         end
       # skip empty values
       when 'main'
@@ -226,10 +218,13 @@ class IngestItems
 
 # Use default collection specified in settings unless otherwise specified
   def get_workflow_client_thesis_xml(metadata_file, main_file=nil, additional_files=nil)
-    if @parent ==  'york:'
+    unless @parent.start_with?('york:')
+      @parent = 'york:' + @parent
+    end
+    if @parent == 'york:'
       @parent = nil
     end
-    if @parent == '' or @parent.nil?
+    if @parent.nil? || @parent == ''
       @parent = Settings.batch.parentcollection
     end
     Nokogiri::XML::Builder.new do |xml|
