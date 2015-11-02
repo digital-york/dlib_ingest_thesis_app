@@ -1,7 +1,7 @@
 server: 'https://yodldev1.york.ac.uk'
 thesis:
   scenarioid: 'York-Fedora-Thesis-Object'
-  parentcollection: 'york:3'
+  parentcollection: 'york:8329486'
   submittedBy: fedoraAdmin
   client: ThesisClient
   stopOnError: false
@@ -12,4 +12,6 @@ filestore:
   yodlprodingest: '/usr/digilib-ingest/'
   archbishop: '/var/tmp/'
 tmppath: '/var/tmp/'
+batch:
+  parentcollection: 'york:8329486'
 

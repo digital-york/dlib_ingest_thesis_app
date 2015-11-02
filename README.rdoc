@@ -1,3 +1,9 @@
+Before deployment
+
+in config/messaging.rb set the correct server for s.queue :workflow_queue
+add the .env file
+
+
 == README
 
 This README would normally document whatever steps are necessary to get the

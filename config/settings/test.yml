@@ -1,15 +1,16 @@
+server: 'https://yodlapp3.york.ac.uk'
 thesis:
   scenarioid: 'York-Fedora-Thesis-Object'
   parentcollection: 'york:847875'
   submittedBy: fedoraAdmin
   client: ThesisClient
   stopOnError: false
-  accesskey: <%= ENV['TEST.WORKFLOW_API_KEY'] %>
+  accesskey: <%= ENV['LIVE.WORKFLOW_API_KEY'] %>
   tmpfilepath: /public/uploadedfiles/
   tmpfileurl:  /uploadedfiles/
-image:
-  scenarioid: 'York-Fedora-StillImage-Object'
 filestore:
-  yodlprodingest: '/usr/digilib-ingest/'
+  yodlprodingest: '/usr/digilib-ingest'
   archbishop: '/usr/digilib-archbishop/'
 tmppath: '/tmp/'
+batch:
+  parentcollection: 'york:8329486'

@@ -8,9 +8,9 @@ thesis:
   accesskey: <%= ENV['LIVE.WORKFLOW_API_KEY'] %>
   tmpfilepath: /public/uploadedfiles/
   tmpfileurl:  /uploadedfiles/
-image:
-  scenarioid: 'York-Fedora-StillImage-Object'
 filestore:
   yodlprodingest: '/usr/digilib-ingest'
   archbishop: '/usr/digilib-archbishop/'
 tmppath: '/tmp/'
+batch:
+  parentcollection: 'york:855395'

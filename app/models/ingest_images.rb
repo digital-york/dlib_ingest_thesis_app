@@ -238,7 +238,7 @@ class IngestImages
   # Use default collection specified in settings unless otherwise specified
   def get_workflow_client_thesis_xml
     if @parent.nil? || @parent == ''
-      @parent = Settings.thesis.parentcollection
+      @parent = Settings.batch.parentcollection
     end
     builder = Nokogiri::XML::Builder.new do |xml|
       xml['wf'].workflow('xmlns:wf' => 'http://dlib.york.ac.uk/workflow') {
