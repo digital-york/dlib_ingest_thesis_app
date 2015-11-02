@@ -111,7 +111,7 @@ class IngestItems
       when 'dc:date'
         @file_output.date += [pair[1]]
       when 'parent'
-        if pair[1] != ''
+        unless pair[1].nil?
           if pair[1].to_s.start_with?('york:')
             @parent = pair[1].to_s
           else
