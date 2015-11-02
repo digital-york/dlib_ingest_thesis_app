@@ -120,15 +120,15 @@ class IngestItems
         end
       # skip empty values
       when 'main'
-        if pair[1] != nil
+        unless pair[1].nil?
           @main_file = pair[1]
         end
       when 'additional'
-        if pair[1] != nil
+        unless pair[1].nil?
           @additional_files += [pair[1]]
         end
       when 'pid'
-        if pair[1] != nil
+        unless pair[1].nil?
           @pid = pair[1]
         end
     end
@@ -154,9 +154,10 @@ class IngestItems
   def build_rights
     # inject rights
     case @rights
-      when 'york_restricted'
-        @file
-
+      when 'creative_commons_by_sa'
+        @file_output.rights += Settings.rights.creative_commons_by_sa.to_hash.values
+      when 'creative_commons_by'
+        @file_output.rights += Settings.rights.creative_commons_by.to_hash.values
       when 'york_restricted'
         @file_output.rights += Settings.rights.york_restricted.to_hash.values
       when 'undetermined'

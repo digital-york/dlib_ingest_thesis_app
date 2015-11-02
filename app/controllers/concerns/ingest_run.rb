@@ -4,6 +4,8 @@ require 'nokogiri-pretty'
 require 'dotenv'
 include ActionView::Helpers::TagHelper
 include ActionView::Context
+include ActionView::Helpers::AssetTagHelper
+
 
 class IngestRun
 
@@ -223,16 +225,16 @@ class IngestRun
     content_tag(:span) {
       i = ''
       if (value == 'main' || value == 'additional') and @content == 'Collections'
-        i << tag("img", src: 'assets/cross.png', alt: 'cross')
+        i << image_tag("cross.png", alt: "cross")
         i << ' this column will not be processed'
       elsif @content.start_with? 'Image' and IMAGE_HEADERS.include? value.downcase
-        i << tag("img", src: 'assets/tick.png', alt: 'cross')
+        i << image_tag("tick.png", alt: "tick")
         i << ' This column will be processed'
       elsif ALLOWED_HEADERS.include? value.downcase
         i << tag("img", src: 'assets/tick.png', alt: 'cross')
         i << ' This column will be processed'
       else
-        i << tag("img", src: 'assets/cross.png', alt: 'cross')
+        i << image_tag("cross.png", alt: "cross")
         i << ' This column will not be processed'
       end
       i.html_safe
@@ -319,7 +321,7 @@ class IngestRun
     content_tag(:p) {
       i = ''
       unless icon.nil?
-        i << tag("img", src: 'assets/' + icon + '.png', alt: icon)
+        i << image_tag("#{icon}.png", alt: "#{icon}")
       end
       i << value
       i.html_safe

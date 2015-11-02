@@ -23,6 +23,7 @@ class IngestImages
     @photographer = photographer
     @worktype = worktype
     @wf = nil
+    @pid = ''
     # open the stored file
     begin
       @file = File.open(Settings.tmppath + email + '.csv')
@@ -152,6 +153,10 @@ class IngestImages
           unless pair[1].nil?
             @file_output.work.worktypeset.worktype = pair[1].to_s
           end
+        when 'pid'
+          unless pair[1].nil?
+            @pid = pair[1]
+          end
       end
     rescue
       @report << paragraph("ERROR in build_metadata_from_pair #{pair[0]}:#{pair[1]}, #{$!}")
@@ -161,12 +166,12 @@ class IngestImages
   def build_rights
     # inject rights
     case @rights
+      when 'creative_commons_by_sa'
+        @file_output.image.rightsset.rights.text = @file_output.rights += Settings.rights.creative_commons_by_sa.text
+        @file_output.image.rightsset.rights.rightshref = @file_output.rights += Settings.rights.creative_commons_by_sa.license
       when 'creative_commons_by'
-        @file_output.image.rightsset.rights.text = Settings.rights.creative_commons_by.text
-        @file_output.image.rightsset.rights.rightshref = Settings.rights.creative_commons_by.license
-      when 'york_restricted'
-        @file_output.image.rightsset.rights.text = Settings.rights.york_restricted.text
-        @file_output.image.rightsset.rights.rightshref = Settings.rights.york_restricted.license
+        @file_output.image.rightsset.rights.text = @file_output.rights += Settings.rights.creative_commons_by.text
+        @file_output.image.rightsset.rights.rightshref = @file_output.rights += Settings.rights.creative_commons_by.license
       when 'undetermined'
         @file_output.image.rightsset.rights.text = Settings.rights.undetermined.text
         @file_output.image.rightsset.rights.rightshref = Settings.rights.undetermined.license
@@ -242,7 +247,7 @@ class IngestImages
     end
     builder = Nokogiri::XML::Builder.new do |xml|
       xml['wf'].workflow('xmlns:wf' => 'http://dlib.york.ac.uk/workflow') {
-        xml['wf'].client(:scenarioid => @scenario, :parent => @parent, :submittedBy => Settings.thesis.submittedBy, :client => Settings.thesis.client, :stopOnError => Settings.thesis.stopOnError, :accesskey => Settings.thesis.accesskey) {
+        xml['wf'].client(:scenarioid => @scenario, :pid => @pid, :parent => @parent, :submittedBy => Settings.thesis.submittedBy, :client => Settings.thesis.client, :stopOnError => Settings.thesis.stopOnError, :accesskey => Settings.thesis.accesskey) {
           xml['wf'].file(:mime => 'text/xml', :id => 'VRA', :file => @metadata_file_path)
 
           unless @archival_master_file_path.nil?

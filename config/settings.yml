@@ -103,9 +103,12 @@ thesis:
     fileextension: x100.jpg
 
 rights:
+  creative_commons_by_sa:
+    text: 'Made available by the University of York under the terms of a Creative Commons Attribution 4.0 International (CC BY-SA 4.0) Licence. Users must adhere to the terms of the licence. Please refer to the University of York Digital Library Rights Policy for further information.'
+    license: 'http://creativecommons.org/licenses/by-sa/4.0/'
   creative_commons_by:
-    text: 'Made available by the University of York under the terms of a Creative Commons Attribution 4.0 International (CC BY 4.0) Licence. Users must adhere to the terms of the licence. Please refer to the University of York Digital Library Rights Policy for further information.'
-    license: 'http://creativecommons.org/licenses/by/4.0/'
+      text: 'Made available by the University of York under the terms of a Creative Commons Attribution 4.0 International (CC BY 4.0) Licence. Users must adhere to the terms of the licence. Please refer to the University of York Digital Library Rights Policy for further information.'
+      license: 'http://creativecommons.org/licenses/by/4.0/'
   admin_only:
       text: 'This item is copyrighted. All rights reserved by the copyright holder. Please refer to the University of York Digital Library Rights Policy for further information.'
       license: 'http://dlib.york.ac.uk/licences#allrightsreservedrestricted'
