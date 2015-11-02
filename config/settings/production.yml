@@ -10,9 +10,9 @@ thesis:
   tmpfilepath: /public/uploadedfiles/
   tmpfileurl:  /uploadedfiles/
 filestore:
-  yodlprodingest: '/usr/digilib-ingest'
+  yodlprodingest: '/usr/digilib-ingest/'
   archbishop: '/usr/digilib-archbishop/'
 tmppath: '/tmp/'
 batch:
-  parentcollection: 'york:855395'
+  #parentcollection: 'york:855395'
   parentcollection: 'york:8329486'

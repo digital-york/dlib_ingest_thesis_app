@@ -226,6 +226,9 @@ class IngestItems
 
 # Use default collection specified in settings unless otherwise specified
   def get_workflow_client_thesis_xml(metadata_file, main_file=nil, additional_files=nil)
+    if @parent ==  'york:'
+      @parent = nil
+    end
     if @parent == '' or @parent.nil?
       @parent = Settings.batch.parentcollection
     end

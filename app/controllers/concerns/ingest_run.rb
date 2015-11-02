@@ -118,7 +118,6 @@ class IngestRun
     else
       #grab the parents list in the csv file and go through unique values
       begin
-        @report << paragraph(" File is valid CSV", 'tick')
         data = CSV.table(@file)
       rescue
         @report << paragraph(" File is not valid CSV. ERROR: #{$!}", 'cross')
@@ -130,13 +129,17 @@ class IngestRun
         unless col.length == 1
           col = col.uniq
         end
-        col.each do |c|
-          # we don't report on nil values, it's possible that there is no parent for some
-          unless c.to_s == '' || c.nil?
-            if c.to_s.start_with?('york:')
-              test_pid(c.to_s)
-            else
-              test_pid('york:'+c.to_s)
+        if col.length == 1 and col[0].class == NilClass
+          @report << paragraph("No PIDS supplied")
+        else
+          col.each do |c|
+            # we don't report on nil values, it's possible that there is no parent for some
+            unless c.to_s == '' || c.nil?
+              if c.to_s.start_with?('york:')
+                test_pid(c.to_s)
+              else
+                test_pid('york:'+c.to_s)
+              end
             end
           end
         end
@@ -151,7 +154,6 @@ class IngestRun
   def check_pids
     @report << header("Check pids (these will overwrite DC on existing objects)")
     begin
-      @report << paragraph(" File is valid CSV", 'tick')
       data = CSV.table(@file)
     rescue
       @report << paragraph(" File is not valid CSV. ERROR: #{$!}", 'cross')
@@ -160,13 +162,19 @@ class IngestRun
     end
     begin
       col = data[:pid]
-      col.each do |c|
-        # we don't report on nil values, it's possible that there is no parent for some
-        unless c.to_s == '' || c.nil?
-          if c.to_s.start_with?('york:')
-            test_pid(c.to_s)
-          else
-            test_pid('york:'+c.to_s)
+      unless col.length == 1
+        col = col.uniq
+      end
+      if col.length == 1 and col[0].class == NilClass
+        @report << paragraph("No PIDS supplied")
+      else
+        col.each do |c|
+          unless c.to_s == '' || c.nil?
+            if c.to_s.start_with?('york:')
+              test_pid(c.to_s)
+            else
+              test_pid('york:'+c.to_s)
+            end
           end
         end
       end

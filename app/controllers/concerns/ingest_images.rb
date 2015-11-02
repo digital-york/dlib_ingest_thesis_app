@@ -242,6 +242,9 @@ class IngestImages
 
   # Use default collection specified in settings unless otherwise specified
   def get_workflow_client_thesis_xml
+    if @parent ==  'york:'
+      @parent = nil
+    end
     if @parent.nil? || @parent == ''
       @parent = Settings.batch.parentcollection
     end
