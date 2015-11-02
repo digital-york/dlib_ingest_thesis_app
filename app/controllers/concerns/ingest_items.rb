@@ -147,77 +147,77 @@ class IngestItems
     # inject rights
     case @rights
       when 'creative_commons_by_sa'
-        @file_output.rights += Settings.rights.creative_commons_by_sa.license
+        @file_output.rights += [Settings.rights.creative_commons_by_sa.license]
         unless @rightsholder.nil?
-          @file_output.rights += @rightsholder
+          @file_output.rights += [@rightsholder]
         end
-        @file_output.rights += Settings.rights.creative_commons_by_sa.text
+        @file_output.rights += [Settings.rights.creative_commons_by_sa.text]
       when 'creative_commons_by'
-        @file_output.rights += Settings.rights.creative_commons_by.license
+        @file_output.rights += [Settings.rights.creative_commons_by.license]
         unless @rightsholder.nil?
-          @file_output.rights += @rightsholder
+          @file_output.rights += [@rightsholder]
         end
-        @file_output.rights += Settings.rights.creative_commons_by.text
+        @file_output.rights += [Settings.rights.creative_commons_by.text]
       when 'york_restricted'
-        @file_output.rights += Settings.rights.york_restricted.license
+        @file_output.rights += [Settings.rights.york_restricted.license]
         unless @rightsholder.nil?
-          @file_output.rights += @rightsholder
+          @file_output.rights += [@rightsholder]
         end
-        @file_output.rights += Settings.rights.york_restricted.text
+        @file_output.rights += [Settings.rights.york_restricted.text]
       when 'undetermined'
-        @file_output.rights += Settings.rights.undetermined.license
+        @file_output.rights += [Settings.rights.undetermined.license]
         unless @rightsholder.nil?
-          @file_output.rights += @rightsholder
+          @file_output.rights += [@rightsholder]
         end
-        @file_output.rights += Settings.rights.undetermined.text
+        @file_output.rights += [Settings.rights.undetermined.text]
       when 'uk_copyright_permitted_acts'
-        @file_output.rights += Settings.rights.uk_copyright_permitted_acts.license
+        @file_output.rights += [Settings.rights.uk_copyright_permitted_acts.license]
         unless @rightsholder.nil?
-          @file_output.rights += @rightsholder
+          @file_output.rights += [@rightsholder]
         end
-        @file_output.rights += Settings.rights.uk_copyright_permitted_acts.text
+        @file_output.rights += [Settings.rights.uk_copyright_permitted_acts.text]
       when 'creative_commons_by_nc_sa'
-        @file_output.rights += Settings.rights.creative_commons_by_nc_sa.license
+        @file_output.rights += [Settings.rights.creative_commons_by_nc_sa.license]
         unless @rightsholder.nil?
-          @file_output.rights += @rightsholder
+          @file_output.rights += [@rightsholder]
         end
-        @file_output.rights += Settings.rights.creative_commons_by_nc_sa.text
+        @file_output.rights += [Settings.rights.creative_commons_by_nc_sa.text]
       when 'creative_commons_by_nc_sa_preview'
-        @file_output.rights += Settings.rights.creative_commons_by_nc_sa_preview.license
+        @file_output.rights += [Settings.rights.creative_commons_by_nc_sa_preview.license]
         unless @rightsholder.nil?
-          @file_output.rights += @rightsholder
+          @file_output.rights += [@rightsholder]
         end
-        @file_output.rights += Settings.rights.creative_commons_by_nc_sa_preview.text
+        @file_output.rights += [Settings.rights.creative_commons_by_nc_sa_preview.text]
       when 'creative_commons_by_nc_nd'
-        @file_output.rights += Settings.rights.creative_commons_by_nc_nd.license
+        @file_output.rights += [Settings.rights.creative_commons_by_nc_nd.license]
         unless @rightsholder.nil?
-          @file_output.rights += @rightsholder
+          @file_output.rights += [@rightsholder]
         end
-        @file_output.rights += Settings.rights.creative_commons_by_nc_nd.text
+        @file_output.rights += [Settings.rights.creative_commons_by_nc_nd.text]
       when 'creative_commons_by_nc_nd_preview'
-        @file_output.rights += Settings.rights.creative_commons_by_nc_nd_preview.license
+        @file_output.rights += [Settings.rights.creative_commons_by_nc_nd_preview.license]
         unless @rightsholder.nil?
-          @file_output.rights += @rightsholder
+          @file_output.rights += [@rightsholder]
         end
-        @file_output.rights += Settings.rights.creative_commons_by_nc_nd_preview.text
+        @file_output.rights += [Settings.rights.creative_commons_by_nc_nd_preview.text]
       when 'admin_only'
-        @file_output.rights += Settings.rights.admin_only.license
+        @file_output.rights += [Settings.rights.admin_only.license]
         unless @rightsholder.nil?
-          @file_output.rights += @rightsholder
+          @file_output.rights += [@rightsholder]
         end
-        @file_output.rights += Settings.rights.admin_only.text
+        @file_output.rights += [Settings.rights.admin_only.text]
       when 'online_only'
-        @file_output.rights += Settings.rights.online_only.license
+        @file_output.rights += [Settings.rights.online_only.license]
         unless @rightsholder.nil?
-          @file_output.rights += @rightsholder
+          @file_output.rights += [@rightsholder]
         end
-        @file_output.rights += Settings.rights.online_only.text
+        @file_output.rights += [Settings.rights.online_only.text]
       when 'public_domain'
-        @file_output.rights += Settings.rights.public_domain.license
+        @file_output.rights += [Settings.rights.public_domain.license]
         unless @rightsholder.nil?
-          @file_output.rights += @rightsholder
+          @file_output.rights += [@rightsholder]
         end
-        @file_output.rights += Settings.rights.public_domain.text
+        @file_output.rights += [Settings.rights.public_domain.text]
     end
   end
 
