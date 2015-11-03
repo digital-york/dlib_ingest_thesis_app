@@ -1,6 +1,3 @@
-require 'activemessaging'
-include ActiveMessaging::MessageSender
-
 class IngestsController < ApplicationController
   #before_action :set_ingest, only: [:show,]
   before_action :authenticate_user!
