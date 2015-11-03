@@ -11,8 +11,8 @@ class IngestRun
 
   ALLOWED_HEADERS = ['dc:title', 'dc:identifier', 'dc:contributor', 'dc:creator', 'dc:publisher', 'dc:type', 'dc:format', 'dc:rights', 'dc:coverage', 'dc:language', 'dc:source', 'dc:description', 'dc:subject', 'dc:relation', 'dc:date', 'dc:contributor', 'parent', 'main', 'additional', 'pid']
   IMAGE_HEADERS = ['image', 'folio', 'recto/verso', 'notes', 'worktype', 'parent', 'part', 'uv'] #no longer using description
-  TICK = '/theses/public/assets/tick-f2f02a239dfbd85ac257e1be2006fcf047dcf6646337e3ab6c6ce99caadddbdd.png'
-  CROSS = '/theses/public/assets/cross-4e2c50ae93cca22c1f4594a3a926d18729f4c750f4cd0bfb508096dfa78d9ca1.png'
+  TICK = '/theses/assets/tick-f2f02a239dfbd85ac257e1be2006fcf047dcf6646337e3ab6c6ce99caadddbdd.png'
+  CROSS = '/theses/assets/cross-4e2c50ae93cca22c1f4594a3a926d18729f4c750f4cd0bfb508096dfa78d9ca1.png'
 
   def ingest(folder, file, content, rights, filestore, parent, worktype, photographer, repository, dryrun, email)
     @folder = folder
