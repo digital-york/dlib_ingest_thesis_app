@@ -5,7 +5,8 @@
   </small>
   <nav>
     <ul>
-      <% if self.current_user.get_department_code == 'libarch' %>
+
+      <% if self.current_user != nil and self.current_user.get_department_code == 'libarch' %>
         <li><%= link_to "Ingests",               ingests_path %></li>
       <% end %>
       <li><%= link_to "Help",               help_path %></li>
