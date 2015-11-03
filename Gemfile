@@ -26,6 +26,11 @@ gem 'jbuilder', '~> 2.0'
 # bundle exec rake doc:rails generates the API under doc/api.
 gem 'sdoc', '~> 0.4.0', group: :doc
 
+gem 'faraday'
+#gem 'faraday_middleware'
+#gem 'faraday-cookie_jar'
+gem 'jstree-rails-4'
+
 # Use ActiveModel has_secure_password
 # gem 'bcrypt', '~> 3.1.7'
 
@@ -37,7 +42,7 @@ gem 'sdoc', '~> 0.4.0', group: :doc
 
 gem 'bootstrap-sass', '3.2.0.0'
 
-gem 'rails_config'
+gem 'config'
 gem 'nokogiri-pretty'
 gem 'dotenv-rails'
 
@@ -56,7 +61,7 @@ gem "compass-rails", github: "Compass/compass-rails", branch: "master"
 #gem 'compass-rails'
 gem 'compass'
 
-gem 'mysql2'
+#gem 'mysql2'
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
@@ -71,6 +76,7 @@ end
 
 group :production do
   gem 'rack-cache', :require => 'rack/cache'
+  gem 'mysql2'
 end
 
 

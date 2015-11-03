@@ -25,6 +25,7 @@ ActiveRecord::Schema.define(version: 20150522092944) do
     t.string   "repository"
     t.string   "parent"
     t.string   "photographer"
+    t.boolean  "dryrun"
   end
 
   create_table "theses", force: :cascade do |t|

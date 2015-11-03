@@ -24,11 +24,18 @@ class User < ActiveRecord::Base
   end
 
   before_save :get_department
+
     def get_department
       #isMemberOf: cn=tg,ou=pgrad,ou=main,ou=ymgtsch,ou=students,ou=inst,ou=groups,dc=york,dc=ac,dc=uk
       #memberinfo = Devise::LDAP::Adapter.get_ldap_param(self.login, "isMemberOf").first
       memberinfo = Devise::LDAP::Adapter.get_ldap_param('brg506', "isMemberOf").first
       self.department = getDepartment(memberinfo)
+    end
+
+    def get_department_code
+       memberinfo = Devise::LDAP::Adapter.get_ldap_param(self.login, "isMemberOf").first
+       #memberinfo = Devise::LDAP::Adapter.get_ldap_param('ww721', "isMemberOf").first
+       self.department = getDepartmentCode(memberinfo)
     end
 
   private
@@ -48,4 +55,13 @@ class User < ActiveRecord::Base
        # end
     end
 
+  private
+  def getDepartmentCode(isMemberOfStr)
+    department = ''
+    # The format of isMemberOfStr is: 'cn=tg,ou=pgrad,ou=main,ou=ymgtsch,ou=students,ou=inst,ou=groups,dc=york,dc=ac,dc=uk'
+    # ["cn=support,ou=main,ou=libarch,ou=staff,ou=inst,ou=groups,dc=york,dc=ac,dc=uk"]
+    #departmentcode = isMemberOfStr.partition('ou=main,ou=').first.partition(',').first
+    #JA: this seems to get the right attribute for libarchstaff, not sure that will work across the board
+    isMemberOfStr.partition('ou=main,ou=').third.partition(',').first
+  end
 end

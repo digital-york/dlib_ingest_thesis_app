@@ -1,0 +1,104 @@
+<%= form_for(@ingest) do |f| %>
+    <% if @ingest.errors.any? %>
+        <div id="error_explanation">
+            <h2><%= pluralize(@ingest.errors.count, "error") %> prohibited this ingest from being saved:</h2>
+
+            <ul>
+                <% @ingest.errors.full_messages.each do |message| %>
+                    <li><%= message %></li>
+                <% end %>
+            </ul>
+        </div>
+    <% end %>
+
+    <div class="field">
+        <%= f.label "Select the filestore" %>&nbsp;
+        <%= f.select(:filestore) do %>
+            <%= options_for_select([
+                                           ['please select', ''],
+                                           ['yodlprodingest'],
+                                           ['archbishop']
+                                   ]) %>
+            <%= :id %>
+        <% end %>
+    </div>
+    <br/>
+    <div class="field ingest 1">
+        <%= f.label "Path to files" %>&nbsp;
+        <%= f.text_field :folder, :size => 50 %>
+        <p>For example: '<i>archbishop/Folder1/Folder2/</i>' enter '<i>Folder1/Folder2</i>'.<br/>
+            Leave blank for root directory.
+        </p>
+    </div>
+    <br/>
+    <div class="field ingest 1">
+        <%= f.label "Select a CSV file to upload" %>&nbsp;
+        <%= f.file_field :file %>
+    </div>
+    <br/>
+
+    <div class="field ingest 2">
+        <%= f.label "Type of Content to Ingest" %>&nbsp;
+        <%= f.select(:content) do %>
+            <%= options_for_select([
+                                           ['please select', ''],
+                                           ['Collections'],
+                                           ['Theses'],
+                                           ['Exam papers'],
+                                           ['Scholarly texts'],
+                                           ['Images'],
+                                   ]) %>
+
+            <%= :id %>
+
+        <% end %>
+
+    </div>
+    <div class="field field-toggle-off">
+        <%= f.label "Imager", :class => 'field-toggle-off' %>&nbsp;
+        <% if self.current_user.nil? %>
+            <%= f.text_field :photographer, :size => 50 %>
+        <% else %>
+            <%= f.text_field :photographer, :value => self.current_user.surname + ', ' + self.current_user.givenname, :size => 50 %>
+        <% end %>
+    </div>
+    <br/>
+    <div class="field field-toggle-off">
+        <%= f.label "Worktype" %>&nbsp;
+        <%= f.text_field :worktype, :size => 50 %>
+        <p>Leave blank if this is in the csv</p>
+    </div>
+    <br/>
+    <div class="field ingest 3">
+        <%= f.label :rights %>&nbsp;
+        <% @hash = Hash.new()
+           @hash = {'please select' => ''}
+           @hash.reverse_merge!(Settings.rights.to_hash { |l| [l['label']] }) %>
+        <%= f.select :rights, options_for_select(@hash) %>
+    </div>
+    <br/>
+    <div class="field ingest 4">
+        <%= f.label :repository %><br/>
+        <%= f.select :repository, options_for_select(Settings.repository.to_hash { |l| [l['label']] }), :class => 'field-toggle-off' %>
+    </div>
+    <%= f.hidden_field :dryrun, :value => 'true' %>
+    <br/>
+    <div class="field ingest 4">
+        <%= f.label "Parent Collection" %><br/>
+        <%= f.label "Select Collection", :id => 'btnColl', :class => 'btn btn-primary' %>
+        <p>Leave blank if this is in the csv</p>
+
+        <div id="divColl" style="display: none;">
+
+        </div>
+        <br/>
+        <br class="remove"/>
+        <%= f.label "Collection pid:", :class => 'remove' %>
+        <br class="remove"/>
+        <%= f.text_field :parent %>
+    </div>
+    <div class="actions ingest 4">
+        <%= f.submit "Test Ingest", class: "pretty_button" %>
+    </div>
+    <br/>
+<% end %>

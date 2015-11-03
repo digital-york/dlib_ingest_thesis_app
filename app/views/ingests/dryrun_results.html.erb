@@ -1,0 +1,20 @@
+<br/><br/>
+<h1>Ingest Report</h1>
+<p id="notice"><%= notice %></p>
+<% if self.current_user.get_department_code == 'libarch' %>
+
+    <p>
+        <%= @dryrun_report %>
+    </p>
+
+    <div class="pretty_button">
+        <%= link_to 'New Ingest', new_ingest_path %>
+    </div>
+
+<% else %>
+
+    <p>You are not authorized to view this page</p>
+    <br /><br />
+
+<% end %>
+

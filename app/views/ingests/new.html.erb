@@ -1,0 +1,15 @@
+<br/><br/>
+<h3>New Batch Ingest</h3>
+<br/>
+
+<% if self.current_user.get_department_code == 'libarch' %>
+
+    <%= render 'form' %>
+
+<% else %>
+
+    <p>You are not authorized to view this page? Redirect?</p>
+
+    <br /><br />
+
+<% end %>
