@@ -11,6 +11,8 @@ class IngestRun
 
   ALLOWED_HEADERS = ['dc:title', 'dc:identifier', 'dc:contributor', 'dc:creator', 'dc:publisher', 'dc:type', 'dc:format', 'dc:rights', 'dc:coverage', 'dc:language', 'dc:source', 'dc:description', 'dc:subject', 'dc:relation', 'dc:date', 'dc:contributor', 'parent', 'main', 'additional', 'pid']
   IMAGE_HEADERS = ['image', 'folio', 'recto/verso', 'notes', 'worktype', 'parent', 'part', 'uv'] #no longer using description
+  TICK = 'public/assets/tick-f2f02a239dfbd85ac257e1be2006fcf047dcf6646337e3ab6c6ce99caadddbdd.png'
+  CROSS = 'public/assets/cross-4e2c50ae93cca22c1f4594a3a926d18729f4c750f4cd0bfb508096dfa78d9ca1.png'
 
   def ingest(folder, file, content, rights, filestore, parent, worktype, photographer, repository, dryrun, email)
     @folder = folder
@@ -233,16 +235,16 @@ class IngestRun
     content_tag(:span) {
       i = ''
       if (value == 'main' || value == 'additional') and @content == 'Collections'
-        i << image_tag("cross.png", alt: "cross")
+        i << tag("img", src: CROSS, alt: "cross")
         i << ' this column will not be processed'
       elsif @content.start_with? 'Image' and IMAGE_HEADERS.include? value.downcase
-        i << image_tag("tick.png", alt: "tick")
+        i << tag("img", src: TICK, alt: "tick")
         i << ' This column will be processed'
       elsif ALLOWED_HEADERS.include? value.downcase
-        i << tag("img", src: 'assets/tick.png', alt: 'tick')
+        i << tag("img", src: TICK, alt: 'tick')
         i << ' This column will be processed'
       else
-        i << image_tag("cross.png", alt: "cross")
+        i << tag("img", src: CROSS, alt: "cross")
         i << ' This column will not be processed'
       end
       i.html_safe
@@ -330,7 +332,7 @@ class IngestRun
     content_tag(:p) {
       i = ''
       unless icon.nil?
-        i << image_tag("#{icon}.png", alt: "#{icon}")
+        i << tag("img", src: icon.upcase, alt: "#{icon}")
       end
       i << value
       i.html_safe
