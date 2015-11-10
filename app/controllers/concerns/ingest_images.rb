@@ -91,7 +91,7 @@ class IngestImages
         @title_hash['folio'].gsub! ' f.',' p.'
       end
     end
-    @title = "#{@title_hash['image']}#{@title_hash['part']}#{@title_hash['folio']}#{@title_hash['rv']}#{@title_hash['notes']}#{@title_hash['uv']}"
+    @title = "#{@title_hash['image']}#{@title_hash['part']}#{@title_hash['folio']}#{@title_hash['rv']}#{@title_hash['membrane']}#{@title_hash['fd']}#{@title_hash['notes']}#{@title_hash['uv']}"
     @title.gsub '  ', ' '
     @file_output.image.titleset.title = @title
     @file_output.work.titleset.title = @title
@@ -129,6 +129,18 @@ class IngestImages
               @title_hash['rv'] =  ' (recto)'
             elsif pair[1] == 'v'
               @title_hash['rv'] = ' (verso)'
+            end
+          end
+        when 'membrane'
+          unless pair[1].nil?
+            @title_hash['membrane'] = ' membrane ' + pair[1].to_s
+          end
+        when 'face/dorse'
+          unless pair[1].nil?
+            if pair[1] == 'f'
+              @title_hash['fd'] =  ' (face)'
+            elsif pair[1] == 'd'
+              @title_hash['fd'] = ' (dorse)'
             end
           end
         when 'notes'
