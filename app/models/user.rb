@@ -27,8 +27,8 @@ class User < ActiveRecord::Base
 
     def get_department
       #isMemberOf: cn=tg,ou=pgrad,ou=main,ou=ymgtsch,ou=students,ou=inst,ou=groups,dc=york,dc=ac,dc=uk
-      #memberinfo = Devise::LDAP::Adapter.get_ldap_param(self.login, "isMemberOf").first
-      memberinfo = Devise::LDAP::Adapter.get_ldap_param('brg506', "isMemberOf").first
+      memberinfo = Devise::LDAP::Adapter.get_ldap_param(self.login, "isMemberOf").first
+      #memberinfo = Devise::LDAP::Adapter.get_ldap_param('brg506', "isMemberOf").first
       self.department = getDepartment(memberinfo)
     end
 
