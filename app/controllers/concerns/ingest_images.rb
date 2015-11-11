@@ -224,7 +224,12 @@ class IngestImages
         @display_file_path = @file_path + @folder.gsub('/','') + '_JPEG2000s/' + @image + '.jp2'
         @scenario = Settings.image.scenarioid_jp2
       end
-      @archival_master_file_path = @file_path + @folder.gsub('/','') + '_TIFFs/' + @image + '.tif'
+      if Dir.exist? @file_path + @folder.gsub('/','') + '_TIFFs/'
+        @archival_master_file_path = @file_path + @folder.gsub('/','') + '_TIFFs/' + @image + '.tif'
+      end
+      if Dir.exist? @file_path + @folder.gsub('/','') + '_JPEGs/'
+        @jpeg_file_path = @file_path + @folder.gsub('/','') + '_JPEGs/' + @image + '.jpg'
+      end
       # replace spaces in files
       if @archival_master_file_path.include? ' '
         main = @archival_master_file_path.clone
@@ -235,6 +240,11 @@ class IngestImages
         main = @display_file_path.clone
         FileUtils.mv @display_file_path, main.gsub!(' ','_')
         @display_file_path = main
+      end
+      if @jpeg_file_path.include? ' '
+        main = @jpeg_file_path.clone
+        FileUtils.mv @jpeg_file_path, main.gsub!(' ','_')
+        @jpeg_file_path = main
       end
     rescue
       @report << paragraph("ERROR in write_data_files #{$!}")
@@ -270,6 +280,9 @@ class IngestImages
           end
           unless @display_file_path.nil?
             xml['wf'].file(:mime => 'image/jp2', :storelocally => 'true', :file => @display_file_path)
+          end
+          unless @jpeg_file_path.nil?
+            xml['wf'].file(:mime => 'image/jpeg', :storelocally => 'true', :file => @jpeg_file_path)
           end
         }
       }

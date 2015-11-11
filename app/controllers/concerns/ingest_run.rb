@@ -268,10 +268,15 @@ class IngestRun
           col.each do |c|
             # we don't report on nil values
             unless c.to_s == '' || c.nil?
-              if Dir.exist? @file_path
+              if Dir.exist? @file_path + @folder.gsub('/', '') + '_JPEG2000s/'
                 file_exist(c, @folder.gsub('/', '') + '_JPEG2000s/', '.jp2')
               end
-              file_exist(c, @folder.gsub('/', '') + '_TIFFs/', '.tif')
+              if Dir.exist? @folder.gsub('/', '') + '_TIFFs/'
+                file_exist(c, @folder.gsub('/', '') + '_TIFFs/', '.tif')
+              end
+              if Dir.exist? @folder.gsub('/', '') + '_JPEGs/'
+                file_exist(c, @folder.gsub('/', '') + '_JPEGs/', '.jpg')
+              end
             end
           end
         rescue
