@@ -10,7 +10,7 @@ thesis:
   tmpfileurl:  /uploadedfiles/
 filestore:
   yodlprodingest: '/usr/digilib-ingest/'
-  archbishop: '/var/tmp/'
+  archbishop: '/vagrant/tmp/'
 tmppath: '/var/tmp/'
 batch:
   parentcollection: 'york:8329486'
