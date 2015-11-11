@@ -61,7 +61,7 @@ gem "compass-rails", github: "Compass/compass-rails", branch: "master"
 #gem 'compass-rails'
 gem 'compass'
 
-#gem 'mysql2'
+gem 'mysql2', '~> 0.3.13'
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
@@ -76,7 +76,7 @@ end
 
 group :production do
   gem 'rack-cache', :require => 'rack/cache'
-  gem 'mysql2'
+  # gem 'mysql2'
 end
 
 
