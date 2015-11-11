@@ -9,5 +9,5 @@ ActiveMessaging::Gateway.define do |s|
   # change the queue name to match the server
   
   s.destination :thesis_message_processor, '/queue/ThesisMessageProcessor'
-  s.queue :workflow_queue, 'yodldev1.genericworkflow.messages'
+  s.queue :workflow_queue, 'yodlapp3.genericworkflow.messages'
 end
