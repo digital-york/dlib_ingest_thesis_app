@@ -2,9 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="f0c74ff7-c51b-4d3a-94d8-8ae9e686e135" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/config/settings/development.yml" afterPath="$PROJECT_DIR$/config/settings/development.yml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/controllers/concerns/ingest_images.rb" afterPath="$PROJECT_DIR$/app/controllers/concerns/ingest_images.rb" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/controllers/concerns/ingest_run.rb" afterPath="$PROJECT_DIR$/app/controllers/concerns/ingest_run.rb" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="thes_master.iws" />
@@ -54,8 +52,8 @@
       <file leaf-file-name="ingest_images.rb" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/app/controllers/concerns/ingest_images.rb">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.67564535">
-              <caret line="85" column="22" selection-start-line="85" selection-start-column="22" selection-end-line="85" selection-end-column="22" />
+            <state vertical-scroll-proportion="0.28619528">
+              <caret line="114" column="67" selection-start-line="114" selection-start-column="67" selection-end-line="114" selection-end-column="67" />
               <folding />
             </state>
           </provider>
@@ -489,12 +487,12 @@
       <workItem from="1446562502173" duration="4808000" />
       <workItem from="1447162934635" duration="352000" />
       <workItem from="1447164267688" duration="87000" />
-      <workItem from="1447169765960" duration="3780000" />
+      <workItem from="1447169765960" duration="4787000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="10428000" />
+    <option name="totallyTimeSpent" value="11435000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
@@ -669,8 +667,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/app/controllers/concerns/ingest_images.rb">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.67564535">
-          <caret line="85" column="22" selection-start-line="85" selection-start-column="22" selection-end-line="85" selection-end-column="22" />
+        <state vertical-scroll-proportion="0.28619528">
+          <caret line="114" column="67" selection-start-line="114" selection-start-column="67" selection-end-line="114" selection-end-column="67" />
           <folding />
         </state>
       </provider>

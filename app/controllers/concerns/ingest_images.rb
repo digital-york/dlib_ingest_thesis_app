@@ -112,7 +112,7 @@ class IngestImages
         when 'image'
           unless pair[1].nil?
             @image = pair[1]
-            @title_hash['image'] = pair[1][0..-6].gsub!('_', ' ').gsub(' 000',' ').gsub(' 00',' ').gsub(' 0',' ') #this makes an assumption about the max number
+            @title_hash['image'] = pair[1][0..-6].gsub!('_', ' ') #.gsub(' 000',' ').gsub(' 00',' ').gsub(' 0',' ') #this makes an assumption about the max number
             @title += ' '
           end
         when 'part'
@@ -156,7 +156,6 @@ class IngestImages
           # prefer file to selection
           unless pair[1].nil?
             @parent = pair[1].to_s
-
           end
         when 'worktype'
           unless pair[1].nil?
@@ -223,28 +222,30 @@ class IngestImages
       if Dir.exist? @file_path+ @folder.gsub('/','') + '_JPEG2000s'
         @display_file_path = @file_path + @folder.gsub('/','') + '_JPEG2000s/' + @image + '.jp2'
         @scenario = Settings.image.scenarioid_jp2
+        # replace spaces in files
+        if @display_file_path.include? ' '
+          main = @display_file_path.clone
+          FileUtils.mv @display_file_path, main.gsub!(' ','_')
+          @display_file_path = main
+        end
       end
       if Dir.exist? @file_path + @folder.gsub('/','') + '_TIFFs/'
         @archival_master_file_path = @file_path + @folder.gsub('/','') + '_TIFFs/' + @image + '.tif'
+        # replace spaces in files
+        if @archival_master_file_path.include? ' '
+          main = @archival_master_file_path.clone
+          FileUtils.mv @archival_master_file_path, main.gsub!(' ','_')
+          @archival_master_file_path = main
+        end
       end
       if Dir.exist? @file_path + @folder.gsub('/','') + '_JPEGs/'
         @jpeg_file_path = @file_path + @folder.gsub('/','') + '_JPEGs/' + @image + '.jpg'
-      end
-      # replace spaces in files
-      if @archival_master_file_path.include? ' '
-        main = @archival_master_file_path.clone
-        FileUtils.mv @archival_master_file_path, main.gsub!(' ','_')
-        @archival_master_file_path = main
-      end
-      if @display_file_path.include? ' '
-        main = @display_file_path.clone
-        FileUtils.mv @display_file_path, main.gsub!(' ','_')
-        @display_file_path = main
-      end
-      if @jpeg_file_path.include? ' '
-        main = @jpeg_file_path.clone
-        FileUtils.mv @jpeg_file_path, main.gsub!(' ','_')
-        @jpeg_file_path = main
+        # replace spaces in files
+        if @jpeg_file_path.include? ' '
+          main = @jpeg_file_path.clone
+          FileUtils.mv @jpeg_file_path, main.gsub!(' ','_')
+          @jpeg_file_path = main
+        end
       end
     rescue
       @report << paragraph("ERROR in write_data_files #{$!}")
