@@ -264,6 +264,26 @@ class IngestRun
       end
       if @content == 'Images'
         begin
+          # Check if the image file paths exist
+          if !Dir.exist? @file_path + @folder.gsub('/', '') + '_JPEG2000s/' and
+              !Dir.exist? @file_path + @folder.gsub('/', '') + '_TIFFs/' and
+              !Dir.exist? @file_path + @folder.gsub('/', '') + '_JPGs/'
+            @report << paragraph('No images found')
+            @corrections = true
+            @stop = true
+          else
+            dirs = []
+            if Dir.exist? @file_path + @folder.gsub('/', '') + '_JPEG2000s/'
+              dirs << @file_path + @folder.gsub('/', '') + '_JPEG2000s/'
+            end
+            if Dir.exist? @file_path + @folder.gsub('/', '') + '_TIFFs/'
+              dirs << @file_path + @folder.gsub('/', '') + '_TIFFs/'
+            end
+            if Dir.exist? @file_path + @folder.gsub('/', '') + '_JPGs/'
+              dirs << @file_path + @folder.gsub('/', '') + '_JPGs/'
+            end
+            @report << paragraph("Directory/ies found for #{dirs.join}, checking for images")
+          end
           col = data[:image]
           col.each do |c|
             # we don't report on nil values
@@ -271,10 +291,10 @@ class IngestRun
               if Dir.exist? @file_path + @folder.gsub('/', '') + '_JPEG2000s/'
                 file_exist(c, @folder.gsub('/', '') + '_JPEG2000s/', '.jp2')
               end
-              if Dir.exist? @folder.gsub('/', '') + '_TIFFs/'
+              if Dir.exist? @file_path + @folder.gsub('/', '') + '_TIFFs/'
                 file_exist(c, @folder.gsub('/', '') + '_TIFFs/', '.tif')
               end
-              if Dir.exist? @folder.gsub('/', '') + '_JPGs/'
+              if Dir.exist? @file_path + @folder.gsub('/', '') + '_JPGs/'
                 file_exist(c, @folder.gsub('/', '') + '_JPGs/', '.jpg')
               end
             end
