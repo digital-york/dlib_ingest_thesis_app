@@ -62,7 +62,6 @@ gem "compass-rails", github: "Compass/compass-rails", branch: "master"
 gem 'compass'
 
 # errors with 0.4x versions 10/11/2015
->>>>>>> f6f61f006ba166d2f75a50399aa940e17ee7a14a
 gem 'mysql2', '~> 0.3.13'
 
 group :development, :test do

@@ -238,8 +238,8 @@ class IngestImages
           @archival_master_file_path = main
         end
       end
-      if Dir.exist? @file_path + @folder.gsub('/','') + '_JPEGs/'
-        @jpeg_file_path = @file_path + @folder.gsub('/','') + '_JPEGs/' + @image + '.jpg'
+      if Dir.exist? @file_path + @folder.gsub('/','') + '_JPGs/'
+        @jpeg_file_path = @file_path + @folder.gsub('/','') + '_JPGs/' + @image + '.jpg'
         # replace spaces in files
         if @jpeg_file_path.include? ' '
           main = @jpeg_file_path.clone

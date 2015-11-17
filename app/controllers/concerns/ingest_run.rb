@@ -274,8 +274,8 @@ class IngestRun
               if Dir.exist? @folder.gsub('/', '') + '_TIFFs/'
                 file_exist(c, @folder.gsub('/', '') + '_TIFFs/', '.tif')
               end
-              if Dir.exist? @folder.gsub('/', '') + '_JPEGs/'
-                file_exist(c, @folder.gsub('/', '') + '_JPEGs/', '.jpg')
+              if Dir.exist? @folder.gsub('/', '') + '_JPGs/'
+                file_exist(c, @folder.gsub('/', '') + '_JPGs/', '.jpg')
               end
             end
           end
