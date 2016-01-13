@@ -2,13 +2,13 @@
 <h3>New Batch Ingest</h3>
 <br/>
 
-<% if self.current_user.get_department_code == 'libarch' %>
+<% if self.current_user.get_department_code == 'libarch' or self.current_user.get_department_code == 'directinfo' %>
 
     <%= render 'form' %>
 
 <% else %>
 
-    <p>You are not authorized to view this page? Redirect?</p>
+    <p><%= self.current_user.get_department_code %> is not authorized to view this page.</p>
 
     <br /><br />
 

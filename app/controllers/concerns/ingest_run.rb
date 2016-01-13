@@ -64,7 +64,7 @@ class IngestRun
     @report << paragraph("Parent: #{@parent}")
     @report << paragraph("Rights: #{@rights}")
     if @content.start_with? "Image"
-      @report << paragraph("Photographer: #{@photo}")
+      @report << paragraph("Photographer: #{@photographer}")
       @report << paragraph("Worktype: #{@worktype}")
     end
     @report << paragraph("Repository: #{@repository}")
@@ -90,7 +90,7 @@ class IngestRun
     if Dir.exist? set_file_path
       @report << paragraph(" #{@file_path} exists.", 'tick')
     else
-      @report << paragraph(" #{@file_path} does not exist.", 'tick')
+      @report << paragraph(" #{@file_path} does not exist.", 'cross')
       @corrections = true
       @dir = false
     end

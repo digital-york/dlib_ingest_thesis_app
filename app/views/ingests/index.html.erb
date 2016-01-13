@@ -1,52 +1,15 @@
 <br/><br/>
 <h1>Batch Ingest</h1>
 <p id="notice"><%= notice %></p>
-<% if self.current_user.get_department_code == 'libarch' %>
+<% if self.current_user.get_department_code == 'libarch' or self.current_user.get_department_code == 'directinfo' %>
 
     <div class="pretty_button">
         <%= link_to 'New Ingest', new_ingest_path %>
     </div>
 
     <h3>York Digital Library Batch Ingest Tool</h3>
-    <p>This tool is for uploading batches of images, dissertations, scholarly texts or exam papers, and their associated files. It can also be used to add batches of collections and can update the metadata for existing objects.</p>
-
-    <p>The tool has two steps. First complete the form and upload your file.
-        The tool then checks the data for errors (files not in the specified locations, incorrect column headings and non-existent collections).
-        If the data has no significant errors the ingest can then proceed.</p>
-
-    <p>Please <strong>check and double check</strong> your data and the on screen report. It's much easier to correct errors now, than later.</p>
-    <p>Do not supply multiple columns where noted below.</p>
-    <p>For DC, you can supply a dc:rights with the rights holder, license info will be added automatically. Please only supply one dc:rights field.</p>
-    <p>For DC, standard dc:type values will be added as noted below. You can add as many additional types as you like.</p>
-    <p>It can take a while to process a large ingest. For example, 50 tiff images may take half an hour or more.</p>
-    <p>Avoid any special characters in file names. Short and unique is best.</p>
-    <p>The main, additional or image columns may include file paths with a forward slash, eg. vol29/10/document.pdf.</p>
-    <p>To update the metadata of an existing object, please supply the pid in a column called 'pid'. Remember that this will replace ALL of the metadata for that object, so make sure your spreadsheet includes everything you need to add.</p>
-
-    <h3>Supported column headings</h3>
-
-    <p><strong>Images</strong>: image<strong>*</strong>, folio<strong>*</strong>, recto/verso<strong>*</strong>, membrane<strong>*</strong>, face/dorse<strong>*</strong>, notes<strong>*</strong>, worktype<strong>*</strong>, parent<strong>*</strong>, part<strong>*</strong>, uv<strong>*</strong></p>
-    <p><strong>Collections:</strong> dc:title, dc:identifier, dc:contributor, dc:creator, dc:publisher, dc:type, dc:format, dc:rights<strong>*</strong>, dc:coverage, dc:language, dc:source, dc:description, dc:subject, dc:relation, dc:date, dc:contributor, parent<strong>*</strong>, pid<strong>*</strong></p>
-    <p><strong>Anything else:</strong> dc:title, dc:identifier, dc:contributor, dc:creator, dc:publisher, dc:type, dc:format, dc:rights<strong>*</strong>, dc:coverage, dc:language, dc:source, dc:description, dc:subject, dc:relation, dc:date, dc:contributor, parent<strong>*</strong>, main<strong>*</strong>, additional, pid<strong>*</strong></p>
-
-    <p><strong>*</strong> One only.</p>
-
-    <p>All other column headings will be ignored.</p>
-
-    <h3>dc:type</h3>
-
-    <p><strong>Collection: </strong>'http://purl.org/dc/dcmitype/Collection', 'Collection'</p>
-    <p><strong>Theses:</strong> 'http://purl.org/dc/dcmitype/Text', 'http://purl.org/eprint/type/Thesis', 'Theses', 'Dissertations'</p>
-    <p><strong>Exam Paper:</strong>'http://purl.org/dc/dcmitype/Text', 'http://dlib.york.ac.uk/type/ExamPaper', 'Exam paper'</p>
-    <p><strong>Scholarly Text:</strong>'http://purl.org/dc/dcmitype/Text', 'http://purl.org/eprint/type/ScholarlyText', 'Scholarly Text'</p>
-
-    <h3>Current limitations</h3>
-
-    <p>It can only upload one type of content at a time.</p>
-    <p>It can only upload pdf files for Dissertations, Scholarly Texts and Exam Papers (both main and additional files).</p>
-    <p>It does not support uploading jpeg images.</p>
-    <p>It will not upload files with Collections.</p>
-    <p>It will not upload batches with mixed rights.</p>
+    <p>Please consult the instructions:</p>
+    <p><%= link_to 'York Digital Library Batch Ingest Tool', 'https://wiki.york.ac.uk/display/dlib/York+Digital+Library+Batch+Ingest+Tool' %></p>
 
     <% if session[:failures] %>
 
@@ -54,5 +17,9 @@
     <% end %>
 
 <% else %>
+
+    <p><%= self.current_user.get_department_code %> is not authorized to view this page.</p>
+
+    <br /><br />
 
 <% end %>
