@@ -64,6 +64,7 @@ class IngestRun
     @report << paragraph("Content: #{@content}")
     @report << paragraph("Parent: #{@parent}")
     @report << paragraph("Rights: #{@rights}")
+    @report << paragraph("Repository: #{@repository}")
     if @content.start_with? "Image"
       @report << paragraph("Photographer: #{@photographer}")
       @report << paragraph("Worktype: #{@worktype}")
@@ -72,7 +73,6 @@ class IngestRun
       end
 
     end
-    @report << paragraph("Repository: #{@repository}")
     if @content == 'Collections' or @metadataonly == '1'
       @report << paragraph("No files will be processed in the ingest.")
     else
@@ -174,6 +174,10 @@ class IngestRun
       end
       if col.length == 1 and col[0].class == NilClass
         @report << paragraph("No PIDS supplied")
+        if @metadataonly == "1"
+          @report << paragraph("PIDS must be supplied for metadataonly records (except Collections).")
+          @stop = true
+        end
       else
         col.each do |c|
           unless c.to_s == '' || c.nil?

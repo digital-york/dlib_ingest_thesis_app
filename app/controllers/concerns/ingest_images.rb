@@ -9,8 +9,6 @@ include ActiveMessaging::MessageSender
 
 class IngestImages
 
-  #TODO set scenario for JPEG2s
-
   def do_ingest(filepath, folder, content, rights, parent, worktype, photographer, repository, email, metadataonly)
     @scenario = Settings.image.scenarioid
     @report = ''
