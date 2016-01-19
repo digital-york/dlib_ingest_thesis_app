@@ -10,11 +10,11 @@ include ActionView::Helpers::AssetTagHelper
 class IngestRun
 
   ALLOWED_HEADERS = ['dc:title', 'dc:identifier', 'dc:contributor', 'dc:creator', 'dc:publisher', 'dc:type', 'dc:format', 'dc:rights', 'dc:coverage', 'dc:language', 'dc:source', 'dc:description', 'dc:subject', 'dc:relation', 'dc:date', 'dc:contributor', 'parent', 'main', 'additional', 'pid']
-  IMAGE_HEADERS = ['image', 'folio', 'recto/verso', 'membrane', 'face/dorse','notes', 'worktype', 'parent', 'part', 'uv'] #no longer using description
+  IMAGE_HEADERS = ['image', 'folio', 'recto/verso', 'membrane', 'face/dorse', 'notes', 'worktype', 'parent', 'part', 'uv'] #no longer using description
   TICK = '/theses/assets/tick-f2f02a239dfbd85ac257e1be2006fcf047dcf6646337e3ab6c6ce99caadddbdd.png'
   CROSS = '/theses/assets/cross-4e2c50ae93cca22c1f4594a3a926d18729f4c750f4cd0bfb508096dfa78d9ca1.png'
 
-  def ingest(folder, file, content, rights, filestore, parent, worktype, photographer, repository, dryrun, email)
+  def ingest(folder, file, content, rights, filestore, parent, worktype, photographer, repository, dryrun, email, metadataonly)
     @folder = folder
     @file = file
     @content = content
@@ -28,19 +28,28 @@ class IngestRun
     @stop = false
     @corrections = false
     @dir = true
+    @metadataonly = metadataonly
 
     if dryrun
       # create a copy of the file
-      begin
+      # begin
         #delete if we have an artefact file
         #FileUtils.rm(Settings.tmppath + email + '.csv')
         #causes an error
+      # rescue
+        #@report << paragraph("ERROR:#{$!}")
+      # end
+      begin
+        FileUtils.cp(@file, Settings.tmppath + email + '.csv')
       rescue
         @report << paragraph("ERROR:#{$!}")
       end
-      FileUtils.cp(@file, Settings.tmppath + email + '.csv')
+      begin
       # do the dry run
       do_dryrun
+      rescue
+        @report << paragraph("ERROR:#{$!}")
+      end
       # return the report
       return @report.html_safe
     else
@@ -48,7 +57,7 @@ class IngestRun
       @report << paragraph("The files you uploaded will be removed from their current location and moved to the server. If you have any 'leftover' that suggests a problem with that line in the spreadsheet.")
       #do the ingest
       if @content.start_with? "Image"
-        @report = IngestImages.new.do_ingest(set_file_path, @folder, @content, @rights, @parent, @worktype, @photographer, @repository, email)
+        @report = IngestImages.new.do_ingest(set_file_path, @folder, @content, @rights, @parent, @worktype, @photographer, @repository, email, @metadataonly)
       else
         @report = IngestItems.new.do_ingest(set_file_path, @content, @rights, @parent, @repository, email)
       end
@@ -63,13 +72,16 @@ class IngestRun
     @report << paragraph("Content: #{@content}")
     @report << paragraph("Parent: #{@parent}")
     @report << paragraph("Rights: #{@rights}")
+    @report << paragraph("Repository: #{@repository}")
     if @content.start_with? "Image"
       @report << paragraph("Photographer: #{@photographer}")
       @report << paragraph("Worktype: #{@worktype}")
+      if @metadataonly == '1'
+        @report << paragraph("Metadata only: true")
+      end
     end
-    @report << paragraph("Repository: #{@repository}")
-    if @content == 'Collections'
-      @report << paragraph("You selected #{@content}, no files will be processed in the ingest.")
+    if @content == 'Collections' or @metadataonly == '1'
+      @report << paragraph("No files will be processed in the ingest.")
     else
       dir_exist
     end
@@ -77,7 +89,7 @@ class IngestRun
     check_pids
     unless @stop
       check_headers
-      unless @content == 'Collections'
+      unless @content == 'Collections' or @metadataonly == '1'
         check_files
       end
     end
@@ -111,46 +123,49 @@ class IngestRun
   def check_parents
     @report << header("Check parent collections")
     unless @parent.nil? || @parent == ''
+      @report << header("You supplied a parent PID in the ingest.")
       # deal with pids with or without the namespace
       if @parent.start_with?('york:')
         test_pid(@parent)
       else
         test_pid('york:'+@parent)
       end
-    else
-      #grab the parents list in the csv file and go through unique values
-      begin
-        data = CSV.table(@file)
-      rescue
-        @report << paragraph(" File is not valid CSV. ERROR: #{$!}", 'cross')
-        @corrections = true
-        @stop = true
+    end
+
+    #check parents list in the csv file and go through unique values
+    begin
+      data = CSV.table(@file)
+    rescue
+      @report << paragraph(" File is not valid CSV. ERROR: #{$!}", 'cross')
+      @corrections = true
+      @stop = true
+    end
+    begin
+      col = data[:parent]
+      unless col.length == 1
+        col = col.uniq
       end
-      begin
-        col = data[:parent]
-        unless col.length == 1
-          col = col.uniq
-        end
-        if col.length == 1 and col[0].class == NilClass
-          @report << paragraph("No PIDS supplied")
-        else
-          col.each do |c|
-            # we don't report on nil values, it's possible that there is no parent for some
-            unless c.to_s == '' || c.nil?
-              if c.to_s.start_with?('york:')
-                test_pid(c.to_s)
-              else
-                test_pid('york:'+c.to_s)
-              end
+      if col.length == 1 and col[0].class == NilClass
+        @report << paragraph("No Parent PIDS supplied")
+      else
+        @report << header("You supplied parent PIDS in the CSV.")
+        col.each do |c|
+          # we don't report on nil values, it's possible that there is no parent for some
+          unless c.to_s == '' || c.nil?
+            if c.to_s.start_with?('york:')
+              test_pid(c.to_s)
+            else
+              test_pid('york:'+c.to_s)
             end
           end
         end
-      rescue
-        @report << paragraph("ERROR: #{$!}")
-        @corrections = true
-        @stop = true
       end
+    rescue
+      @report << paragraph("ERROR: #{$!}")
+      @corrections = true
+      @stop = true
     end
+
   end
 
   def check_pids
@@ -169,6 +184,10 @@ class IngestRun
       end
       if col.length == 1 and col[0].class == NilClass
         @report << paragraph("No PIDS supplied")
+        if @metadataonly == "1"
+          @report << paragraph("PIDS must be supplied for metadataonly records (except Collections).")
+          @stop = true
+        end
       else
         col.each do |c|
           unless c.to_s == '' || c.nil?
