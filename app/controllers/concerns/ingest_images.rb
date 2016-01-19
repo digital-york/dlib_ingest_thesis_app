@@ -11,7 +11,7 @@ class IngestImages
 
   #TODO set scenario for JPEG2s
 
-  def do_ingest(filepath, folder, content, rights, parent, worktype, photographer, repository, email)
+  def do_ingest(filepath, folder, content, rights, parent, worktype, photographer, repository, email, metadataonly)
     @scenario = Settings.image.scenarioid
     @report = ''
     @file_path = filepath
@@ -24,6 +24,7 @@ class IngestImages
     @worktype = worktype
     @wf = nil
     @pid = ''
+    @metadataonly = metadataonly
     # open the stored file
     begin
       @file = File.open(Settings.tmppath + email + '.csv')
@@ -58,7 +59,9 @@ class IngestImages
           build_metadata(i)
           build_rights
           write_metadata_file
-          write_data_files
+          if @metadataonly != '1'
+            write_data_files
+          end
           write_workflow_files
           @report << paragraph("Adding #{@title} to collection #{@parent}")
           # publish to the workflow queue

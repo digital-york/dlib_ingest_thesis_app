@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150522092944) do
+ActiveRecord::Schema.define(version: 20160118131901) do
 
   create_table "ingests", force: :cascade do |t|
     t.string   "folder"
@@ -26,6 +26,7 @@ ActiveRecord::Schema.define(version: 20150522092944) do
     t.string   "parent"
     t.string   "photographer"
     t.boolean  "dryrun"
+    t.string   "metadataonly"
   end
 
   create_table "theses", force: :cascade do |t|

@@ -14,7 +14,7 @@ class IngestRun
   TICK = '/theses/assets/tick-f2f02a239dfbd85ac257e1be2006fcf047dcf6646337e3ab6c6ce99caadddbdd.png'
   CROSS = '/theses/assets/cross-4e2c50ae93cca22c1f4594a3a926d18729f4c750f4cd0bfb508096dfa78d9ca1.png'
 
-  def ingest(folder, file, content, rights, filestore, parent, worktype, photographer, repository, dryrun, email)
+  def ingest(folder, file, content, rights, filestore, parent, worktype, photographer, repository, dryrun, email, metadataonly)
     @folder = folder
     @file = file
     @content = content
@@ -28,6 +28,7 @@ class IngestRun
     @stop = false
     @corrections = false
     @dir = true
+    @metadataonly = metadataonly
 
     if dryrun
       # create a copy of the file
@@ -48,7 +49,7 @@ class IngestRun
       @report << paragraph("The files you uploaded will be removed from their current location and moved to the server. If you have any 'leftover' that suggests a problem with that line in the spreadsheet.")
       #do the ingest
       if @content.start_with? "Image"
-        @report = IngestImages.new.do_ingest(set_file_path, @folder, @content, @rights, @parent, @worktype, @photographer, @repository, email)
+        @report = IngestImages.new.do_ingest(set_file_path, @folder, @content, @rights, @parent, @worktype, @photographer, @repository, email,@metadataonly)
       else
         @report = IngestItems.new.do_ingest(set_file_path, @content, @rights, @parent, @repository, email)
       end
@@ -66,10 +67,14 @@ class IngestRun
     if @content.start_with? "Image"
       @report << paragraph("Photographer: #{@photographer}")
       @report << paragraph("Worktype: #{@worktype}")
+      if @metadataonly == '1'
+        @report << paragraph("Metadata only: true")
+      end
+
     end
     @report << paragraph("Repository: #{@repository}")
-    if @content == 'Collections'
-      @report << paragraph("You selected #{@content}, no files will be processed in the ingest.")
+    if @content == 'Collections' or @metadataonly == '1'
+      @report << paragraph("No files will be processed in the ingest.")
     else
       dir_exist
     end
@@ -77,7 +82,7 @@ class IngestRun
     check_pids
     unless @stop
       check_headers
-      unless @content == 'Collections'
+      unless @content == 'Collections' or @metadataonly == '1'
         check_files
       end
     end
@@ -132,7 +137,7 @@ class IngestRun
           col = col.uniq
         end
         if col.length == 1 and col[0].class == NilClass
-          @report << paragraph("No PIDS supplied")
+          @report << paragraph("No Parent PIDS supplied")
         else
           col.each do |c|
             # we don't report on nil values, it's possible that there is no parent for some
