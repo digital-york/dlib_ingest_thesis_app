@@ -31,7 +31,7 @@ class IngestsController < ApplicationController
   def ingest_repost
     @ingest = Ingest.new(session[:ingest])
 
-    @dryrun_report = IngestRun.new.ingest(@ingest[:folder], nil, @ingest[:content], @ingest[:rights], @ingest[:filestore], @ingest[:parent], @ingest[:worktype],@ingest[:photographer], @ingest[:repository],false, self.current_user.get_ldap_email, @ingest[:metadataonly])
+    @dryrun_report = IngestRun.new.ingest(@ingest[:folder], nil, @ingest[:content], @ingest[:rights], @ingest[:filestore], @ingest[:parent], @ingest[:worktype],@ingest[:photographer], @ingest[:repository],false, self.current_user.get_ldap_email)
 
     respond_to do |format|
       format.html { render :dryrun_results }
@@ -49,7 +49,7 @@ class IngestsController < ApplicationController
   def create
 
     @ingest = Ingest.new(ingest_params)
-    @dryrun_report = IngestRun.new.ingest(@ingest[:folder], params[:ingest][:file].tempfile, @ingest[:content], @ingest[:rights], @ingest[:filestore], @ingest[:parent], @ingest[:worktype],@ingest[:photographer], @ingest[:repository],@ingest[:dryrun], self.current_user.get_ldap_email,@ingest[:metadataonly])
+    @dryrun_report = IngestRun.new.ingest(@ingest[:folder], params[:ingest][:file].tempfile, @ingest[:content], @ingest[:rights], @ingest[:filestore], @ingest[:parent], @ingest[:worktype],@ingest[:photographer], @ingest[:repository],@ingest[:dryrun], self.current_user.get_ldap_email)
 
     unless session[:ingest].class == NilClass
       session[:ingest].clear
@@ -80,6 +80,6 @@ class IngestsController < ApplicationController
 
   # Never trust parameters from the scary internet, only allow the white list through.
   def ingest_params
-    params.require(:ingest).permit(:folder, :file, :content, :rights, :worktype, :repository, :filestore, :parent, :photographer, :dryrun, :metadataonly)
+    params.require(:ingest).permit(:folder, :file, :content, :rights, :worktype, :repository, :filestore, :parent, :photographer, :dryrun)
   end
 end
