@@ -33,7 +33,7 @@ class IngestRun
     if dryrun
       # create a copy of the file
       # begin
-        #delete if we have an artefact file
+        #delete if we have an existing file
         #FileUtils.rm(Settings.tmppath + email + '.csv')
         #causes an error
       # rescue
@@ -120,10 +120,10 @@ class IngestRun
     @file_path
   end
 
-  def check_parents
+  def check_parentsUntitled event
     @report << header("Check parent collections")
     unless @parent.nil? || @parent == ''
-      @report << header("You supplied a parent PID in the ingest.")
+      @report << p("You supplied a parent PID in the form.")
       # deal with pids with or without the namespace
       if @parent.start_with?('york:')
         test_pid(@parent)
@@ -146,7 +146,7 @@ class IngestRun
         col = col.uniq
       end
       if col.length == 1 and col[0].class == NilClass
-        @report << paragraph("No Parent PIDS supplied")
+        @report << paragraph("No Parent PIDS supplied in the CSV.")
       else
         @report << header("You supplied parent PIDS in the CSV.")
         col.each do |c|
@@ -169,7 +169,7 @@ class IngestRun
   end
 
   def check_pids
-    @report << header("Check pids (these will overwrite DC on existing objects)")
+    @report << header("Check pids. NB: existing objects will be overwritten; for images you MUST check the metadata only box to update the metadata")
     begin
       data = CSV.table(@file)
     rescue
