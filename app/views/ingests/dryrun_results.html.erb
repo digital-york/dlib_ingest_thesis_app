@@ -1,7 +1,7 @@
 <br/><br/>
 <h1>Ingest Report</h1>
 <p id="notice"><%= notice %></p>
-<% if self.current_user.get_department_code == 'libarch' %>
+<% if self.current_user.get_department_code == 'libarch' or self.current_user.get_department_code == 'directinfo' %>
 
     <p>
         <%= @dryrun_report %>
