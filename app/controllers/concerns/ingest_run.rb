@@ -120,7 +120,7 @@ class IngestRun
     @file_path
   end
 
-  def check_parentsUntitled event
+  def check_parents
     @report << header("Check parent collections")
     unless @parent.nil? || @parent == ''
       @report << p("You supplied a parent PID in the form.")
