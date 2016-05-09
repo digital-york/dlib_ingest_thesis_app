@@ -1,5 +1,6 @@
 source 'https://rubygems.org'
 
+gem 'resque', :require => 'resque/server'
 gem 'active-fedora', '~> 7.1.0'
 gem 'om', '~> 3.1.0'
 

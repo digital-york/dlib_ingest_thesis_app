@@ -1,4 +1,6 @@
 Rails.application.routes.draw do
+  mount Resque::Server, :at => "/resque"
+
   get 'errors/file_not_found'
 
   get 'errors/unprocessable'
